@@ -443,6 +443,21 @@ def run_tool_tests(project: Path, selection="all") -> None:
         raise CheckError("; ".join(failures))
 
 
+def check_coverage_gaps(project: Path) -> None:
+    """The reviewed coverage-gap record is strict and names only setup/*.yml modules; absent means none."""
+    acceptance = load_module("_cicd_global_nightly_acceptance", Path(__file__).with_name("nightly_acceptance.py"))
+    path = renderer.safe_path(project, acceptance.GAPS_PATH)
+    if not path.exists():
+        return
+    try:
+        recorded = acceptance.coverage_gaps(acceptance.parse_json(path.read_bytes()))
+    except ValueError as error:
+        raise CheckError(f"{acceptance.GAPS_PATH}: {error}") from error
+    unregistered = sorted(set(recorded) - {name for name, _ in renderer.registry(project)})
+    if unregistered:
+        raise CheckError(f"{acceptance.GAPS_PATH}: unregistered modules: " + ", ".join(unregistered))
+
+
 def check_app_inventory(project: Path) -> None:
     inventory = load_module("_cicd_app_inventory", Path(__file__).with_name("check_app_inventory.py"))
     try:
@@ -538,6 +553,7 @@ def run(project: Path, scope="full", *, suites="all") -> bool:
             log(f"global {label}: {error}")
 
     check("App workflow inventory", lambda: check_app_inventory(project))
+    check("reviewed coverage gaps", lambda: check_coverage_gaps(project))
     check("committed render inputs", lambda: check_committed_inputs(project))
     check("committed render", lambda: check_committed_render(project))
     check("immutable delivery bootstrap", lambda: check_bootstrap(project))

@@ -124,7 +124,10 @@ Recognized forms supply the exact working directory, import roots and language:
   name literal tests after the `-v`, `-q`, `-f`, `-c` and `-b` flags, their
   long forms and `--locals`. A dotted name selects the module of its longest
   local prefix, which must be a module file because a package runs its own
-  `load_tests`. A name with no local prefix is an installed test module. A
+  `load_tests`. A name with no local prefix is an installed test module,
+  unless a tracked module file or directory anywhere carries its first
+  component, compared case-insensitively, because another import root could
+  supply it; that fails as an unsupported test runner. A
   `.py` operand under the working directory selects its file, which rule 1
   also includes as a literal reference. Other unittest options and operands
   fail. The selected modules are test sources; see
@@ -150,13 +153,16 @@ Recognized forms supply the exact working directory, import roots and language:
   tuple made of `-p:Name=Value` operands with fixed property names. Other argv
   expansion remains unsupported. Literal script references in these data
   operands still enter discovery. The executable can also be
-  `shutil.which('dotnet')` from the standard module. The argv can be a
+  `shutil.which('dotnet')` from the standard module, directly or through a
+  function-local name bound once to it; an importer could rebind a module-level
+  name. The argv can be a
   function-local list bound once and only passed to standard subprocess calls,
   alone or concatenated with a literal list. A computed working directory for build, pack, restore and
   msbuild is directory data, as for Git. The .NET host reads `global.json`
   from that directory and its parents, and a relative PATH entry or lookup
   result resolves inside it. So every tracked `global.json` must be strict
-  JSON without duplicate keys and must not declare SDK search `paths`; SDK
+  JSON without duplicate keys, nested at most 64 levels deep, and must not
+  declare SDK search `paths`; SDK
   version and roll-forward settings only choose installed SDKs. A tracked
   `dotnet` host, an unproved subprocess API, a shell, a pre-execution
   callback and `DOTNET_`, `MSBuild`, `NUGET_`, host or loader variables in
@@ -218,12 +224,17 @@ Recognized forms supply the exact working directory, import roots and language:
   process options fail. A wrapper whose subprocess argv, `cwd` or `env` is
   one of its parameters is checked at each direct call site in the same
   source, with that call's arguments in place of the parameters, up to 8
-  levels and 128 variants. The wrapper may only read its argv parameter and
-  may use its env parameter only as a proved copy. A wrapper without callers
-  in its source, or one that is passed on, decorated or a method, still fails.
-  These proofs see only their own source, so a module-level wrapper fails when
-  other discovered code imports that source, unless every importer is a
-  test source that keeps [the test boundary](#test-boundary).
+  levels and 128 variants. Each failing call site is reported, naming its
+  line. The wrapper may only read its argv parameter and may use its env
+  parameter only as a proved copy, and its subprocess call takes argv as its
+  only positional argument. A wrapper without callers in its source, or one
+  that is passed on, decorated or a method, still fails.
+  These proofs see only their own source. A module-level wrapper of either
+  form, including each `*args` wrapper an expansion passes through, fails
+  when other discovered code can reach its name, as
+  [the import index](#import-index) decides, unless every such importer is a
+  test source that keeps [the test boundary](#test-boundary). Importers that
+  use only the source's other names leave the proof intact.
   Git wrappers must meet the same rules at every call site. A constant tuple
   can supply literal operands. A conditional `**` mapping may supply only
   the subprocess `env` keyword, and the environment must preserve executable
@@ -245,8 +256,8 @@ Recognized forms supply the exact working directory, import roots and language:
   class based on `object` or `unittest.TestCase`. Every reference to that
   attribute name in the source must be one of those uses. A module-level copy
   or an instance attribute fails when other discovered code imports its
-  source, unless every importer is a test source that keeps the test
-  boundary. The source may not replace or write
+  source, as the import index decides, unless every importer is a test source
+  that keeps the test boundary. The source may not replace or write
   `os.environ`, or pass it or `os` to unknown code. `patch.dict(os.environ,
   ...)` from `unittest.mock` is allowed because it changes the process
   environment through the public mapping API. Aliases, unknown mutations,
@@ -446,8 +457,9 @@ name also matches `test*.py` exactly. Other files that a broader pattern or a
 literal test name selects keep full rules. Package
 initializers are not test sources, and a file name alone never makes one. A test
 source keeps full rules when anything else reaches it, such as an action or
-script that runs it, a launch, a literal reference or a static import from other
-code. Only static imports between test sources keep the boundary.
+script that runs it, a launch, a literal reference or an import from other
+code, including any import that [the import index](#import-index) matches to
+it. Only imports between test sources keep the boundary.
 
 In a test source that only unittest selection and other test sources reach,
 rule 2 diagnostics at process launches, execution literals and dynamic loads are
@@ -477,11 +489,99 @@ site in that source could launch it. These errors end with `no test boundary:
 the source names a GitHub workflow command file`.
 
 Wrapper and environment-copy proofs see only their own source. When every
-importer of a product source is a test source that keeps the boundary, those
-proofs are observations at the proof site, because the calls those test
-sources make through them are boundary sites too. A product importer, an
-importer that names a workflow command file, or a coverage limit keeps the
-error.
+importer that can reach a wrapper's name, or every importer of a source with
+a copy, is a test source that keeps the boundary, those proofs are
+observations at the proof site, because the calls those test sources make
+through them are boundary sites too. A product importer, an importer that
+names a workflow command file, an import that names no module outside such a
+test source, or a coverage limit keeps the error.
+
+### Import index
+
+Rules that depend on which code imports a source use a name-based index, not
+the import roots that discovery follows. Any code can change `sys.path` at run
+time, and a module that one source inserts a directory for can be imported by
+name from any other source in the same process. Every import in every selected
+Python source counts, at any nesting, including inline programs and heredocs,
+which count for the file that holds them:
+
+- `import` and `from` statements, including relative imports;
+- literal `importlib.import_module` and `__import__` names, also through
+  static aliases;
+- literal `sys.modules[...]` and `sys.modules.get(...)` lookups, where
+  `sys.modules[__name__]` is the source itself;
+- `runpy` calls whose returned module namespace is used, and reviewed loader
+  calls that load one exact source.
+
+An import of a dotted name counts as an import of every selected module with
+that name under any directory used as an import root. For every directory
+prefix `ROOT`, both `ROOT/a/b.py` and `ROOT/a/b/__init__.py` are named `a.b`.
+Names compare case-insensitively. The parent packages count too, and so does
+every submodule of the module that the import binds. An unaliased `import a.b`
+binds `a`. `import a.b as x` and `from a import b` bind `a.b`, and the from-import
+also reads names from `a`. A relative import counts the package's own
+initializer and its names below the package. So
+a same-named module in another directory counts as imported, and the proof in
+it fails too. Give such modules distinct names, or keep the call in the
+proved source. Membership tests on `sys.modules` and text that only mentions
+an import are not imports.
+
+Some imports name no module:
+
+- computed `importlib.import_module` or `__import__` targets;
+- file-location loaders, `exec`, `eval` and `compile`;
+- `importlib.util.find_spec`, `importlib.util.spec_from_loader`, `pydoc.locate`
+  and calls into `importlib.machinery`, `pkgutil` or `zipimport`;
+- any other use of `sys.modules`, also when reached through another module
+  (`os.sys.modules`) or a dynamic import of `sys`;
+- a used `runpy` namespace with a computed target;
+- an import API handed to other code;
+- a star import from a package whose own name is unknown;
+- a source that cannot be parsed or exceeds a discovery limit.
+
+A source holding one counts as an importer of every selected source. So does
+a source that reads a function's or frame's globals (`__globals__`,
+`f_globals` or `f_locals`, also by a literal `getattr` or
+`operator.attrgetter` name) or calls `inspect.getmodule`,
+`inspect.getmembers`, `gc.get_objects`, `gc.get_referrers` or
+`gc.get_referents`, which reach a module's names without importing it.
+Their own diagnostics, and the observations of those in test sources, are
+unchanged. The index decides importers only: it never selects a file, and it
+does not change how imports resolve for traversal.
+
+A module-level copy or instance attribute fails for any importer of its
+source. A module-level wrapper fails only for an importer that can reach the
+wrapper's name. Each binding an import makes is followed through every use of
+that name in the importing source, at any scope. A literal dynamic import
+counts its own expression, or the one name it is assigned to. An importer
+reaches the name when it:
+
+- binds the name: `from M import name`, under any alias, or a star import;
+- uses it: `M.name`, also through a package (`pkg.M.name`);
+- reads a namespace dunder of the module, such as `__dict__`, by attribute
+  or from-import (`__name__`, `__file__`, `__doc__` and `__version__` are
+  plain reads);
+- stores into the module or into any object it holds (`M.other = value`,
+  `M.table[key] = value`);
+- hands the module, or a package holding it, to other code: passing it,
+  returning it, assigning it to another name or attribute, calling `getattr`,
+  `setattr` or `vars` on it, or any use other than an attribute access, a
+  call, a comparison, a truth test, a discarded value or the inspecting
+  builtins `isinstance`, `type`, `repr`, `str`, `print`, `len`, `id`,
+  `bool`, `callable`, `hasattr`, `dir` and `issubclass`;
+- binds it in a class body, or calls `globals()`, `locals()` or `vars()`
+  without arguments anywhere in its source (such a call in the wrapper's own
+  source fails the proof too);
+- holds it through a `runpy` namespace, a reviewed loader,
+  `sys.modules[__name__]` or an `__import__` call with a `fromlist` or other
+  arguments;
+- names no module, as above.
+
+A binding in an importer's module namespace re-exports the module, so the
+importers of that source are examined in turn through that binding, also
+through import cycles. A source that the index matches without an import record
+it can follow counts as reaching the name. Importers that use only other
+names, such as `from M import other` or `M.other()`, do not count.
 
 Each observation is a coverage loss. Discovery does not follow the process,
 inline program or module that the site starts. Code reached only that way is
@@ -558,6 +658,13 @@ The durable output directory contains:
   `observations` (`path`, `line` and `reason`), and findings with format,
   lines, tokens, fragment and both original module/path/line endpoints. Readers
   that ignore `observations` keep their verdict: an observation is never an error.
+  `errorSources` has one entry per row error, in order. A discovery error that
+  names one selected source as `path:line: diagnostic` has its `path`, `line`,
+  `diagnostic` and `lineSha256`, the SHA-256 of that LF-delimited line's exact
+  bytes without the LF. The digest is null when the line is out of range, or when
+  a non-shell source has a lone CR, U+0085, U+2028 or U+2029. Every other error,
+  and every error of a row whose discovery hit a coverage limit, a pinned-source
+  failure or a failure outside discovery, has a null entry.
 - `summary.md`: the readable verdict, source coverage, diagnostics, boundary
   observations and copied fragments with the original locations of code to move
   into Builds. Each fragment is a top-level fenced block longer than any backtick
@@ -629,6 +736,36 @@ run-with-temp env UV_NO_CACHE=1 uv run --locked --script --python 3.12 tools/tes
 This case uses local synthetic Git sources rather than live module origins.
 Registry or signature access failures leave detector integration unproven;
 offline controller success does not qualify it.
+
+## Reviewed coverage gaps
+
+A reviewed coverage gap is a discovery diagnostic that a recorded human decision
+accepts. The scan still fails and reports it: the row stays `fail`, and
+`report.json`, `summary.md` and the scan workflow keep the error. Only module
+acceptance in `tools/nightly_acceptance.py` accepts such a row. Every error must
+match an entry recorded for that module in
+[`tools/scan-coverage-gaps.json`](../tools/scan-coverage-gaps.json) at the scan's
+controller revision. The scan itself never reads that file.
+
+An entry names the module, path and diagnostic, the reported line's
+`line_sha256`, the number of matching errors it covers (`occurrences`) and its
+`decision`. Line numbers never identify a gap. Embedded numbers are written
+`line N`, so a moved line with unchanged text still matches. Acceptance fails as
+before on a changed line, an unlisted or extra error, or a missing source
+digest. It also fails on a revision mismatch, a run-level error, a finding
+involving the module, or an incomplete row. A malformed record fails every row
+that needs it: unknown keys, duplicates, bad digests and unregistered modules
+are malformed. The digest covers only the reported physical line, not the rest
+of its statement or the code its diagnostic depends on.
+
+Each entry needs a recorded human decision. Its `decision` names the story
+whose spec change log records that decision, and the entry's date. To propose
+entries from a report, run
+`python3 -I tools/scan_gap_candidates.py <report.json> --module <Repo> --story <key> --date <YYYY-MM-DD>`.
+It prints candidate entries and lists errors that acceptance can never match. It
+never writes the record. Commit only the entries that the decision covers. The
+acceptance report lists each accepted gap. The receipt records their count with
+the record's revision and blob ID.
 
 ## Calibration and retuning
 

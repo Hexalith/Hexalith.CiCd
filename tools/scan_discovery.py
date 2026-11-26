@@ -34,6 +34,14 @@ import yaml
 
 from delivery_runtime import DeliveryError, clean
 
+
+class ForwardedWrapperErrors(DeliveryError):
+    """One diagnostic for each failing call site of a forwarding wrapper."""
+
+    def __init__(self, messages):
+        super().__init__(messages[0])
+        self.messages = list(messages)
+
 FORMATS = {".yml": "yaml", ".yaml": "yaml", ".sh": "bash", ".bash": "bash",
            ".ps1": "powershell", ".psm1": "powershell", ".py": "python",
            ".js": "javascript", ".mjs": "javascript", ".cjs": "javascript",
@@ -318,6 +326,37 @@ def executes(name):
 
 def reflective_api(name):
     return executes(name) or name in MUTATORS
+
+
+# Namespaces whose members can import a module by name, location or source text.
+IMPORT_NAMESPACES = ("importlib", "runpy", "builtins", "__builtins__")
+# Import machinery that finds or loads a module by a name or location the
+# import index cannot read. A spec or loader reaches a module only through one.
+IMPORT_FINDERS = {"importlib.__import__", "importlib.find_loader", "importlib.util.find_spec",
+                  "importlib.util.spec_from_loader", "pydoc.locate"}
+IMPORT_FINDER_PREFIXES = ("importlib.machinery.", "pkgutil.", "zipimport.")
+# Module attributes that read no namespace binding.
+SAFE_DUNDERS = {"__name__", "__file__", "__doc__", "__version__"}
+# Reflection that reads another module's globals without importing it by name.
+GLOBALS_ATTRIBUTES = {"__globals__", "f_globals", "f_locals"}
+GLOBALS_CALLS = {"inspect.getmodule", "inspect.getmembers", "inspect.getmembers_static", "gc.get_objects",
+                 "gc.get_referrers", "gc.get_referents"}
+# Builtins that only inspect the object they receive.
+INSPECTING_BUILTINS = {"isinstance", "issubclass", "callable", "print", "repr", "str", "id", "type", "len", "bool",
+                       "hasattr", "dir"}
+# Reported when a wrapper's name could be re-exported beyond the proof budgets.
+EXPOSURE_LIMIT = "<module re-export limit>"
+
+
+def unsafe_dunder(name):
+    """A dunder attribute that can read or replace namespace bindings."""
+    return len(name) > 4 and name.startswith("__") and name.endswith("__") and name.casefold() not in SAFE_DUNDERS
+
+
+def import_api(name):
+    """An import API, or a namespace holding one, that code could use to import any module."""
+    return (name in {"__import__", "exec", "eval", "compile"} or name in UNSUPPORTED_CALLS
+            or name.split(".", 1)[0] in IMPORT_NAMESPACES)
 
 
 def literal_key(node):
@@ -702,6 +741,14 @@ class Discovery:
         # Sources other discovered code imports, the files importing each, and
         # proofs that only see callers and mutations inside their own source.
         self.imported_sources, self.importers, self.exported_proofs = set(), {}, []
+        # Name-based import index: the dotted-name patterns that each source's
+        # Python code imports, and sources holding an import that names no module.
+        self.import_names, self.unresolved_imports = {}, {}
+        # How each source binds and uses the modules it imports, so that a
+        # module-level wrapper proof can tell whether an importer reaches its name.
+        self.import_records, self.import_record_keys = {}, set()
+        # Sources that hand their own bindings on through globals(), locals() or vars().
+        self.namespace_reflection = set()
         # Python sources whose literal text names a workflow command file or form.
         self.workflow_text = set()
         # Test boundary: how each file was reached, and diagnostics at process,
@@ -1046,10 +1093,24 @@ class Discovery:
                 if modules:
                     selected.extend(modules)
                     break
-            # A name without any local prefix is an installed test module.
+            else:
+                # A name without any local prefix is an installed test module,
+                # unless another import root could supply a tracked module or
+                # package that carries its first component.
+                if parts[0].casefold() in self.tracked_module_names():
+                    raise DeliveryError("unsupported test runner with tracked module tests: unittest")
         for target in selected:
             self.add_module(target, cwd, action, (cwd,), test=True)
         return True
+
+    def tracked_module_names(self):
+        """Case-folded names that tracked Python modules and directories (packages) can be imported by."""
+        names = {posixpath.basename(directory).casefold() for directory in self.directories}
+        for item in self.items:
+            base = posixpath.basename(item).casefold()
+            if base.endswith((".py", ".pyw", ".pyc", ".pyd", ".so")):
+                names.add(base.split(".", 1)[0])
+        return names
 
     def recipe(self, names, bases):
         for base in bases:
@@ -2429,6 +2490,345 @@ class Discovery:
                 remaining = remaining[1:]
         return None, remaining
 
+    def import_name(self, path, module, bound=None):
+        """Index an import of a dotted name by Python code in path, whatever search path resolves it.
+
+        A runtime search-path change made by any other code can resolve the
+        name, so it counts for every selected module with that name. The
+        parent packages run, and the importer reaches the bound module (by
+        default the imported one) and every submodule below it.
+        """
+        parts = tuple(module.casefold().split("."))
+        reach = parts if bound is None else tuple(bound.casefold().split("."))
+        patterns = self.import_names.setdefault(path, set())
+        patterns.update((parts[:index], False) for index in range(1, len(parts)))
+        patterns.add((reach, True))
+
+    def unresolved_import(self, path, line):
+        """Python code in path can import a module that discovery cannot name."""
+        self.unresolved_imports.setdefault(path, line)
+
+    def import_edge(self, target, path):
+        """An exactly resolved import of a tracked source."""
+        self.imported_sources.add(target)
+        self.importers.setdefault(target, set()).add(path)
+
+    def from_import_names(self, node, path, offset, uses):
+        """Index the modules a from-import can bind: the module itself and each name as its submodule."""
+        module = node.module or ""
+        refers = tuple(module.casefold().split(".")) if module else ()
+        package = None
+        if node.level:
+            # A relative import names the package directory and below it only
+            # submodule names; the package's own dotted name depends on the root.
+            package = str(PurePosixPath(path).parent)
+            for _ in range(node.level - 1):
+                package = None if package in {".", None} else str(PurePosixPath(package).parent)
+            initializer = None if package is None else posixpath.normpath(posixpath.join(package, "__init__.py"))
+            if initializer in self.items:
+                self.import_edge(initializer, path)
+        for item in node.names:
+            if item.name != "*":
+                self.import_name(path, module + "." + item.name if module else item.name)
+                self.import_record(path, node, "from", refers, uses, item=item.name.casefold(),
+                                   bound=item.asname or item.name, package=package if node.level else None)
+            elif module:
+                self.import_name(path, module)
+                self.import_record(path, node, "star", refers, uses)
+            elif package not in {None, "."}:
+                self.import_name(path, PurePosixPath(package).name)
+                self.import_record(path, node, "star", (PurePosixPath(package).name.casefold(),), uses)
+            else:
+                # A star import from a package whose own name is unknown.
+                self.unresolved_import(path, node.lineno + offset)
+
+    def call_import_names(self, call, calls, path, offset, uses):
+        """Index import_module and __import__ calls by their literal module name; others are unresolved."""
+        if any(name in IMPORT_FINDERS or name.startswith(IMPORT_FINDER_PREFIXES) or name in GLOBALS_CALLS
+               for name in calls) or calls & {"getattr", "operator.attrgetter"} and any(
+                isinstance(argument, ast.Constant) and argument.value in GLOBALS_ATTRIBUTES for argument in call.args):
+            # A literal read of a function's or frame's globals, like the attribute itself.
+            self.unresolved_import(path, call.lineno + offset)
+        if not calls & {"importlib.import_module", "__import__", "builtins.__import__"}:
+            return
+        name = (call.args[0].value if call.args and isinstance(call.args[0], ast.Constant)
+                and isinstance(call.args[0].value, str) else None)
+        if name is None or not MODULE.fullmatch(name):
+            self.unresolved_import(path, call.lineno + offset)
+            return
+        parts = tuple(name.casefold().split("."))
+        if "importlib.import_module" in calls:
+            self.import_name(path, name)
+            self.import_record(path, call, "module", parts, uses, root=call)
+        if calls & {"__import__", "builtins.__import__"}:
+            # __import__ returns the top-level package unless given a fromlist.
+            self.import_name(path, name, name.split(".", 1)[0])
+            if len(call.args) > 1 or call.keywords:
+                self.import_record(path, call, "opaque", parts[:1], uses)
+            else:
+                self.import_record(path, call, "module", parts[:1], uses, root=call, full=parts)
+
+    def module_table_import(self, node, parents, nodes, path, offset, uses):
+        """sys.modules: a literal lookup imports that name; any other use can reach any module."""
+        parent = parents.get(node)
+        key = lookup = None
+        if isinstance(parent, ast.Subscript) and parent.value is node and isinstance(parent.ctx, ast.Load):
+            key, lookup = parent.slice, parent
+        elif (isinstance(parent, ast.Attribute) and parent.value is node and parent.attr == "get"
+              and isinstance(parents.get(parent), ast.Call) and parents[parent].func is parent
+              and parents[parent].args):
+            key, lookup = parents[parent].args[0], parents[parent]
+        elif isinstance(parent, ast.Compare) and any(item is node for item in parent.comparators) and all(
+                isinstance(operator, (ast.In, ast.NotIn)) for operator in parent.ops):
+            # A membership test reads no module.
+            return
+        if isinstance(key, ast.Constant) and isinstance(key.value, str) and MODULE.fullmatch(key.value):
+            self.import_name(path, key.value)
+            self.import_record(path, lookup, "module", tuple(key.value.casefold().split(".")), uses, root=lookup)
+        elif isinstance(key, ast.Name) and key.id == "__name__" and self.unshadowed("__name__", nodes):
+            # The module itself, reached other than through its own names.
+            self.import_edge(path, path)
+            self.opaque_record(path, target=path)
+        else:
+            self.unresolved_import(path, getattr(node, "lineno", 1) + offset)
+
+    def import_uses(self, path, nodes, parents, offset):
+        """The per-source facts that import records read: name loads, global declarations, namespace reflection."""
+        loads, declared = {}, set()
+        for node in nodes:
+            if isinstance(node, ast.Name) and isinstance(node.ctx, ast.Load):
+                loads.setdefault(node.id, []).append(node)
+            elif isinstance(node, ast.Global):
+                declared.update(node.names)
+        # globals(), locals() and vars() hand the source's own bindings to other code.
+        reflection = any(isinstance(node, ast.Call) and isinstance(node.func, ast.Name)
+                         and (node.func.id in {"globals", "locals"} or node.func.id == "vars" and not node.args)
+                         and self.unshadowed(node.func.id, nodes) for node in nodes)
+        if reflection:
+            self.namespace_reflection.add(path)
+        return nodes, parents, loads, declared, reflection, offset
+
+    def import_record(self, path, anchor, kind, refers, uses, *, item=None, bound=None, root=None, package=None,
+                      full=None):
+        """Record how one import binds a module and how the source uses that binding.
+
+        A Name binding counts every load of that name in the source. A literal
+        dynamic import counts its own expression, or the single name it is
+        assigned to. A binding in the module namespace re-exports the module.
+        """
+        nodes, parents, loads, declared, reflection, offset = uses
+        key = (path, offset, getattr(anchor, "lineno", 0), getattr(anchor, "col_offset", 0), kind, refers, item, bound)
+        if key in self.import_record_keys:
+            return
+        self.import_record_keys.add(key)
+        escape, exposed, roots = reflection, None, ()
+        if root is not None:
+            consumer = parents.get(root)
+            targets = (consumer.targets if isinstance(consumer, ast.Assign) else
+                       [consumer.target] if isinstance(consumer, ast.AnnAssign) else [])
+            if getattr(consumer, "value", None) is root and len(targets) == 1 and isinstance(targets[0], ast.Name):
+                bound, anchor = targets[0].id, consumer
+            else:
+                roots = (root,)
+        if bound is not None:
+            roots = loads.get(bound, ())
+            scope = self.scope_of(anchor, parents)
+            if isinstance(scope, ast.ClassDef):
+                # A class attribute holds the module.
+                escape = True
+            elif isinstance(scope, ast.Module) or bound in declared:
+                exposed = bound.casefold()
+        refers = tuple(refers)
+        if kind == "from":
+            full = (*refers, item)
+        self.import_records.setdefault(path, []).append({
+            "kind": kind, "refers": refers, "full": tuple(full or refers), "item": item, "package": package,
+            "target": None, "escape": escape, "exposed": exposed, "uses": self.chain_uses(roots, parents, nodes)})
+
+    def opaque_record(self, path, *, refers=None, target=None):
+        """An import whose result discovery does not follow: a namespace dict, a loader or the source itself."""
+        key = (path, "opaque", refers, target)
+        if key not in self.import_record_keys:
+            self.import_record_keys.add(key)
+            self.import_records.setdefault(path, []).append({
+                "kind": "opaque", "refers": tuple(refers or ()), "full": tuple(refers or ()), "item": None,
+                "package": None, "target": target, "escape": True, "exposed": None, "uses": ()})
+
+    def chain_uses(self, roots, parents, nodes):
+        """Each use of a module object: its attribute chain, whether it stores, and how the value is consumed."""
+        result = []
+        for root in roots:
+            attributes, current = [], root
+            while isinstance(parents.get(current), ast.Attribute) and parents[current].value is current:
+                current = parents[current]
+                attributes.append(current.attr.casefold())
+            consumer = parents.get(current)
+            store = (isinstance(getattr(current, "ctx", None), (ast.Store, ast.Del))
+                     or isinstance(consumer, ast.Subscript) and consumer.value is current
+                     and isinstance(consumer.ctx, (ast.Store, ast.Del)))
+            if store:
+                # An assignment or deletion target: the store itself decides.
+                kind = "store"
+            elif isinstance(consumer, ast.Call) and consumer.func is current:
+                kind = "call"
+            elif (isinstance(consumer, (ast.Expr, ast.Compare))
+                  or isinstance(consumer, ast.UnaryOp) and isinstance(consumer.op, ast.Not)
+                  or isinstance(consumer, (ast.If, ast.While, ast.Assert, ast.IfExp)) and consumer.test is current
+                  or isinstance(consumer, ast.Call) and isinstance(consumer.func, ast.Name)
+                  and consumer.func.id in INSPECTING_BUILTINS and any(item is current for item in consumer.args)
+                  and self.unshadowed(consumer.func.id, nodes)):
+                kind = "read"
+            else:
+                # Assigned, passed, returned, iterated or otherwise handed on.
+                kind = "escape"
+            result.append((tuple(attributes), store, kind))
+        return tuple(result)
+
+    @staticmethod
+    def module_components(path):
+        """The trailing name components of a source under its innermost import root, or None if unnamable."""
+        parts = path.casefold().split("/")
+        if parts[-1] == "__init__.py":
+            return tuple(parts[:-1])
+        if parts[-1].endswith(".py") and "." not in parts[-1][:-3]:
+            return (*parts[:-1], parts[-1][:-3])
+        return None
+
+    def record_paths(self, record, module):
+        """How an import record can hold a module.
+
+        ("bind", path): the binding reaches it through that attribute path;
+        ("attr", name): the binding is that attribute of it; ("none",): only a
+        parent package runs; ("opaque",): discovery cannot tell.
+        """
+        if record["target"] is not None:
+            return [("opaque",)] if record["target"] == module else []
+        components = self.module_components(module)
+        if components is None:
+            return []
+        refers, kind = record["refers"], record["kind"]
+
+        def below(parts):
+            return [components[index + len(parts):] for index in range(len(components) - len(parts) + 1)
+                    if parts and components[index:index + len(parts)] == parts]
+        if kind == "from":
+            package = record["package"]
+            exact = (components[-len(refers):] == refers if refers else package is not None
+                     and module == posixpath.normpath(posixpath.join(package, "__init__.py")))
+            entries = [("attr", record["item"])] if exact else []
+            entries += [("bind", rest) for rest in below(record["full"])]
+        elif kind == "module":
+            entries = [("bind", rest) for rest in below(refers)]
+        else:
+            entries = [("opaque",) for _ in below(refers)]
+        full = record["full"]
+        if not entries and any(components[-index:] == full[:index] for index in range(1, len(full))):
+            entries.append(("none",))
+        return entries
+
+    @staticmethod
+    def chains_reach(uses, path, name):
+        """Whether a use reaches name in the module that path leads to, or hands on that module or a package of it."""
+        for attributes, store, kind in uses:
+            common, limit = 0, min(len(attributes), len(path))
+            while common < limit and attributes[common] == path[common]:
+                common += 1
+            if common < limit:
+                # Another attribute; only a namespace dunder can still lead back.
+                if unsafe_dunder(attributes[common]):
+                    return True
+                continue
+            if len(attributes) <= len(path):
+                # The module itself, or a package holding it, handed on. Replacing
+                # the package attribute that holds it reaches none of its names.
+                if kind == "escape":
+                    return True
+                continue
+            beyond = attributes[len(path):]
+            if beyond[0] == name or store or any(unsafe_dunder(attribute) for attribute in beyond):
+                return True
+        return False
+
+    def name_reachers(self, target, name, importers):
+        """Importers that can reach a module-level name of target, directly or through re-exported modules.
+
+        An importer whose import of the module (or of a package holding it)
+        binds or uses that name, stores into the module, hands the module on,
+        reflects on it, star-imports it or cannot be matched to a record counts.
+        A module-level binding of the module re-exports it, so the importers of
+        that source are examined too, within a fixed size budget.
+        """
+        name = name.casefold()
+        # A path longer than every recorded attribute chain decides nothing more,
+        # so re-exports through import cycles end at this horizon.
+        horizon = 2 + max((len(attributes) for records in self.import_records.values() for record in records
+                           for attributes, _, _ in record["uses"]), default=0)
+        # The source's own namespace reflection reaches the name without an import.
+        reachers = {target} if target in self.namespace_reflection else set()
+        queue, seen = deque([(target, ())]), {(target, ())}
+        while queue:
+            module, suffix = queue.popleft()
+            for importer in sorted(importers.get(module, ())):
+                matched = False
+                for record in self.import_records.get(importer, ()):
+                    for entry in self.record_paths(record, module):
+                        matched = True
+                        if entry[0] == "none":
+                            continue
+                        if entry[0] == "opaque":
+                            reachers.add(importer)
+                            continue
+                        if entry[0] == "attr":
+                            item = entry[1]
+                            if unsafe_dunder(item) or not suffix and item == name:
+                                reachers.add(importer)
+                                continue
+                            if not suffix or item != suffix[0]:
+                                continue
+                            path = suffix[1:]
+                        else:
+                            path = entry[1] + suffix
+                        if record["escape"] or self.chains_reach(record["uses"], path, name):
+                            reachers.add(importer)
+                        elif record["exposed"] is not None:
+                            exposure = (importer, (record["exposed"], *path)[:horizon])
+                            if exposure in seen:
+                                continue
+                            if len(seen) >= MAX_PYTHON_PROOF_NODES:
+                                reachers.add(EXPOSURE_LIMIT)
+                                continue
+                            seen.add(exposure)
+                            queue.append(exposure)
+                if not matched:
+                    # An exact edge without a record that discovery can follow.
+                    reachers.add(importer)
+        return reachers
+
+    def import_index(self):
+        """Every selected Python source each source's imports can name, under any search path.
+
+        A module's name under some import root is any trailing run of its path
+        components: directories, then the file stem or a package directory.
+        An exact pattern matches such a name; a reach pattern also matches
+        every submodule below it. Exactly resolved imports stay edges too.
+        """
+        reach, exact = {}, {}
+        for path, item in self.files.items():
+            components = self.module_components(path) if item["format"] == "python" else None
+            if components is None:
+                # The import system cannot name this file.
+                continue
+            for start in range(len(components)):
+                exact.setdefault(components[start:], set()).add(path)
+                for end in range(start + 1, len(components) + 1):
+                    reach.setdefault(components[start:end], set()).add(path)
+        importers = {target: set(paths) for target, paths in self.importers.items()}
+        for importer, patterns in self.import_names.items():
+            for pattern, below in patterns:
+                for target in (reach if below else exact).get(pattern, ()):
+                    importers.setdefault(target, set()).add(importer)
+        return importers
+
     def import_path(self, path):
         """A known import component must be a directory, never a git blob/link."""
         parts = path.split("/")
@@ -2476,8 +2876,7 @@ class Discovery:
             selected.append(stem)
             for target in candidates:
                 if not execute:
-                    self.imported_sources.add(target)
-                    self.importers.setdefault(target, set()).add(path)
+                    self.import_edge(target, path)
                 self.add_module(target, cwd, action, import_roots)
             if namespace:
                 self.add_module(stem + "/__init__.py", cwd, action, import_roots)
@@ -2509,11 +2908,14 @@ class Discovery:
             tree = ast.parse(text.removeprefix("\ufeff"))
         except (SyntaxError, ValueError, RecursionError) as error:
             self.error(path, getattr(error, "lineno", 1) + offset, "invalid Python source")
+            # Its imports are unknown, so it may import any module.
+            self.unresolved_import(path, getattr(error, "lineno", 1) + offset)
             return
         nodes, parents = [], {}
         for index, node in enumerate(ast.walk(tree)):
             if index > 100000:
                 self.error(path, 1, "Python discovery node limit exceeded")
+                self.unresolved_import(path, 1 + offset)
                 return
             nodes.append(node)
             for child in ast.iter_child_nodes(node):
@@ -2587,11 +2989,13 @@ class Discovery:
                         changed |= len(binding) != previous
                         if len(binding) > 100:
                             self.error(path, node.lineno + offset, "Python alias-resolution limit exceeded")
+                            self.unresolved_import(path, node.lineno + offset)
                             return
             if not changed:
                 break
         else:
             self.error(path, 1, "Python alias-resolution depth limit exceeded")
+            self.unresolved_import(path, 1 + offset)
             return
 
         def search_path(expression):
@@ -2677,6 +3081,7 @@ class Discovery:
                          self.bases(path, action, [cwd, *roots]))
 
         literals, modules, bases, cwds = [], [], [cwd, *roots], [cwd]
+        uses = self.import_uses(path, nodes, parents, offset)
         for node in nodes:
             for sequence in sequences(node):
                 modules.extend((getattr(node, "lineno", 1) + offset, module)
@@ -2710,8 +3115,30 @@ class Discovery:
                         if not (isinstance(consumer, ast.Attribute) and consumer.value is node
                                 and parents.get(consumer) in proven_paths):
                             raise DeliveryError("unsupported Python search-path mutation or escape")
-                    self.reflective(node, parents, names)
+                    candidates = names(ast.unparse(node))
+                    if "sys.modules" in candidates:
+                        self.module_table_import(node, parents, nodes, path, offset, uses)
+                    elif any(re.search(r"(?:\.sys|(?:import_module|__import__)\((['\"])sys\1\))\.modules\Z", candidate)
+                             for candidate in candidates):
+                        # The module table reached through another module or a dynamic import of sys.
+                        self.unresolved_import(path, getattr(node, "lineno", 1) + offset)
+                    if isinstance(node, ast.Attribute) and node.attr in GLOBALS_ATTRIBUTES:
+                        # A function's or frame's globals reach a module's names without an import.
+                        self.unresolved_import(path, node.lineno + offset)
+                    try:
+                        self.reflective(node, parents, names)
+                    except DeliveryError:
+                        # An import API handed to other code can import any module.
+                        if any(import_api(candidate) for candidate in candidates):
+                            self.unresolved_import(path, getattr(node, "lineno", 1) + offset)
+                        raise
                 elif isinstance(node, ast.Import):
+                    for item in node.names:
+                        # An unaliased import binds its top-level package and so reaches every submodule.
+                        self.import_name(path, item.name, None if item.asname else item.name.split(".", 1)[0])
+                        parts = tuple(item.name.casefold().split("."))
+                        self.import_record(path, node, "module", parts if item.asname else parts[:1], uses,
+                                           bound=item.asname or item.name.split(".", 1)[0], full=parts)
                     importer, self.importer = self.importer, path
                     try:
                         for item in node.names:
@@ -2720,6 +3147,7 @@ class Discovery:
                         self.importer = importer
                 elif isinstance(node, ast.ImportFrom):
                     module = node.module or ""
+                    self.from_import_names(node, path, offset, uses)
                     if not node.level and module in PROCESS_MODULES and any(item.name == "*" for item in node.names):
                         raise DeliveryError("unsupported star import of a process/import API")
                     importer, self.importer = self.importer, path
@@ -2737,8 +3165,7 @@ class Discovery:
                                         self.import_path(stem)
                                         for candidate in (stem + ".py", stem + "/__init__.py"):
                                             if candidate in self.items:
-                                                self.imported_sources.add(candidate)
-                                                self.importers.setdefault(candidate, set()).add(path)
+                                                self.import_edge(candidate, path)
                                                 self.add_module(candidate, cwd, action, roots)
                                 elif not module:
                                     # Only "from . import name" imports a module by that
@@ -2762,6 +3189,7 @@ class Discovery:
                     raise DeliveryError("unsupported Python environment mutation affecting resolution")
                 elif isinstance(node, ast.Call):
                     calls = names(ast.unparse(node.func))
+                    self.call_import_names(node, calls, path, offset, uses)
                     receiver = parents.get(node)
                     direct_namespace_call = (isinstance(receiver, ast.Attribute)
                                              and isinstance(parents.get(receiver), ast.Call)
@@ -2817,8 +3245,9 @@ class Discovery:
                             self.window = window
                         launch = False
             except (ValueError, RecursionError) as error:
-                self.error(path, getattr(node, "lineno", 1) + offset, "local-script discovery: " + clean(error),
-                           boundary=launch)
+                for message in getattr(error, "messages", [error]):
+                    self.error(path, getattr(node, "lineno", 1) + offset, "local-script discovery: " + clean(message),
+                               boundary=launch)
         for candidate_cwd in dict.fromkeys(cwds):
             self.include(literals, path, candidate_cwd, action, self.bases(path, action, bases))
             self.include_modules(modules, path, candidate_cwd, action, self.bases(path, action, bases))
@@ -3625,8 +4054,11 @@ class Discovery:
             for entry in nodes)
 
     @staticmethod
-    def forwarded_argv(expression, invocation, parents, nodes):
-        """Expand only direct immutable *args forwarding and finite literal tuple loops."""
+    def forwarded_argv(expression, invocation, parents, nodes, wrappers=None):
+        """Expand only direct immutable *args forwarding and finite literal tuple loops.
+
+        Each *args wrapper the expansion passes through is added to wrappers.
+        """
         if not Discovery.proof_namespace_safe(nodes):
             raise ValueError("unsafe forwarded namespace or proof limit")
         functions = {}
@@ -3699,6 +4131,8 @@ class Discovery:
                      and isinstance(entry.func, ast.Name) and entry.func.id == scope.name]
             if not calls or len(calls) > 128:
                 raise ValueError("unresolved forwarded wrapper callers")
+            if wrappers is not None:
+                wrappers.append(scope)
             result = []
             fixed = len(scope.args.posonlyargs) + len(scope.args.args)
             for caller in calls:
@@ -3782,7 +4216,13 @@ class Discovery:
                 result.extend(ast.keyword(arg="env", value=value) for value in branch.values)
         return result
 
-    def git_subprocess_argv(self, first, node, call, path, cwd, action, roots, parents, nodes):
+    def export_wrappers(self, wrappers, path, line, parents):
+        """Module-level wrappers are proved only at callers in their own source; importers must not reach them."""
+        for function in dict.fromkeys(wrappers):
+            if isinstance(parents.get(function), ast.Module):
+                self.exported_proofs.append((path, line, "forwarded wrapper", self.window == path, function.name))
+
+    def git_subprocess_argv(self, first, node, call, path, cwd, action, roots, parents, nodes, offset=0):
         """Return the finite argv forms of a literal subprocess Git operation."""
         if call in {"subprocess.getoutput", "subprocess.getstatusoutput"}:
             return ()
@@ -3801,13 +4241,14 @@ class Discovery:
             declaration = parents.get(bindings[0]) if len(bindings) == 1 else None
             standard_api = (isinstance(declaration, ast.ImportFrom) and declaration.module == "subprocess"
                             and declaration.level == 0 and isinstance(parents.get(declaration), ast.Module))
+        wrappers = []
         if sequence and not expanded:
             variants = [first.elts]
         else:
             if not standard_api:
                 return ()
             try:
-                variants = self.forwarded_argv(first, first, parents, nodes)
+                variants = self.forwarded_argv(first, first, parents, nodes, wrappers)
             except (ValueError, TypeError, SyntaxError):
                 return ()
         if not any(variant and isinstance(variant[0], ast.Constant) and variant[0].value == "git"
@@ -3820,6 +4261,7 @@ class Discovery:
             raise DeliveryError("unproved Git executable: tracked Git command")
         if not all(self.git_data_argv(variant) for variant in variants):
             raise DeliveryError("unsupported Git mode or unresolved Git options")
+        self.export_wrappers(wrappers, path, node.lineno + offset, parents)
         return variants
 
     def include_git_operands(self, variants, path, cwd, action, line):
@@ -3969,7 +4411,9 @@ class Discovery:
         """shutil.which('dotnet'), directly or through a once-bound local name, from the standard module."""
         if isinstance(expression, ast.Name) and isinstance(expression.ctx, ast.Load):
             scope, _, bindings = self.owning_scope(expression.id, expression, parents, nodes)
-            if scope is None or len(bindings) != 1 or not isinstance(bindings[0], ast.Name):
+            # An importer can rebind a module-scope name; only a function-local binding counts.
+            if (scope is None or isinstance(scope, ast.Module) or len(bindings) != 1
+                    or not isinstance(bindings[0], ast.Name)):
                 return False
             definition = parents.get(bindings[0])
             if not isinstance(definition, ast.Assign) or len(definition.targets) != 1 or definition.targets[0] is not bindings[0]:
@@ -4063,9 +4507,11 @@ class Discovery:
                 return "unproved .NET SDK selection: unsafe global.json: " + clean(item)
             try:
                 document = json.loads(self.blob(item).decode("utf-8-sig"), object_pairs_hook=unique_json_object)
+                # Nesting past the key-search limit is unreadable too.
+                paths = json_has_key(document, "paths")
             except (ValueError, UnicodeError, RecursionError):
                 return "unproved .NET SDK selection: unreadable global.json: " + clean(item)
-            if json_has_key(document, "paths"):
+            if paths:
                 return "unproved .NET SDK selection: global.json declares SDK search paths: " + clean(item)
         return None
 
@@ -4168,8 +4614,10 @@ class Discovery:
         such parameter or the wrapper is not a proved direct-call function.
         """
         function = self.scope_of(node, parents)
+        # Like a direct call, only argv may be positional: a later positional
+        # (such as Popen's executable) would never be examined.
         if (not isinstance(function, ast.FunctionDef) or call in {"subprocess.getoutput", "subprocess.getstatusoutput"}
-                or self.works_platform_context(path, cwd, action, offset)):
+                or len(node.args) != 1 or self.works_platform_context(path, cwd, action, offset)):
             return False
         parameters = {item.arg: item for item in (*function.args.posonlyargs, *function.args.args,
                                                   *function.args.kwonlyargs)}
@@ -4217,57 +4665,79 @@ class Discovery:
                             function.args.defaults))
         defaults.update({item.arg: value for item, value in zip(function.args.kwonlyargs, function.args.kw_defaults)
                          if value is not None})
+        failures = []
         for caller in callers:
-            if (any(isinstance(item, ast.Starred) for item in caller.args)
-                    or any(keyword.arg is None for keyword in caller.keywords)):
-                raise DeliveryError("unresolved forwarded wrapper options at line " + str(caller.lineno + offset))
-
-            def argument(name):
-                parameter = parameters[name]
-                index = next((index for index, item in enumerate(positional) if item is parameter), None)
-                if index is not None and index < len(caller.args):
-                    return caller.args[index]
-                if not any(item is parameter for item in function.args.posonlyargs):
-                    matches = [keyword.value for keyword in caller.keywords if keyword.arg == name]
-                    if matches:
-                        return matches[0]
-                default = defaults.get(name)
-                if isinstance(default, ast.Constant):
-                    return default
-                raise DeliveryError("unresolved forwarded wrapper argument at line " + str(caller.lineno + offset))
-            substitutes = {role: argument(name) for role, name in slots.items()}
-            if "argv" in substitutes and first is not argv and isinstance(substitutes["argv"], ast.Constant):
-                # list(...), tuple(...) and [*...] would split a string into one-character words.
-                raise DeliveryError("unresolved forwarded wrapper argv at line " + str(caller.lineno + offset))
-            keywords = [ast.keyword(arg=keyword.arg, value=substitutes[keyword.arg]) if keyword.arg in substitutes
-                        else keyword for keyword in node.keywords]
-            synthetic = ast.Call(func=node.func, args=[substitutes.get("argv", first)], keywords=keywords)
-            ast.copy_location(synthetic, caller)
-            self.forward_budget += 1
-            if self.forward_budget > MAX_FORWARDED_VARIANTS:
-                raise DeliveryError("forwarded wrapper expansion limit exceeded")
-            parents[synthetic] = caller
-            self.forward_stack += (function.name,)
             try:
-                self.python_call(call, synthetic, path, cwd, action, roots, offset, names, parents, nodes)
+                self.forward_caller(call, node, function, caller, first, argv, slots, parameters, positional, defaults,
+                                    path, cwd, action, roots, offset, names, parents, nodes)
+            except ForwardedWrapperErrors as error:
+                failures.extend(error.messages)
             except DeliveryError as error:
-                raise DeliveryError(f"forwarded wrapper call at line {caller.lineno + offset}: {clean(error)}") from None
-            finally:
-                self.forward_stack = self.forward_stack[:-1]
-                del parents[synthetic]
-            directory = substitutes.get("cwd")
-            if "argv" in substitutes and isinstance(directory, ast.Constant) and isinstance(directory.value, str):
-                # Rule 1 also applies under the caller's literal working directory.
-                try:
-                    resolved = self.resolve(directory.value, path=path, cwd=cwd, action=action, allow_root=True)
-                except DeliveryError:
-                    continue
-                literals = [(entry.lineno + offset, entry.value) for entry in ast.walk(substitutes["argv"])
-                            if isinstance(entry, ast.Constant) and isinstance(entry.value, str)]
-                self.include(literals, path, resolved, action, self.bases(path, action, [cwd, resolved]))
+                failures.append(clean(error))
+                if self.forward_budget > MAX_FORWARDED_VARIANTS:
+                    break
+        if failures:
+            # One diagnostic per failing caller, each naming that caller's line.
+            raise ForwardedWrapperErrors(failures)
         if isinstance(parents.get(function), ast.Module):
-            self.exported_proofs.append((path, node.lineno + offset, "forwarded wrapper", self.window == path))
+            self.exported_proofs.append((path, node.lineno + offset, "forwarded wrapper", self.window == path,
+                                         function.name))
         return True
+
+    def forward_caller(self, call, node, function, caller, first, argv, slots, parameters, positional, defaults,
+                       path, cwd, action, roots, offset, names, parents, nodes):
+        """Prove one direct call site of a forwarding wrapper as the same subprocess call."""
+        if (any(isinstance(item, ast.Starred) for item in caller.args)
+                or any(keyword.arg is None for keyword in caller.keywords)):
+            raise DeliveryError("unresolved forwarded wrapper options at line " + str(caller.lineno + offset))
+
+        def argument(name):
+            parameter = parameters[name]
+            index = next((index for index, item in enumerate(positional) if item is parameter), None)
+            if index is not None and index < len(caller.args):
+                return caller.args[index]
+            if not any(item is parameter for item in function.args.posonlyargs):
+                matches = [keyword.value for keyword in caller.keywords if keyword.arg == name]
+                if matches:
+                    return matches[0]
+            default = defaults.get(name)
+            if isinstance(default, ast.Constant):
+                return default
+            raise DeliveryError("unresolved forwarded wrapper argument at line " + str(caller.lineno + offset))
+        substitutes = {role: argument(name) for role, name in slots.items()}
+        if "argv" in substitutes and first is not argv and isinstance(substitutes["argv"], ast.Constant):
+            # list(...), tuple(...) and [*...] would split a string into one-character words.
+            raise DeliveryError("unresolved forwarded wrapper argv at line " + str(caller.lineno + offset))
+        keywords = [ast.keyword(arg=keyword.arg, value=substitutes[keyword.arg]) if keyword.arg in substitutes
+                    else keyword for keyword in node.keywords]
+        synthetic = ast.Call(func=node.func, args=[substitutes.get("argv", first)], keywords=keywords)
+        ast.copy_location(synthetic, caller)
+        self.forward_budget += 1
+        if self.forward_budget > MAX_FORWARDED_VARIANTS:
+            raise DeliveryError("forwarded wrapper expansion limit exceeded")
+        parents[synthetic] = caller
+        self.forward_stack += (function.name,)
+        prefix = f"forwarded wrapper call at line {caller.lineno + offset}: "
+        try:
+            self.python_call(call, synthetic, path, cwd, action, roots, offset, names, parents, nodes)
+        except ForwardedWrapperErrors as error:
+            # A wrapper this caller forwards through failed at several of its own callers.
+            raise ForwardedWrapperErrors([prefix + message for message in error.messages]) from None
+        except DeliveryError as error:
+            raise DeliveryError(prefix + clean(error)) from None
+        finally:
+            self.forward_stack = self.forward_stack[:-1]
+            del parents[synthetic]
+        directory = substitutes.get("cwd")
+        if "argv" in substitutes and isinstance(directory, ast.Constant) and isinstance(directory.value, str):
+            # Rule 1 also applies under the caller's literal working directory.
+            try:
+                resolved = self.resolve(directory.value, path=path, cwd=cwd, action=action, allow_root=True)
+            except DeliveryError:
+                return
+            literals = [(entry.lineno + offset, entry.value) for entry in ast.walk(substitutes["argv"])
+                        if isinstance(entry, ast.Constant) and isinstance(entry.value, str)]
+            self.include(literals, path, resolved, action, self.bases(path, action, [cwd, resolved]))
 
     def direct_python_call(self, call, node, path, cwd, action, roots, offset, names, parents, nodes):
         if self.works_platform_context(path, cwd, action, offset):
@@ -4275,18 +4745,29 @@ class Discovery:
             target = self.works_platform_targets.get(callsite)
             if target is not None:
                 source, language = target
+                if call in UNSUPPORTED_CALLS:
+                    # The reviewed loader imports this exact source.
+                    self.import_edge(source, path)
+                    self.opaque_record(path, target=source)
                 self.add(source, language, cwd, action)
                 return
             if callsite in WORKS_PLATFORM_GIT_CALLS:
                 return
         if call.startswith(UNSUPPORTED_PREFIXES) or call in UNSUPPORTED_CALLS:
+            if call in UNSUPPORTED_CALLS:
+                # A file loader or executed source text can import any module.
+                self.unresolved_import(path, node.lineno + offset)
             raise DeliveryError("unsupported Python process/import API: " + clean(call))
         if call in {"importlib.import_module", "__import__"}:
             if not node.args or not isinstance(node.args[0], ast.Constant):
                 raise DeliveryError("unresolved computed Python import")
             self.import_module(node.args[0].value, path, cwd, action, roots=roots)
         if call in COMMAND_APIS:
+            # runpy returns the executed module's globals unless the call's value is discarded.
+            namespace = call.startswith("runpy.") and not isinstance(parents.get(node), ast.Expr)
             if not node.args:
+                if namespace:
+                    self.unresolved_import(path, node.lineno + offset)
                 raise DeliveryError("unresolved Python script invocation")
             first = node.args[0]
             git_argv = ()
@@ -4294,7 +4775,7 @@ class Discovery:
             if call.startswith("subprocess."):
                 if len(node.args) > 1:
                     raise DeliveryError("unresolved subprocess positional/options expansion")
-                git_argv = self.git_subprocess_argv(first, node, call, path, cwd, action, roots, parents, nodes)
+                git_argv = self.git_subprocess_argv(first, node, call, path, cwd, action, roots, parents, nodes, offset)
                 dotnet = None if git_argv else self.fixed_dotnet_argv(first, call, path, cwd, action, roots,
                                                                       names, parents, nodes)
                 # dotnet with an application .dll; a computed cwd stays unresolved.
@@ -4355,7 +4836,7 @@ class Discovery:
                     elif keyword.arg == "shell" and option not in (None, False, True):
                         raise DeliveryError("unresolved subprocess shell option")
                 if exports:
-                    self.exported_proofs.append((path, node.lineno + offset, exports[0], self.window == path))
+                    self.exported_proofs.append((path, node.lineno + offset, exports[0], self.window == path, None))
                 if assembly is not None:
                     self.fixed_dotnet_operation(node, path, cwd, action, roots, parents, nodes, directory=False,
                                                 environment=literal_env, line=node.lineno + offset, assembly=True)
@@ -4411,7 +4892,8 @@ class Discovery:
                     if any(keyword.arg == "shell" and not (isinstance(keyword.value, ast.Constant)
                             and keyword.value.value in (None, False)) for keyword in node.keywords):
                         raise ValueError("unsupported forwarded shell option")
-                    variants = self.forwarded_argv(first, first, parents, nodes)
+                    wrappers = []
+                    variants = self.forwarded_argv(first, first, parents, nodes, wrappers)
                     for variant in variants:
                         if variant and isinstance(variant[0], ast.Constant) and variant[0].value == "git":
                             raise ValueError("unsupported forwarded Git mode or operands")
@@ -4419,6 +4901,7 @@ class Discovery:
                         if not command or not all(isinstance(item, str) for item in command):
                             raise ValueError("unresolved forwarded executable or argument")
                         self.commands(path, shlex.join(command), target_cwd, action, offset=node.lineno - 1 + offset)
+                    self.export_wrappers(wrappers, path, node.lineno + offset, parents)
                     return
                 except (ValueError, TypeError, SyntaxError):
                     raise DeliveryError("unresolved computed Python script invocation; unsafe or unresolved forwarding") from None
@@ -4483,13 +4966,24 @@ class Discovery:
                     else:
                         raise ValueError("unsupported computed invocation")
                 except (ValueError, TypeError, SyntaxError):
+                    if call.startswith("runpy.") and namespace:
+                        self.unresolved_import(path, node.lineno + offset)
                     raise DeliveryError("unresolved computed Python script invocation") from None
             if call == "runpy.run_module":
+                if namespace:
+                    if isinstance(value, str) and MODULE.fullmatch(value):
+                        self.import_name(path, value)
+                        self.opaque_record(path, refers=tuple(value.casefold().split(".")))
+                    else:
+                        self.unresolved_import(path, node.lineno + offset)
                 self.import_module(value, path, cwd, action, roots=roots, required=True, execute=True)
             elif call == "runpy.run_path":
                 bases = self.bases(path, action, [cwd, *roots])
                 for resolved in self.targets(value, path=path, cwd=cwd, action=action, bases=bases):
                     self.language(resolved, "python")
+                    if namespace:
+                        self.import_edge(resolved, path)
+                        self.opaque_record(path, target=resolved)
                     self.add(resolved, "python", cwd, action, python_roots=roots)
             elif isinstance(value, str):
                 self.commands(path, value, target_cwd, action, offset=node.lineno - 1 + offset)
@@ -4541,20 +5035,39 @@ class Discovery:
                     self.commands(path, item["text"], cwd, action, powershell=item["format"] == "powershell", sourced=sourced)
             except (ValueError, UnicodeError, RecursionError) as error:
                 self.error(path, 1, "discovery failed: " + clean(error))
-        sources, observations = self.test_sources(), set()
+                if self.files.get(path, {}).get("format") == "python":
+                    self.unresolved_import(path, 1)
+        # Who can import each selected source, by name under any search path.
+        importers, unresolved = self.import_index(), set(self.unresolved_imports)
+        sources, observations = self.test_sources(importers), set()
         # A test source whose literal text names a workflow command file keeps
         # its boundary sites errors: a child it starts could write that file.
         boundary = sources - self.workflow_text
         # These proofs only see their own source: another discovered source
-        # that imports it could call the wrapper or change the object. Calls
-        # from test sources are their test boundary sites, so imports by those
-        # sources alone are observations; any other importer keeps the error.
-        for path, line, proof, site in self.exported_proofs:
-            if path not in self.imported_sources:
+        # that imports it could call the wrapper or change the object. A
+        # module-level wrapper fails only for importers that can reach its
+        # name; a copy fails for any importer. Calls from test sources are
+        # their test boundary sites, so imports by those sources alone are
+        # observations; any other importer, including one whose import names
+        # no module, keeps the error.
+        reached = {}
+        for path, line, proof, site, name in self.exported_proofs:
+            if name is None:
+                found = importers.get(path, set()) | unresolved
+                message = f"local-script discovery: unresolved {proof}: its source is imported by other code"
+            else:
+                if (path, name) not in reached:
+                    reached[path, name] = self.name_reachers(path, name, importers)
+                found = reached[path, name] | unresolved
+                message = f"local-script discovery: unresolved {proof}: other code can reach {name}"
+            if not found:
                 continue
-            message = f"local-script discovery: unresolved {proof}: its source is imported by other code"
-            if self.importers.get(path) and self.importers[path] <= boundary and (path not in sources or path in boundary):
+            if found <= boundary and (path not in sources or path in boundary):
                 observations.add((clean(path), line, clean(message)))
+            elif path in boundary:
+                # The source keeps its boundary, but an importer that names a
+                # workflow command file does not: the proof stays an error.
+                self.errors.append(f"{clean(path)}:{line}: {clean(message)}")
             else:
                 self.error(path, line, message, boundary=site)
         # Pinned sources acquired later can add a host, SDK selection or command.
@@ -4577,22 +5090,25 @@ class Discovery:
                                  item[0], item[1] if isinstance(item[1], int) else -1, str(item[1]), item[2]))]
         return self.files, sorted(set(self.errors))
 
-    def test_sources(self):
+    def test_sources(self, importers):
         """Selected test modules that only unittest selection and other such modules reach.
 
         Any other path, such as an action, a launch, a literal reference or an
-        import from other code, keeps full rules. A global coverage limit keeps
-        them everywhere.
+        import from other code, keeps full rules. Imports count by name under
+        any search path, and an import that names no module can reach every
+        source. A global coverage limit keeps them everywhere.
         """
         if self.exhausted:
             return set()
         sources = {path for path, origins in self.origins.items() if ("test",) in origins}
+        unresolved = set(self.unresolved_imports)
         changed = True
         while changed:
             changed = False
             for path in sorted(sources):
-                if any(origin != ("test",) and not (origin[0] == "import" and origin[1] in sources)
-                       for origin in self.origins[path]):
+                if (any(origin != ("test",) and not (origin[0] == "import" and origin[1] in sources)
+                        for origin in self.origins[path])
+                        or not (importers.get(path, set()) | unresolved) <= sources):
                     sources.discard(path)
                     changed = True
         return sources

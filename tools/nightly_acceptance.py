@@ -10,10 +10,12 @@ The run must be a completed ``nightly.yml`` run on ``main``, scheduled or
 dispatched, whose ``dispatch`` job ran (so ``qualify-bump`` was false). Each
 selected module's verdict comes from its own rows only: its nightly row and
 release run, its release CodeQL jobs, its scan row and, after a pushed Builds
-bump, its delivery-wait row. Other targets, Builds and the night's aggregate
-are reported and never change it. ``--checkpoint pilot`` also requires the bump
-to report no change, or a pushed candidate with a green delivery-wait, and
-keepalive to pass.
+bump, its delivery-wait row. A failed scan row passes only when each of its
+errors is a reviewed coverage gap recorded for the module in CiCd's committed
+tools/scan-coverage-gaps.json at the scan's controller revision. Other targets,
+Builds and the night's aggregate are reported and never change it.
+``--checkpoint pilot`` also requires the bump to report no change, or a pushed
+candidate with a green delivery-wait, and keepalive to pass.
 
 Exit 0 when every selected module (and the checkpoint) passes, 1 when any
 fails, and 2 for a rejected run, a usage error or a transport error.
@@ -56,6 +58,8 @@ DELIVERY_SCHEMA = "hexalith.nightly-delivery-wait.v1"
 KEEPALIVE_SCHEMA = "hexalith.nightly-keepalive.v1"
 REPORT_SCHEMA = "hexalith.nightly-acceptance.v1"
 RECEIPT_SCHEMA = "hexalith.nightly-acceptance-receipt.v1"
+GAPS_SCHEMA = "hexalith.scan-coverage-gaps.v1"
+GAPS_PATH = "tools/scan-coverage-gaps.json"
 
 # Mirrored from tools/nightly_runtime.py (DIGEST, ROW_KEYS, STATE_KEYS and the
 # allowed row values), not imported: this tool runs under ``python3 -I``.
@@ -82,6 +86,17 @@ ENDPOINT = re.compile(r"repos/Hexalith/[A-Za-z0-9_.-]{1,100}/[A-Za-z0-9_./%=&?:+
 STAMP = re.compile(r"[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\.[0-9]{1,6})?Z\Z")
 LANGUAGE = re.compile(r"[a-z][a-z-]{0,31}\Z")
 CODEQL_JOB = re.compile(r"(?:.+ / )?Release CodeQL \((.+)\)\Z")
+# Reviewed coverage gaps: the record's entry fields, tools/scan.py's per-error
+# source details, and the embedded line numbers that never identify a gap.
+GAP_KEYS = ("module", "path", "diagnostic", "line_sha256", "caller_sha256", "occurrences", "decision")
+DECISION_KEYS = frozenset(("story", "date"))
+ERROR_SOURCE_KEYS = frozenset(("path", "line", "span", "diagnostic", "lineSha256", "callers"))
+CALLER_KEYS = frozenset(("line", "span", "sha256"))
+EMBEDDED_LINE = re.compile(r"\bline ([0-9]+)\b")
+STORY = re.compile(r"[0-9a-z]{1,16}(?:-[0-9a-z]{1,16}){0,3}\Z")
+DATE = re.compile(r"[0-9]{4}-[0-9]{2}-[0-9]{2}\Z")
+MAX_GAPS = 1000
+MAX_DIAGNOSTIC = 2000
 MAX_ZIP = 8 * 1024 * 1024
 MAX_JSON = 2 * 1024 * 1024
 MAX_RESPONSE = 16 * 1024 * 1024
@@ -629,25 +644,31 @@ def publication_proof(github, name, row, run, clock):
             "outcomeArtifact": {key: metadata[key] for key in ("name", "id", "digest")}}
 
 
+def committed_file(github, path, ref, label):
+    """A CiCd file's bytes and blob id at ``ref``, bound to its contents response; NotFound passes through."""
+    value = github.json(f"repos/{OWNER}/{CICD}/contents/{quote(path)}?ref={ref}")
+    if (not isinstance(value, dict) or value.get("type") != "file" or value.get("path") != path
+            or value.get("encoding") != "base64" or not isinstance(value.get("content"), str)):
+        raise Unproven(label + " contents response is malformed")
+    try:
+        data = base64.b64decode("".join(value["content"].split()), validate=True)
+    except ValueError:
+        raise Unproven(label + " content is not base64") from None
+    blob = hashlib.sha1(b"blob %d\0" % len(data) + data).hexdigest()
+    if not same(value.get("size"), len(data)) or value.get("sha") != blob:
+        raise Unproven(label + " size or blob id does not match its content")
+    return data, blob
+
+
 def codeql_languages(github, name, delivered):
     """The codeql list of the hexalith-ci.json rendered at the delivered CiCd commit."""
     if not delivered:
         raise Unproven("no delivered CiCd revision to read its CodeQL languages from")
     path = f"rendered/{name}/.github/hexalith-ci.json"
     try:
-        value = github.json(f"repos/{OWNER}/{CICD}/contents/{quote(path)}?ref={delivered}")
+        data, _ = committed_file(github, path, delivered, "rendered hexalith-ci.json")
     except NotFound:
         raise Unproven("rendered hexalith-ci.json is not found at the delivered revision") from None
-    if (not isinstance(value, dict) or value.get("type") != "file" or value.get("path") != path
-            or value.get("encoding") != "base64" or not isinstance(value.get("content"), str)):
-        raise Unproven("rendered hexalith-ci.json contents response is malformed")
-    try:
-        data = base64.b64decode("".join(value["content"].split()), validate=True)
-    except ValueError:
-        raise Unproven("rendered hexalith-ci.json content is not base64") from None
-    blob = hashlib.sha1(b"blob %d\0" % len(data) + data).hexdigest()
-    if not same(value.get("size"), len(data)) or value.get("sha") != blob:
-        raise Unproven("rendered hexalith-ci.json size or blob id does not match its content")
     try:
         config = parse_json(data)
     except ValueError as error:
@@ -693,25 +714,171 @@ def scan_report_problems(report, producer):
     return []
 
 
-def scan_row_problems(report, name, head):
+def normalized_diagnostic(text):
+    """Embedded line numbers never identify a gap: a moved line keeps its unchanged text."""
+    return EMBEDDED_LINE.sub("line N", text)
+
+
+def printable(text):
+    """No C0/C1 control character or lone surrogate, as tools/scan.py's diagnostics guarantee."""
+    return all(32 <= ord(char) < 127 or (159 < ord(char) and not 0xD800 <= ord(char) <= 0xDFFF) for char in text)
+
+
+def gap_path(value):
+    return (isinstance(value, str) and 0 < len(value) <= 1000 and not value.startswith("/") and printable(value)
+            and not any(char in value for char in "\\:")
+            and all(part not in ("", ".", "..") for part in value.split("/")))
+
+
+def decision_reference(value):
+    """A story key whose spec change log records the human decision, and that entry's date."""
+    if (not isinstance(value, dict) or set(value) != DECISION_KEYS or not isinstance(value["story"], str)
+            or not STORY.fullmatch(value["story"])
+            or not isinstance(value["date"], str) or not DATE.fullmatch(value["date"])):
+        return False
+    try:
+        datetime.strptime(value["date"], "%Y-%m-%d")
+    except ValueError:
+        return False
+    return True
+
+
+def coverage_gaps(value):
+    """The strict reviewed-gap record by module, then (path, diagnostic, digests); raise ValueError.
+
+    Each entry names a module, a safe relative path, the diagnostic with
+    embedded line numbers written ``line N``, the SHA-256 of the reported
+    statement and of each caller statement it names, at most how many such
+    errors it covers and the human decision. Registration is checked where a
+    registry is known: by the scan row of the judged module and by
+    tools/check_global.py against setup/.
+    """
+    if not isinstance(value, dict) or set(value) != {"schema", "gaps"} or value["schema"] != GAPS_SCHEMA:
+        raise ValueError("record is not exactly a " + GAPS_SCHEMA + " schema and gaps")
+    if not isinstance(value["gaps"], list) or len(value["gaps"]) > MAX_GAPS:
+        raise ValueError(f"gaps is not a list of at most {MAX_GAPS} entries")
+    recorded = {}
+    for index, gap in enumerate(value["gaps"]):
+        label = f"gap {index}"
+        if not isinstance(gap, dict) or set(gap) != set(GAP_KEYS):
+            raise ValueError(label + " fields are not " + ", ".join(GAP_KEYS))
+        module, path, diagnostic, digest, callers, occurrences, decision = (gap[key] for key in GAP_KEYS)
+        if (not isinstance(module, str) or not REPOSITORY.fullmatch(module)
+                or module.casefold() == BUILDS.casefold()):
+            raise ValueError(f"{label} module {clean(module, 100)} is not a module repository name")
+        if not gap_path(path):
+            raise ValueError(label + " path is not a safe relative module path")
+        if (not isinstance(diagnostic, str) or not 0 < len(diagnostic) <= MAX_DIAGNOSTIC or not printable(diagnostic)
+                or normalized_diagnostic(diagnostic) != diagnostic):
+            raise ValueError(label + " diagnostic is not canonical: embedded line numbers read 'line N'")
+        if not isinstance(digest, str) or not SHA256.fullmatch(digest):
+            raise ValueError(label + " line_sha256 is not a lowercase SHA-256 digest")
+        if (not isinstance(callers, list) or len(callers) != len(re.findall(r"\bline N\b", diagnostic))
+                or not all(isinstance(item, str) and SHA256.fullmatch(item) for item in callers)):
+            raise ValueError(label + " caller_sha256 needs one SHA-256 digest per 'line N' in the diagnostic")
+        if type(occurrences) is not int or not 1 <= occurrences <= MAX_GAPS:
+            raise ValueError(label + " occurrences is not a positive count")
+        if not decision_reference(decision):
+            raise ValueError(label + " decision does not name a story key and the ISO date of its decision")
+        gaps = recorded.setdefault(module, {})
+        if (path, diagnostic, digest, tuple(callers)) in gaps:
+            raise ValueError(label + " duplicates an earlier gap; count repeats with occurrences")
+        gaps[path, diagnostic, digest, tuple(callers)] = {"occurrences": occurrences, "decision": dict(decision)}
+    return recorded
+
+
+def holds(span, line):
+    """A [first, last] statement span that holds the reported or caller line."""
+    return (isinstance(span, list) and len(span) == 2 and all(type(item) is int for item in (*span, line))
+            and 1 <= span[0] <= line <= span[1])
+
+
+def located_error(error, source):
+    """One scan error's (path, line, diagnostic, digest, caller digests) from tools/scan.py, or why not.
+
+    The report must name each caller line of the diagnostic, in order, and
+    carry a digest for the reported statement and for every caller statement.
+    """
+    if (not isinstance(error, str) or not isinstance(source, dict) or set(source) != ERROR_SOURCE_KEYS
+            or not isinstance(source["path"], str) or type(source["line"]) is not int or source["line"] < 1
+            or not isinstance(source["diagnostic"], str)
+            or error != f"{source['path']}:{source['line']}: {source['diagnostic']}"
+            or not isinstance(source["callers"], list)
+            or not all(isinstance(caller, dict) and set(caller) == CALLER_KEYS for caller in source["callers"])
+            or [caller["line"] for caller in source["callers"]]
+            != [int(number) for number in EMBEDDED_LINE.findall(source["diagnostic"])]):
+        return None, "names no located discovery source"
+    sites = [(source["span"], source["line"], source["lineSha256"]),
+             *((caller["span"], caller["line"], caller["sha256"]) for caller in source["callers"])]
+    if any(not isinstance(digest, str) or not SHA256.fullmatch(digest) or not holds(span, line)
+           for span, line, digest in sites):
+        return None, "has no source statement digest"
+    return (source["path"], source["line"], source["diagnostic"], source["lineSha256"],
+            tuple(caller["sha256"] for caller in source["callers"])), None
+
+
+def match_gaps(row, recorded):
+    """(accepted, unused) when every row error uses one recorded occurrence, else (None, reason).
+
+    ``occurrences`` is a ceiling: the unused entries and occurrences are reported.
+    """
+    errors, sources = row["errors"], row.get("errorSources")
+    if not isinstance(sources, list) or len(sources) != len(errors):
+        return None, "scan row has no per-error source details"
+    remaining = {key: gap["occurrences"] for key, gap in recorded.items()}
+    accepted = []
+    for error, source in zip(errors, sources):
+        located, refusal = located_error(error, source)
+        if refusal:
+            return None, f"scan error {refusal}: " + clean(error, 120)
+        path, line, diagnostic, digest, callers = located
+        key = (path, normalized_diagnostic(diagnostic), digest, callers)
+        if remaining.get(key, 0) < 1:
+            return None, "scan error is not a recorded coverage gap: " + clean(error, 120)
+        remaining[key] -= 1
+        accepted.append({"path": path, "line": line, "diagnostic": diagnostic, "lineSha256": digest,
+                         "callerSha256": list(callers), "decision": recorded[key]["decision"]})
+    unused = [{"path": path, "diagnostic": diagnostic, "line_sha256": digest, "caller_sha256": list(callers),
+               "unused": count} for (path, diagnostic, digest, callers), count in remaining.items() if count]
+    return accepted, unused
+
+
+def involving(findings, name):
+    """Findings with an endpoint in the module; a malformed finding involves every module."""
+    return [item for item in findings if not isinstance(item, dict) or name in (
+        endpoint.get("module") if isinstance(endpoint, dict) else name
+        for endpoint in (item.get("first"), item.get("second")))]
+
+
+def scan_row_problems(report, name, head, reviewed=None):
+    """The module's scan problems, and its accepted gaps when ``reviewed`` accepts every own error.
+
+    Only a failed row with errors, at the dispatched head, in a report without
+    run-level errors or findings involving the module, consults ``reviewed``.
+    """
     rows = [row for row in report["modules"] if row["module"] == name]
     if len(rows) != 1:
-        return ["scan report has " + ("no row" if not rows else "duplicate rows") + " for the module"]
+        return ["scan report has " + ("no row" if not rows else "duplicate rows") + " for the module"], None
     row, problems = rows[0], []
     if row.get("revision") != head:
         problems.append(f"scan row revision {clean(row.get('revision'), 40)} is not the dispatched head {head}")
     errors = row.get("errors")
+    involved = involving(report["findings"], name)
+    accepted = note = None
     if row.get("result") != "pass" or not isinstance(errors, list) or errors:
-        first = errors[0] if isinstance(errors, list) and errors else row.get("result")
-        problems.append("own scan row failed: " + clean(first, 150))
+        if (reviewed is not None and not problems and not report["errors"] and not involved
+                and row.get("result") == "fail" and isinstance(errors, list) and errors):
+            accepted, note = reviewed(row)
+        if accepted is None:
+            first = errors[0] if isinstance(errors, list) and errors else row.get("result")
+            problems.append("own scan row failed: " + clean(first, 150))
+            if note:
+                problems.append(note)
     if report["errors"]:
         problems.append("scan report has run-level errors: " + clean(report["errors"][0], 150))
-    involved = [item for item in report["findings"] if not isinstance(item, dict) or name in (
-        endpoint.get("module") if isinstance(endpoint, dict) else name
-        for endpoint in (item.get("first"), item.get("second")))]
     if involved:
         problems.append(f"{len(involved)} cross-module duplicate findings involve the module")
-    return problems
+    return problems, accepted
 
 
 class ScanSource:
@@ -720,7 +887,7 @@ class ScanSource:
     def __init__(self, github, run, jobs, artifacts, clock):
         self.github, self.run, self.artifacts, self.clock = github, run, artifacts, clock
         self.in_run = "scan" in jobs
-        self.runs, self.reports = None, {}
+        self.runs, self.reports, self.records = None, {}, {}
 
     def problems(self, name, head):
         if not head:
@@ -731,8 +898,9 @@ class ScanSource:
                 return [str(report)], None
             if report is None:
                 return ["the attempt's scan artifact is missing"], None
-            problems = scan_report_problems(report, self.run) or scan_row_problems(report, name, head)
-            return problems, {"source": "scan job", "runId": self.run["id"]}
+            detail = {"source": "scan job", "runId": self.run["id"]}
+            problems = scan_report_problems(report, self.run) or self.row_problems(report, name, head, detail)
+            return problems, detail
         skipped = []
         try:
             for producer in self.scan_runs():
@@ -749,13 +917,60 @@ class ScanSource:
                     skipped.append(f"scan.yml run {producer['id']}: " + problems[0])
                     continue
                 if any(row["module"] == name and row.get("revision") == head for row in report["modules"]):
-                    return scan_row_problems(report, name, head), {"source": "scan.yml", "runId": producer["id"]}
+                    detail = {"source": "scan.yml", "runId": producer["id"]}
+                    return self.row_problems(report, name, head, detail), detail
         except Unproven as error:
             return ["scan.yml " + str(error)], None
         notes = ["skipped " + note for note in skipped[:3]]
         if len(skipped) > 3:
             notes.append(f"skipped {len(skipped) - 3} more unreadable scan.yml runs")
         return ["no completed scan.yml run on main after the nightly covers the dispatched head", *notes], None
+
+    def row_problems(self, report, name, head, detail):
+        problems, accepted = scan_row_problems(report, name, head, lambda row: self.reviewed(report, name, row))
+        if accepted is not None:
+            detail["reviewedGaps"] = accepted
+        # Test boundary observations never fail a row, but they are coverage loss.
+        rows = [row for row in report["modules"] if row["module"] == name]
+        observations = rows[0].get("observations") if len(rows) == 1 else None
+        if isinstance(observations, list) and observations:
+            detail["observations"] = len(observations)
+        return problems
+
+    def record(self, revision):
+        """CiCd's committed gap record at ``revision``: (document, blob), None when absent, or Unproven; read once."""
+        if revision not in self.records:
+            try:
+                data, blob = committed_file(self.github, GAPS_PATH, revision, "reviewed coverage gaps")
+                self.records[revision] = (parse_json(data), blob)
+            except NotFound:
+                self.records[revision] = None
+            except Unproven as error:
+                self.records[revision] = error
+            except ValueError as error:
+                self.records[revision] = Unproven("reviewed coverage gaps: " + str(error))
+        return self.records[revision]
+
+    def reviewed(self, report, name, row):
+        """(accepted gaps, None) when every own error is a gap recorded at the report's controller revision."""
+        revision = report["controllerRevision"]
+        record = self.record(revision)
+        if record is None:
+            return None, None
+        if isinstance(record, Unproven):
+            return None, "reviewed coverage gaps are unusable: " + str(record)
+        document, blob = record
+        try:
+            recorded = coverage_gaps(document)
+        except ValueError as error:
+            return None, "reviewed coverage gaps are unusable: " + str(error)
+        # The judged module has this row, so its own entries are registered in the scan.
+        if name not in recorded:
+            return None, None
+        accepted, unused = match_gaps(row, recorded[name])
+        if accepted is None:
+            return None, unused
+        return {"revision": revision, "blob": blob, "accepted": accepted, "unused": unused}, None
 
     def scan_runs(self):
         if self.runs is None:
@@ -995,6 +1210,14 @@ def receipt(report):
         proof = item.get("release", {}).get("publicationProof")
         if proof is not None:
             value["modules"][name]["publicationProof"] = proof
+        scan = item.get("scan") or {}
+        if "observations" in scan:
+            value["modules"][name]["scanObservations"] = scan["observations"]
+        gaps = scan.get("reviewedGaps")
+        if gaps is not None:
+            value["modules"][name]["reviewedGaps"] = {
+                "revision": gaps["revision"], "blob": gaps["blob"], "accepted": len(gaps["accepted"]),
+                "unused": sum(entry["unused"] for entry in gaps["unused"])}
     data = (json.dumps(value, indent=2, sort_keys=True, ensure_ascii=True) + "\n").encode()
     if len(data) > MAX_RECEIPT:
         raise ReceiptTooLarge(f"receipt would be {len(data)} bytes, over the 16 KiB limit")

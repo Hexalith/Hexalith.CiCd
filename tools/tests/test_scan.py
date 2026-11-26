@@ -863,12 +863,17 @@ class TestBoundaryTests(unittest.TestCase):
     def test_wrapper_proofs_imported_only_by_tests_stay_observations(self):
         files = {"tests/test_wrapper.py": "import subprocess\ndef launch(argv):\n    subprocess.run(argv)\n"
                                           "launch(['tool', '--check'])\n",
-                 "tests/test_user.py": "import test_wrapper\n", "tools/check.py": "from tests import test_wrapper\n"}
-        message = "tests/test_wrapper.py:3: local-script discovery: unresolved forwarded wrapper: its source is imported by other code"
+                 "tests/test_user.py": "import test_wrapper\ntest_wrapper.launch(['tool'])\n",
+                 "tools/check.py": "from tests import test_wrapper\ntest_wrapper.launch(['tool'])\n"}
+        message = "tests/test_wrapper.py:3: local-script discovery: unresolved forwarded wrapper: other code can reach launch"
         _, errors, observations = discover_boundary([self.DISCOVER], files)
         self.assertEqual((errors, observations), ([], [message]))
         _, errors, observations = discover_boundary([self.DISCOVER, ("bash", "python tools/check.py", "")], files)
         self.assertEqual((errors, observations), ([message], []))
+        # Importers that never reach the wrapper's name leave its proof intact.
+        unused = {**files, "tests/test_user.py": "import test_wrapper\n", "tools/check.py": "from tests import test_wrapper\n"}
+        _, errors, observations = discover_boundary([self.DISCOVER, ("bash", "python tools/check.py", "")], unused)
+        self.assertEqual((errors, observations), ([], []))
 
     def test_boundary_site_in_a_file_reached_both_ways_stays_an_error(self):
         files = {"tests/test_both.py": self.UNRESOLVED, "tests/test_peer.py": "import test_both\n" + self.UNRESOLVED,
@@ -910,24 +915,26 @@ class TestBoundaryTests(unittest.TestCase):
                "ENVIRONMENT['MODE'] = 'x'\n"
                "launch(['python3', 'tools/leaf.py'])\n"
                "subprocess.run(['python3', 'tools/leaf.py'], env=ENVIRONMENT)\n")
-    PROOFS = ["tools/run.py:3: local-script discovery: unresolved forwarded wrapper: its source is imported by other code",
+    PROOFS = ["tools/run.py:3: local-script discovery: unresolved forwarded wrapper: other code can reach launch",
               "tools/run.py:7: local-script discovery: unresolved module-level environment copy: its source is imported "
               "by other code"]
+    # An importer that reaches the wrapper's name; the copy fails for any importer.
+    USER = "from tools import run\nrun.launch(['python3', 'tools/leaf.py'])\n"
 
     def test_product_proofs_imported_only_by_test_sources_are_observations(self):
-        files = {"tools/run.py": self.PRODUCT, "tools/leaf.py": "pass\n", "tests/test_run.py": "from tools import run\n"}
+        files = {"tools/run.py": self.PRODUCT, "tools/leaf.py": "pass\n", "tests/test_run.py": self.USER}
         product = ("bash", "python tools/run.py", "")
         selected, errors, observations = discover_boundary([self.DISCOVER, product], files)
         self.assertEqual((errors, observations), ([], self.PROOFS))
         self.assertTrue(set(files) <= selected, selected)
         cases = {
             "product_importer": ([self.DISCOVER, product, ("bash", "python tools/check.py", "")],
-                                 {"tools/check.py": "from tools import run\n"}),
+                                 {"tools/check.py": self.USER}),
             "importer_run_by_product": ([self.DISCOVER, product, ("bash", "python tests/test_run.py", "")], {}),
             "importer_names_workflow_file": ([self.DISCOVER, product], {
-                "tests/test_run.py": "from tools import run\nSUMMARY = 'echo done >> \"$GITHUB_STEP_SUMMARY\"'\n"}),
+                "tests/test_run.py": self.USER + "SUMMARY = 'echo done >> \"$GITHUB_STEP_SUMMARY\"'\n"}),
             "importer_not_test_named": ([("bash", "python -m unittest discover -s tests -p 'check_*.py'", ""), product],
-                                        {"tests/test_run.py": "pass\n", "tests/check_run.py": "from tools import run\n"}),
+                                        {"tests/test_run.py": "pass\n", "tests/check_run.py": self.USER}),
         }
         for label, (commands, changes) in cases.items():
             with self.subTest(case=label):
@@ -980,6 +987,376 @@ class TestBoundaryTests(unittest.TestCase):
             with self.subTest(command=command):
                 _, errors, observations = discover_boundary([("bash", command, "")], files)
                 self.assertEqual((sites(errors), observations), ({path + ":2"}, []))
+
+
+class ImportIndexTests(unittest.TestCase):
+    """Imports count by name under any search path, including insertions that other modules make."""
+
+    DISCOVER, PRODUCT, PROOFS = TestBoundaryTests.DISCOVER, TestBoundaryTests.PRODUCT, TestBoundaryTests.PROOFS
+    RUN, MAIN = ("bash", "python tools/run.py", ""), ("bash", "python scripts/main.py", "")
+    # A proved source-relative insertion: once scripts/paths.py has run, tools/
+    # is on sys.path, but it is not one of scripts/main.py's own import roots.
+    PATHS = ("import sys\nfrom pathlib import Path\n"
+             "sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'tools'))\n")
+    FILES = {"tools/run.py": PRODUCT, "tools/leaf.py": "pass\n", "scripts/paths.py": PATHS}
+
+    def discover(self, main, commands=None, extra=None):
+        files = {**self.FILES, "scripts/main.py": main, **(extra or {})}
+        return discover_boundary(commands or [self.RUN, self.MAIN], files)
+
+    def test_imports_through_a_runtime_search_path_defeat_exported_proofs(self):
+        selected, errors, observations = self.discover("import paths\n")
+        self.assertEqual((errors, observations), ([], []))
+        self.assertTrue({"tools/run.py", "scripts/main.py", "scripts/paths.py"} <= selected, selected)
+        cases = {
+            "runtime_path": "import paths\nimport run\nrun.launch(['python3', name])\n",
+            "aliased": "import paths\nimport run as runner\nrunner.launch(['python3', name])\n",
+            "from_import": "import paths\nfrom run import launch, ENVIRONMENT\nlaunch(['python3', name])\n",
+            "nested": "import paths\ndef main():\n    import run\n    run.launch(['python3', name])\n",
+            "conditional": "import paths\ntry:\n    import run\nexcept ImportError:\n    run = None\nrun.launch(name)\n",
+            "importlib_literal": "import importlib, paths\nimportlib.import_module('run').launch(['python3', name])\n",
+            "importlib_alias": "import paths\nfrom importlib import import_module as load\nload('run').launch(name)\n",
+            "dunder_import": "import paths\n__import__('run').launch(['python3', name])\n",
+            "module_table": "import paths, sys\nsys.modules['run'].launch(['python3', name])\n",
+            "module_table_get": "import paths, sys\nsys.modules.get('run').launch(['python3', name])\n",
+            "runpy_namespace": "import runpy\nrunpy.run_path('tools/run.py')['launch'](['python3', name])\n",
+            "inline_program": "import subprocess, sys\n"
+                              "subprocess.run([sys.executable, '-c', 'import run; run.launch([])'], check=True)\n",
+            # A dotted import binds its top-level package, which reaches every submodule.
+            "package_reach": "import paths\nimport tools.helpers\ntools.run.launch(['python3', name])\n",
+        }
+        extra = {"tools/helpers/__init__.py": "pass\n"}
+        for label, main in cases.items():
+            with self.subTest(case=label):
+                _, errors, observations = self.discover(main, extra=extra)
+                self.assertEqual((errors, observations), (self.PROOFS, []))
+        # The same imports without a use of the wrapper's name fail only the copy, which any importer fails.
+        for label in ("runtime_path", "aliased", "nested", "importlib_alias", "module_table", "package_reach"):
+            with self.subTest(case=label + "_other_name"):
+                main = cases[label].replace(".launch(", ".other(").replace("launch(['python3', name])", "")
+                _, errors, observations = self.discover(main, extra=extra)
+                self.assertEqual((errors, observations), (self.PROOFS[1:], []))
+
+    def test_from_import_names_its_submodule(self):
+        files = {"lib/pkg/run.py": self.PRODUCT, "tools/leaf.py": "pass\n",
+                 "scripts/paths.py": self.PATHS.replace("'tools'", "'lib'")}
+        commands = [("bash", "python lib/pkg/run.py", ""), self.MAIN]
+        proofs = [proof.replace("tools/run.py", "lib/pkg/run.py") for proof in self.PROOFS]
+        for main, expected in (("import paths\nfrom pkg import other\n", []),
+                               ("import paths\nfrom pkg import run\nrun.launch(name)\n", proofs),
+                               ("import paths\nfrom pkg import run\n", proofs[1:]),
+                               ("import paths\nfrom pkg.run import launch\n", proofs)):
+            with self.subTest(main=main):
+                _, errors, observations = discover_boundary(commands, {**files, "scripts/main.py": main})
+                self.assertEqual((errors, observations), (expected, []))
+
+    def test_other_names_membership_tests_and_text_are_not_imports(self):
+        main = ("import paths, runpy, sys\nimport run_tools\nimport xrun\nfrom runner import run\n"
+                "import importlib\nimportlib.import_module('runner')\n__import__('xrun.run')\n"
+                "sys.modules.get('run_tools')\nREADY = 'run' in sys.modules\n"
+                "print('import run', 'from run import launch')\nrunpy.run_path('tools/run.py')\n")
+        selected, errors, observations = self.discover(main)
+        self.assertEqual((errors, observations), ([], []))
+        self.assertIn("tools/run.py", selected)
+
+    def test_instance_copies_imported_by_name_fail(self):
+        files = {"tools/fixture.py": ComputedProcessContextTests.INSTANCE, "leaf.py": "pass\n",
+                 "scripts/paths.py": self.PATHS}
+        commands = [("bash", "python tools/fixture.py", ""), self.MAIN]
+        _, errors, _ = discover_boundary(commands, {**files, "scripts/main.py": "import paths\n"})
+        self.assertEqual(errors, [])
+        _, errors, _ = discover_boundary(commands, {**files, "scripts/main.py": "import paths\nimport fixture\n"})
+        self.assertEqual(errors, ["tools/fixture.py:8: local-script discovery: unresolved instance environment copy: "
+                                  "its source is imported by other code"])
+
+    def test_same_named_modules_in_other_directories_are_all_imported(self):
+        wrapper = "import subprocess\ndef launch(argv):\n    subprocess.run(argv)\nlaunch(['python3', 'tools/leaf.py'])\n"
+        files = {"alpha/util.py": wrapper, "beta/util.py": wrapper, "gamma/utility.py": wrapper,
+                 "tools/leaf.py": "pass\n", "alpha/main.py": "import util\nutil.launch(name)\n"}
+        commands = [("bash", f"python {path}", "") for path in ("alpha/util.py", "beta/util.py", "gamma/utility.py")]
+        _, errors, _ = discover_boundary(commands, files)
+        self.assertEqual(errors, [])
+        # alpha/main.py resolves util beside itself, and another import root can supply beta/util.py.
+        message = ": local-script discovery: unresolved forwarded wrapper: other code can reach launch"
+        _, errors, _ = discover_boundary([*commands, ("bash", "python alpha/main.py", "")], files)
+        self.assertEqual(errors, ["alpha/util.py:3" + message, "beta/util.py:3" + message])
+
+    def test_only_test_importers_that_keep_the_boundary_are_observations(self):
+        # tests/support.py makes tools/ importable; the test's own import resolves only by name.
+        tests = {"tests/support.py": self.PATHS, "tests/test_run.py": "import support\nimport run\nrun.launch(name)\n"}
+        commands = [self.DISCOVER, self.RUN, self.MAIN]
+        _, errors, observations = self.discover("import paths\n", commands, tests)
+        self.assertEqual((errors, observations), ([], self.PROOFS))
+        cases = {
+            "product_importer": (commands, "import paths\nimport run\nrun.launch(name)\n", tests),
+            "workflow_text": (commands, "import paths\n", {
+                **tests, "tests/test_run.py": "import support\nimport run\nrun.launch(name)\nSUMMARY = 'GITHUB_STEP_SUMMARY'\n"}),
+            "test_run_directly": ([*commands, ("bash", "python tests/test_run.py", "")], "import paths\n", tests),
+        }
+        for label, (variant, main, files) in cases.items():
+            with self.subTest(case=label):
+                _, errors, observations = self.discover(main, variant, files)
+                self.assertEqual((errors, observations), (self.PROOFS, []))
+
+    def test_product_import_of_a_test_source_by_name_ends_its_boundary(self):
+        files = {"tests/test_launch.py": TestBoundaryTests.UNRESOLVED,
+                 "scripts/paths.py": self.PATHS.replace("'tools'", "'tests'")}
+        site = ["tests/test_launch.py:2: local-script discovery: unresolved computed Python script invocation; "
+                "unsafe or unresolved forwarding"]
+        commands = [self.DISCOVER, self.MAIN]
+        _, errors, observations = discover_boundary(commands, {**files, "scripts/main.py": "import paths\n"})
+        self.assertEqual((errors, observations), ([], site))
+        _, errors, observations = discover_boundary(commands, {**files, "scripts/main.py": "import paths\nimport test_launch\n"})
+        self.assertEqual((errors, observations), (site, []))
+        # A product import that names no module could import the test source too.
+        _, errors, observations = discover_boundary(commands, {
+            **files, "scripts/main.py": "import importlib, sys\nimportlib.import_module(sys.argv[1])\n"})
+        self.assertEqual((sites(errors), observations), ({"scripts/main.py:2", "tests/test_launch.py:2"}, []))
+
+    def test_imports_that_name_no_module_fail_dependent_proofs(self):
+        # Each product importer: its source and how many diagnostics its own site reports.
+        product = {
+            "computed_import": ("import importlib, sys\nimportlib.import_module(sys.argv[1])\n", 1),
+            "computed_dunder": ("import sys\n__import__(sys.argv[1])\n", 1),
+            "file_loader": ("import importlib.util\nimportlib.util.spec_from_file_location('run', 'tools/run.py')\n", 1),
+            "executed_text": ("exec(open('plugin.txt').read())\n", 1),
+            "module_table": ("import sys\nfor module in list(sys.modules.values()):\n    print(module)\n", 0),
+            "module_table_key": ("import sys\nsys.modules[sys.argv[1]].launch([])\n", 0),
+            "import_api_escape": ("import importlib\nregister(importlib)\n", 1),
+            "runpy_namespace": ("import runpy, sys\nrunpy.run_module(sys.argv[1])['launch']([])\n", 1),
+            "relative_star_from_root": ("from .. import *\n", 0),
+            "finder": ("import importlib.util, sys\nimportlib.util.find_spec(sys.argv[1])\n", 0),
+            "package_resolver": ("from pkgutil import resolve_name\nresolve_name('run:launch')([])\n", 0),
+            "invalid_source": ("import run(\n", 1),
+        }
+        for label, (main, site_errors) in product.items():
+            with self.subTest(case=label):
+                _, errors, observations = self.discover(main)
+                self.assertEqual(observations, [])
+                self.assertEqual(sorted(set(errors) - set(self.PROOFS)), errors[:site_errors], errors)
+                self.assertTrue(all(error.startswith("scripts/main.py:") for error in errors[:site_errors]), errors)
+                self.assertEqual(errors[site_errors:], self.PROOFS)
+        # The same imports in a test source that keeps the boundary are observations, and so are the proofs.
+        for label, (test, line) in {"computed_import": ("import importlib\nimportlib.import_module(name)\n", 2),
+                                    "file_loader": ("import importlib.util\n"
+                                                    "importlib.util.spec_from_file_location('x', path)\n", 2),
+                                    "executed_text": ("exec(text)\n", 1)}.items():
+            with self.subTest(case="test_" + label):
+                _, errors, observations = self.discover("import paths\n", [self.DISCOVER, self.RUN, self.MAIN],
+                                                        {"tests/test_dynamic.py": test})
+                self.assertEqual(errors, [])
+                self.assertEqual(sites(observations), {f"tests/test_dynamic.py:{line}"} | sites(self.PROOFS), observations)
+
+
+class NameReachTests(unittest.TestCase):
+    """A module-level forwarding wrapper fails only for importers that can reach its name."""
+
+    DISCOVER = TestBoundaryTests.DISCOVER
+    # Only the wrapper is importer-dependent here: no copy fails for any importer.
+    TOOL = ("import subprocess\n"
+            "def launch(argv):\n"
+            "    subprocess.run(argv)\n"
+            "def other():\n"
+            "    return 1\n"
+            "VALUE = 1\n"
+            "launch(['python3', 'tools/leaf.py'])\n")
+    # The *args form: proved through its literal callers in its own source.
+    GIT = ("import subprocess\n"
+           "def git(*args):\n"
+           "    return subprocess.run(['git', *args], check=True)\n"
+           "def revision(*args):\n"
+           "    return git('rev-parse', *args)\n"
+           "def other():\n"
+           "    return 1\n"
+           "git('status', '--porcelain')\n"
+           "revision('HEAD')\n")
+    LAUNCH = "tools/run.py:3: local-script discovery: unresolved forwarded wrapper: other code can reach launch"
+
+    def discover(self, main, *, tool=TOOL, extra=None, commands=None):
+        files = {"tools/run.py": tool, "tools/leaf.py": "pass\n", "tools/main.py": main, **(extra or {})}
+        return discover_boundary(commands or [("bash", "python tools/run.py", ""), ("bash", "python tools/main.py", "")],
+                                 files)
+
+    def test_importers_that_use_only_other_names_keep_the_proof(self):
+        for label, main in {
+            "attribute": "import run\nrun.other()\nprint(run.VALUE, run.__name__)\n",
+            "from_import": "from run import other, VALUE\nother()\n",
+            "alias": "import run as tool\nvalue = tool.VALUE\ntool.other()\n",
+            "truth_and_type": "import run\nif run:\n    print(type(run), repr(run), isinstance(run, object))\n",
+            "dynamic": "import importlib, sys\nimportlib.import_module('run').other()\nsys.modules['run'].other()\n",
+            "local": "def main():\n    import run\n    return run.other()\n",
+            "discarded": "import importlib\nimportlib.import_module('run')\n",
+            "dynamic_bound": "import importlib\ntool = importlib.import_module('run')\ntool.other()\n",
+            "package_attribute_replaced": "import tools.hub\ntools.run = replacement\n",
+            "from_module_alias": "from tools import run as tool\ntool.other()\n",
+            "reexport_other_name": "import hub\nhub.run.other()\n",
+            "elsewhere": "from other_tool import launch\nlaunch(['python3', name])\nTEXT = 'run.launch'\n",
+        }.items():
+            with self.subTest(case=label):
+                _, errors, observations = self.discover(main, extra={"tools/hub.py": "import run\n",
+                                                                     "tools/other_tool.py": "def launch(argv):\n    pass\n"})
+                self.assertEqual((errors, observations), ([], []))
+
+    def test_importers_that_reach_or_hand_on_the_module_fail_the_proof(self):
+        for label, main in {
+            "attribute": "import run\nrun.launch(['python3', name])\n",
+            "from_import": "from run import launch\n",
+            "from_alias": "from run import launch as go\ngo(name)\n",
+            "star": "from run import *\n",
+            "getattr": "import run\ngetattr(run, 'other')()\n",
+            "vars": "import run\nvars(run)\n",
+            "namespace_dunder": "import run\nrun.__dict__['other']\n",
+            "dunder_import": "from run import __dict__ as namespace\n",
+            "passed_on": "import run\nregister(run)\n",
+            "rebound": "import run\nalias = run\n",
+            "returned": "def load():\n    import run\n    return run\n",
+            "stored_name": "import run\nrun.subprocess = replacement\n",
+            "stored_object": "import run\nrun.VALUE += 1\n",
+            "class_binding": "class Holder:\n    import run\n",
+            "assigned_dynamic": "import importlib\nholder.tool = importlib.import_module('run')\n",
+            "own_namespace": "import run\nglobals()['run'].other()\n",
+            "frame_globals": "import sys\nsys._getframe(1).f_globals\n",
+            "function_globals": "def peek(function):\n    return function.__globals__\n",
+            "getattr_globals": "def peek(function):\n    return getattr(function, '__globals__')\n",
+            "module_of": "import inspect\ninspect.getmodule(handler)\n",
+            "reexport": "import hub\nhub.run.launch(name)\n",
+            "reexport_from": "from hub import run\nrun.launch(name)\n",
+            "reexport_handed_on": "import hub\nregister(hub.run)\n",
+            "from_module_alias": "from tools import run as tool\ntool.launch(name)\n",
+        }.items():
+            with self.subTest(case=label):
+                _, errors, observations = self.discover(main, extra={"tools/hub.py": "import run\n"})
+                self.assertEqual(observations, [])
+                self.assertIn(self.LAUNCH, errors)
+
+    def test_reexports_through_import_cycles_are_followed(self):
+        cycle = {"tools/hub.py": "import spoke\n", "tools/spoke.py": "import hub\nimport run\n"}
+        for main, expected in (("import hub\nhub.spoke.run.other()\nhub.spoke.hub.spoke.run.VALUE\n", []),
+                               ("import hub\nhub.spoke.hub.spoke.run.launch(name)\n", [self.LAUNCH]),
+                               ("from spoke import hub\nregister(hub.spoke)\n", [self.LAUNCH])):
+            with self.subTest(main=main):
+                _, errors, observations = self.discover(main, extra=cycle)
+                self.assertEqual((errors, observations), (expected, []))
+
+    def test_namespace_reflection_in_the_wrapper_source_reaches_the_name(self):
+        main = "import run\nrun.other()\n"
+        for line in ("globals()['launch'](argv)\n", "namespace = vars()\n", "print(locals())\n"):
+            with self.subTest(line=line):
+                _, errors, observations = self.discover(main, tool=self.TOOL + line)
+                self.assertEqual((errors, observations), ([self.LAUNCH], []))
+        _, errors, observations = self.discover(main, tool=self.TOOL + "print(vars(self_test))\n")
+        self.assertEqual((errors, observations), ([], []))
+
+    def test_an_importer_without_a_matching_import_record_reaches_the_name(self):
+        discovery = object.__new__(sc.Discovery)
+        discovery.import_records, discovery.namespace_reflection = {"tools/user.py": []}, set()
+        self.assertEqual(discovery.name_reachers("tools/run.py", "launch", {"tools/run.py": {"tools/user.py"}}),
+                         {"tools/user.py"})
+
+    def test_star_args_wrappers_need_the_same_proof(self):
+        message = "tools/run.py:3: local-script discovery: unresolved forwarded wrapper: other code can reach {}"
+        for main, expected in (
+                ("import run\nrun.other()\n", []),
+                ("from run import other\nother()\n", []),
+                ("import run\nrun.git('show', name)\n", [message.format("git")]),
+                ("from run import git\ngit(name)\n", [message.format("git")]),
+                # revision forwards to git: reaching either reaches the launch.
+                ("from run import revision\nrevision(name)\n", [message.format("revision")]),
+                ("import run\nregister(run)\n", [message.format("git"), message.format("revision")])):
+            with self.subTest(main=main):
+                _, errors, observations = self.discover(main, tool=self.GIT)
+                self.assertEqual((sorted(errors), observations), (expected, []))
+
+    def test_boundary_test_importers_that_reach_the_name_are_observations(self):
+        commands = [self.DISCOVER, ("bash", "python tools/run.py", "")]
+        files = {"tests/support.py": ("import sys\nfrom pathlib import Path\n"
+                                      "sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'tools'))\n")}
+        for test, expected in (("import support\nimport run\nrun.other()\n", []),
+                               ("import support\nimport run\nrun.launch(['python3', name])\n", [self.LAUNCH])):
+            with self.subTest(test=test):
+                _, errors, observations = self.discover("pass\n", commands=commands,
+                                                        extra={**files, "tests/test_run.py": test})
+                self.assertEqual((errors, observations), ([], expected))
+        # The *args form follows the same rule.
+        _, errors, observations = self.discover("pass\n", tool=self.GIT, commands=commands, extra={
+            **files, "tests/test_run.py": "import support\nfrom run import git\ngit(name)\n"})
+        self.assertEqual((errors, observations), (
+            [], ["tools/run.py:3: local-script discovery: unresolved forwarded wrapper: other code can reach git"]))
+
+
+class ReviewedProofGapTests(unittest.TestCase):
+    """Proof gaps found in review: each case fails closed."""
+
+    WRAPPER = TestBoundaryTests.DISCOVER
+
+    def test_every_failing_wrapper_caller_is_reported(self):
+        source = ("import subprocess\ndef run(argv, cwd):\n    subprocess.run(argv, cwd=cwd)\n"
+                  "run(['python3', 'leaf.py'], 'work')\nrun(['python3', 'leaf.py'], first)\n"
+                  "run(['python3', 'leaf.py'], second)\n")
+        _, errors = discover_python({"entry.py": source, "leaf.py": "pass\n", "work/leaf.py": "pass\n"})
+        self.assertEqual(errors, [f"entry.py:3: local-script discovery: forwarded wrapper call at line {line}: "
+                                  "unresolved computed subprocess cwd" for line in (5, 6)])
+
+    def test_wrapper_calls_with_more_positional_arguments_are_not_forwarded(self):
+        for call in ("subprocess.Popen(argv, -1, tool)", "subprocess.run(argv, 0)"):
+            with self.subTest(call=call):
+                source = f"import subprocess\ndef run(argv):\n    {call}\nrun(['python3', 'leaf.py'])\n"
+                _, errors = discover_python({"entry.py": source, "leaf.py": "pass\n"})
+                self.assertEqual(errors, ["entry.py:3: local-script discovery: unresolved subprocess positional/options "
+                                          "expansion"])
+
+    def test_unittest_names_of_tracked_modules_under_other_roots_fail(self):
+        files = {"src/pkg/__init__.py": "pass\n", "src/pkg/test_x.py": "pass\n", "tools/helper.py": "pass\n"}
+        for command in ("python -m unittest pkg.test_x", "python -m unittest PKG.Test_x", "python -m unittest helper",
+                        "python -m unittest -v src"):
+            with self.subTest(command=command):
+                _, errors, observations = discover_boundary([("bash", command, "")], files)
+                self.assertEqual(len(errors), 1, errors)
+                self.assertIn("unsupported test runner with tracked module tests: unittest", errors[0])
+        # A name that no tracked module or package carries is an installed test module.
+        _, errors, _ = discover_boundary([("bash", "python -m unittest json.tests", "")], files)
+        self.assertEqual(errors, [])
+
+    def test_test_importers_that_name_workflow_command_files_keep_proof_errors(self):
+        wrapper = "import subprocess\ndef launch(argv):\n    subprocess.run(argv)\nlaunch(['tool', '--check'])\n"
+        copy = ("import os, subprocess\nENVIRONMENT = os.environ.copy()\nENVIRONMENT['MODE'] = 'x'\n"
+                "subprocess.run(['tool', '--check'], env=ENVIRONMENT)\n")
+        files = {"tests/test_wrapper.py": wrapper, "tests/test_copy.py": copy,
+                 "tests/test_user.py": "import test_wrapper, test_copy\ntest_wrapper.launch(['tool'])\n"}
+        expected = ["tests/test_copy.py:4: local-script discovery: unresolved module-level environment copy: its source "
+                    "is imported by other code",
+                    "tests/test_wrapper.py:3: local-script discovery: unresolved forwarded wrapper: other code can reach "
+                    "launch"]
+        _, errors, observations = discover_boundary([self.WRAPPER], files)
+        self.assertEqual((errors, observations), ([], expected))
+        files["tests/test_user.py"] += "SUMMARY = 'echo done >> \"$GITHUB_STEP_SUMMARY\"'\n"
+        _, errors, observations = discover_boundary([self.WRAPPER], files)
+        self.assertEqual((errors, observations), (expected, []))
+
+    def test_module_scope_dotnet_lookup_is_not_a_proof(self):
+        call = "subprocess.run([dotnet, 'build', project], cwd=directory)"
+        local = f"import shutil, subprocess\ndef build(directory, project):\n    dotnet = shutil.which('dotnet')\n    {call}\n"
+        self.assertEqual(discover_python({"entry.py": local})[1], [])
+        module = f"import shutil, subprocess\ndotnet = shutil.which('dotnet')\ndef build(directory, project):\n    {call}\n"
+        self.assertEqual(discover_python({"entry.py": module})[1],
+                         ["entry.py:4: local-script discovery: unresolved computed subprocess cwd"])
+
+    def test_deeply_nested_global_json_is_an_sdk_selection_diagnostic(self):
+        deep = '{"a": ' * 70 + "1" + "}" * 70 + "\n"
+        source = "import subprocess\nsubprocess.run(['dotnet', 'build', project], cwd=directory)\n"
+        self.assertEqual(discover_python({"entry.py": source, "global.json": deep})[1],
+                         ["entry.py:2: local-script discovery: unproved .NET SDK selection: unreadable global.json: "
+                          "global.json"])
+
+    def test_module_tables_reached_through_other_modules_name_no_module(self):
+        for main in ("import os\nos.sys.modules['run'].other()\n",
+                     "import importlib\nimportlib.import_module('sys').modules['run'].other()\n",
+                     "__import__('sys').modules.get('run').other()\n",
+                     "import subprocess\nsubprocess.sys.modules['run'].other()\n"):
+            with self.subTest(main=main):
+                _, errors, observations = NameReachTests().discover(main)
+                self.assertEqual(observations, [])
+                self.assertIn(NameReachTests.LAUNCH, errors)
 
 
 class ComputedProcessContextTests(unittest.TestCase):
@@ -1091,6 +1468,8 @@ class ComputedProcessContextTests(unittest.TestCase):
         "    subprocess.run([shutil.which('dotnet'), f'{name}.dll', '--port', str(port)], cwd='tools')\n"
         "    subprocess.run(('dotnet', 'tests/literal.dll', name), env={'MODE': 'x'})\n"
         "    subprocess.run(['dotnet', f'{name}.dll', 'tools/leaf.py'])\n"
+        "    targets = ['dotnet', f'{name}.dll', '--port']\n"
+        "    subprocess.run(targets + [str(port)], check=True)\n"
         "run_suite('Fixture', Path(out), 8080)\n"
     )
 
@@ -1121,6 +1500,8 @@ class ComputedProcessContextTests(unittest.TestCase):
             "computed_host": (base.replace("'dotnet'", "host"), computed),
             "which_path": (base.replace("'dotnet'", "shutil.which('dotnet', path=root)"), computed),
             "starred": (base.replace("output]", "*options]"), "unsafe or unresolved forwarding"),
+            "list_store": ("import subprocess\ndef run(name):\n    targets = ['dotnet', f'{name}.dll']\n"
+                           "    targets[0] = host\n    subprocess.run(targets)\n", "unsafe or unresolved forwarding"),
             "computed_cwd": (base.replace("output])", "output], cwd=directory)"), "computed subprocess cwd"),
             "startup_hook": (base.replace("output])", "output], env=dict(os.environ, DOTNET_STARTUP_HOOKS=hook))"),
                              "computed subprocess env"),
@@ -1370,9 +1751,14 @@ class ComputedProcessContextTests(unittest.TestCase):
                 _, errors = discover_python({"entry.py": unsafe, **files})
                 self.assertTrue(errors and all("entry.py:" in error for error in errors), (label, errors))
         # Callers and mutations in an importing source are not visible to the proof.
+        wrapper = "tooling.py:4: local-script discovery: unresolved forwarded wrapper: other code can reach run"
+        _, errors = discover_python({"entry.py": "import tooling\ntooling.run(['python3', 'leaf.py'])\n",
+                                     "tooling.py": source, **files})
+        self.assertIn(wrapper, errors)
+        self.assertTrue(any("module-level environment copy: its source is imported" in error for error in errors), errors)
+        # An importer that never reaches the name leaves the wrapper proved; the copy still fails.
         _, errors = discover_python({"entry.py": "import tooling\n", "tooling.py": source, **files})
-        self.assertIn("tooling.py:4: local-script discovery: unresolved forwarded wrapper: its source is imported by "
-                      "other code", errors)
+        self.assertNotIn(wrapper, errors)
         self.assertTrue(any("module-level environment copy: its source is imported" in error for error in errors), errors)
         method = ("import subprocess\nclass Runner:\n    def run(self, command):\n        return subprocess.run(command)\n"
                   "Runner().run(['python3', 'leaf.py'])\n")
@@ -1395,6 +1781,41 @@ class ComputedProcessContextTests(unittest.TestCase):
             with self.subTest(case=label):
                 _, errors = discover_python({"entry.py": unsafe, "leaf.py": "pass\n", "other.py": "pass\n"})
                 self.assertTrue(any("unsafe or unresolved forwarding" in error for error in errors), (label, errors))
+
+
+class ErrorSourceTests(unittest.TestCase):
+    """Per-error source details: the exact reported line's digest, or none when it is not identifiable."""
+
+    @staticmethod
+    def digest(data):
+        return hashlib.sha256(data).hexdigest()
+
+    def test_located_errors_digest_the_exact_reported_line(self):
+        selected = {"a.py": {"format": "python", "text": "first\nsecond line\r\nthird\n"},
+                    "run.sh": {"format": "bash", "text": "a\rb\nc\u2028d\n"}}
+        errors = ["a.py:2: local-script discovery: x at line 3", "a.py:3: d", "run.sh:2: e", "run.sh:1: f"]
+        sources = sc.error_sources(errors, selected)
+        self.assertEqual(sources, [
+            {"path": "a.py", "line": 2, "diagnostic": "local-script discovery: x at line 3",
+             "lineSha256": self.digest(b"second line\r")},
+            {"path": "a.py", "line": 3, "diagnostic": "d", "lineSha256": self.digest(b"third")},
+            # Shell sources split only on LF, so other separators stay inside the line.
+            {"path": "run.sh", "line": 2, "diagnostic": "e", "lineSha256": self.digest("c\u2028d".encode())},
+            {"path": "run.sh", "line": 1, "diagnostic": "f", "lineSha256": self.digest(b"a\rb")}])
+        self.assertEqual({frozenset(item) for item in sources}, {acceptance_tests.tool.ERROR_SOURCE_KEYS})
+
+    def test_unidentifiable_lines_and_unlocated_errors_have_no_digest(self):
+        selected = {"a.py": {"format": "python", "text": "one\ntwo\n"},
+                    "b.py": {"format": "python", "text": "one\rtwo\n"},
+                    "c.yml": {"format": "yaml", "text": "a: 1\u2028b: 2\n"},
+                    "d.ts": {"format": "typescript", "text": "x\u2029y\n"},
+                    "e": {"format": "python", "text": "x\n"}, "e:1: f": {"format": "python", "text": "y\n"}}
+        sources = sc.error_sources(["a.py:3: past the final line", "b.py:1: lone CR", "c.yml:1: separator",
+                                    "d.ts:1: separator", "missing.py:1: unselected", "registry failure",
+                                    "a.py:0: zero line", "e:1: f:1: ambiguous path"], selected)
+        self.assertEqual([item is None for item in sources], [False] * 4 + [True] * 4)
+        self.assertEqual([item["lineSha256"] for item in sources[:4]], [None] * 4)
+        self.assertEqual(sc.error_sources(["a.py:1: incomplete discovery"], selected, complete=False), [None])
 
 
 class ScanTests(acceptance_tests.Harness):
@@ -2858,6 +3279,96 @@ class ScanTests(acceptance_tests.Harness):
         self.assertEqual(code, 0, verdicts)
         self.assertEqual(self.verdicts(verdicts), {alpha: "pass"})
 
+    def test_reviewed_coverage_gaps_end_to_end(self):
+        alpha = acceptance_tests.MODULES[0]
+        w = self.workspace((alpha,))
+        w.action(alpha, "python scripts/start.py")
+        w.write(alpha, "scripts/other.py", "print(1)\n")
+        start = ("import os\nimport subprocess\n\n\ndef run(argv, directory):\n"
+                 + acceptance_tests.LAUNCH + "\n\n\nrun(['python3', 'scripts/other.py'], os.environ['WORK'])\n"
+                 + acceptance_tests.COMPUTED + "\n")
+        w.write(alpha, "scripts/start.py", start)
+        w.commit(w.paths[alpha])
+        report = w.scan(self.factory)
+        row = report["modules"][0]
+        invocation, wrapper = acceptance_tests.INVOCATION, acceptance_tests.WRAPPER
+        self.assertEqual((report["result"], row["result"], row["errors"]), (
+            "fail", "fail", ["scripts/start.py:10: " + invocation, "scripts/start.py:6: " + wrapper.format(9)]), report)
+        self.assertEqual(row["errorSources"], [
+            {"path": "scripts/start.py", "line": 10, "diagnostic": invocation,
+             "lineSha256": acceptance_tests.line_digest(acceptance_tests.COMPUTED)},
+            {"path": "scripts/start.py", "line": 6, "diagnostic": wrapper.format(9),
+             "lineSha256": acceptance_tests.line_digest(acceptance_tests.LAUNCH)}])
+        # The generator only prints candidates; the reviewer commits the record to CiCd.
+        stdout, stderr = io.StringIO(), io.StringIO()
+        code = acceptance_tests.GapCandidateTests.generator.main(
+            [str(w.output / "report.json"), "--module", alpha, "--story", "15", "--date", "2026-11-26"],
+            stdout=stdout, stderr=stderr)
+        self.assertEqual((code, stderr.getvalue()), (0, ""))
+        self.assertFalse((w.cicd / "tools/scan-coverage-gaps.json").exists())
+        record = w.cicd / "tools/scan-coverage-gaps.json"
+        record.write_text(stdout.getvalue())
+        source = w.commit(w.cicd)
+
+        def judged(text):
+            w.write(alpha, "scripts/start.py", text)
+            head = w.commit(w.paths[alpha])
+            report = w.scan(self.factory)
+            summary = (w.output / "summary.md").read_text()
+            world = acceptance_tests.World((alpha,))
+            world.run["head_sha"] = source
+            world.nightly_overrides["identity"] = {"runId": world.run["id"], "attempt": world.run["run_attempt"],
+                                                   "source": source}
+            world.rows[alpha].update(dispatchHead=head, deliveredSha=source)
+            world.rows[alpha]["outcome"]["sha"] = head
+            world.scan = (w.output / "report.json").read_bytes()
+            world.scan_summary = summary.encode()
+            world.gap_records[source] = record.read_bytes()
+            code, verdicts = self.judge(world, alpha)
+            # The scan itself still fails and reports every gap.
+            self.assertEqual((report["controllerRevision"], report["result"]), (source, "fail"))
+            self.assertTrue(summary.startswith("# Nightly cross-module duplicate scan: FAIL\n"))
+            for error in report["modules"][0]["errors"]:
+                self.assertIn("  - " + error + "\n", summary)
+            return code, verdicts
+
+        code, verdicts = judged("\n" + start)
+        self.assertEqual(code, 0, verdicts)
+        gaps = verdicts["modules"][alpha]["scan"]["reviewedGaps"]
+        self.assertEqual((gaps["revision"], gaps["blob"]),
+                         (source, git(w.cicd, "rev-parse", source + ":tools/scan-coverage-gaps.json")))
+        self.assertEqual([(item["line"], item["diagnostic"]) for item in gaps["accepted"]],
+                         [(11, invocation), (7, wrapper.format(10))])
+        changed = start.replace(acceptance_tests.COMPUTED, "subprocess.run(os.environ['TOOL'], check=False)")
+        code, verdicts = judged(changed)
+        self.assertEqual(code, 1, verdicts)
+        self.assertIn("scan error is not a recorded coverage gap: scripts/start.py:10:", self.reasons(verdicts, alpha))
+        code, verdicts = judged(start + "subprocess.run(os.environ['OTHER'])\n")
+        self.assertEqual(code, 1, verdicts)
+        self.assertIn("scan error is not a recorded coverage gap: scripts/start.py:11:", self.reasons(verdicts, alpha))
+
+    def test_incomplete_or_failed_rows_locate_no_error(self):
+        alpha = "Hexalith.Alpha"
+        w = self.workspace((alpha,))
+        w.action(alpha, "python scripts/start.py")
+        w.write(alpha, "scripts/start.py", "import os\nimport subprocess\nsubprocess.run(os.environ['TOOL'])\n")
+        w.commit(w.paths[alpha])
+        row = w.scan(self.factory)["modules"][0]
+        self.assertEqual([(item["path"], item["line"], item["lineSha256"]) for item in row["errorSources"]],
+                         [("scripts/start.py", 3, hashlib.sha256(b"subprocess.run(os.environ['TOOL'])").hexdigest())])
+        with mock.patch.object(sys.modules[sc.Discovery.__module__], "MAX_FILES", 1):
+            row = w.scan(self.factory)["modules"][0]
+        self.assertTrue(any("module selected-file limit exceeded" in error for error in row["errors"]), row)
+        self.assertEqual(row["errorSources"], [None] * len(row["errors"]))
+        with mock.patch.object(sc, "MAX_EXPORT", 1):
+            row = w.scan(self.factory)["modules"][0]
+        self.assertIn("aggregate selected-source limit exceeded", row["errors"])
+        self.assertEqual(row["errorSources"], [None] * len(row["errors"]))
+        workspace, _ = self.pinned_workspace("bash references/Hexalith.Dependency/eng/launcher.sh", configured=False)
+        row = workspace.scan(self.factory)["modules"][0]
+        self.assertTrue(any("not authorized by committed setup" in error for error in row["errors"]), row)
+        self.assertEqual(row["errorSources"], [None] * len(row["errors"]))
+
     def pinned_workspace(self, command, *, declaration=True, origin=None, duplicate=False, configured=True,
                          gitlink=True, symlink=False, check_source="import helper\n",
                          module="Hexalith.Alpha", repository="Hexalith.Dependency", dependency_files=None):
@@ -2947,6 +3458,21 @@ class ScanTests(acceptance_tests.Harness):
         self.assertEqual("fail", row["result"], report)
         self.assertTrue(any("unresolved computed Python script invocation" in error for error in row["errors"]), report)
         self.assertNotIn("outside/check.py", {item["path"] for item in row["files"]})
+
+    def test_deeply_nested_global_json_in_a_later_pinned_source_keeps_the_row(self):
+        launcher = "references/Hexalith.Dependency/eng/launcher.sh"
+        deep = '{"a": ' * 70 + "1" + "}" * 70 + "\n"
+        workspace, _ = self.pinned_workspace("python3 entry.py", dependency_files={"global.json": deep})
+        workspace.write("Hexalith.Alpha", "entry.py", "import subprocess\n"
+                        "subprocess.run(['dotnet', 'build', project], cwd=directory)\n"
+                        f"subprocess.run(['bash', {launcher!r}])\n")
+        module = workspace.paths["Hexalith.Alpha"]
+        git(module, "add", "entry.py")
+        git(module, "commit", "--quiet", "-m", "record computed .NET directory")
+        row = workspace.scan(self.factory)["modules"][0]
+        self.assertIn("entry.py", {item["path"] for item in row["files"]}, row)
+        self.assertIn("entry.py:2: local-script discovery: unproved .NET SDK selection: unreadable global.json: "
+                      "references/Hexalith.Dependency/global.json", row["errors"], row)
 
     def test_computed_dotnet_directory_rechecks_sdk_selection_in_later_pinned_sources(self):
         launcher = "references/Hexalith.Dependency/eng/launcher.sh"
@@ -3146,6 +3672,39 @@ class ScanTests(acceptance_tests.Harness):
             self.assertIn(f"{path}/eng/check.py:3: local-script discovery: unresolved computed Python script invocation",
                           row["errors"])
             self.assertFalse(any("unproved" in error for error in row["errors"]), row)
+
+    def test_works_platform_loader_imports_its_reviewed_target(self):
+        import scan_discovery as discovery
+
+        module, repository = "Hexalith.Works", "Hexalith.Platform"
+        path, action, workflow = (discovery.WORKS_PLATFORM_ROOT, discovery.WORKS_PLATFORM_ACTION,
+                                  discovery.WORKS_PLATFORM_WORKFLOW)
+        coordinator, export = "scripts/coordinator.py", "eng/export.py"
+        reviewed = "jobs:\n  parity:\n    steps:\n    - uses: ./.github/actions/platform-parity\n"
+        entries = {(coordinator, 2, "importlib.util.spec_from_file_location"): (export, "python")}
+        # The loaded module's wrapper is proved only at its own call sites.
+        wrapper = "import subprocess\ndef git(argv):\n    subprocess.run(argv)\ngit(['git', 'status'])\n"
+        for label, export_source, expected in (("plain", "print('export')\n", []), ("wrapper", wrapper, [
+                f"{path}/{export}:3: local-script discovery: unresolved forwarded wrapper: other code can reach git"])):
+            with self.subTest(case=label):
+                workspace, _ = self.pinned_workspace("echo dormant", module=module, repository=repository,
+                                                     dependency_files={export: export_source})
+                remote = workspace.paths[module]
+                script = workspace.write(module, coordinator, "import importlib.util\n"
+                                         "importlib.util.spec_from_file_location('export', sealed / 'eng/export.py')\n")
+                action_source = workspace.write(module, action, steps(("bash", "python3 " + coordinator, "")))
+                workspace.write(module, workflow, reviewed)
+                git(remote, "add", "--", action, coordinator, workflow)
+                git(remote, "commit", "--quiet", "-m", "record parity loader")
+                inputs = {workflow: discovery.works_fingerprint(workflow, reviewed.encode()),
+                          action: hashlib.sha256(action_source.read_bytes()).hexdigest(),
+                          coordinator: hashlib.sha256(script.read_bytes()).hexdigest()}
+                exports = {export: hashlib.sha256(export_source.encode()).hexdigest()}
+                with mock.patch.multiple(discovery, WORKS_PLATFORM_INPUTS=inputs, WORKS_PLATFORM_EXPORT=exports,
+                                         WORKS_PLATFORM_ENTRIES=entries):
+                    row = workspace.scan(self.factory)["modules"][0]
+                self.assertIn(f"{path}/{export}", {item["path"] for item in row["files"]}, row)
+                self.assertEqual(row["errors"], expected, row)
 
     def test_works_platform_production_export_is_a_loaded_entry_target(self):
         import scan_discovery as discovery

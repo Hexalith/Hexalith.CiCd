@@ -7,6 +7,7 @@
 from __future__ import annotations
 
 import argparse
+import ast
 import hashlib
 import json
 import os
@@ -27,6 +28,17 @@ MAX_EXPORT = 128 * 1024 * 1024
 MAX_FINDINGS = 1000
 VERSION = "5.4.3"
 TYPESCRIPT_VERSION = "6.0.3"
+# A located discovery error is "path:line: diagnostic". Only Python sources get
+# statement digests: other files can hold embedded code whose line numbers use
+# another split, and these separators make Python line numbering ambiguous.
+LOCATED = re.compile(r"([1-9][0-9]*): (.*)\Z", re.S)
+AMBIGUOUS_BREAK = re.compile("\r(?!\n)|[\x85\u2028\u2029]")
+CALLER_LINE = re.compile(r"\bline ([0-9]+)\b")
+# Diagnostics that stop discovery of a whole file, or of everything past a
+# coverage limit, name no single site and are never located gaps.
+WHOLE_FILE = ("invalid Python source", "discovery failed: ", "invalid action/discovery: ")
+COMPOUND = (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef, ast.If, ast.For, ast.AsyncFor, ast.While,
+            ast.With, ast.AsyncWith, ast.Try, ast.TryStar, ast.Match)
 
 
 class ScanTransport(rt.Transport):
@@ -218,6 +230,78 @@ def findings(value, manifest):
     return sorted(result, key=lambda row: json.dumps(row, sort_keys=True))
 
 
+def statements(item):
+    """A Python source's statements as (first line, last line, node), or None without a syntax tree."""
+    if item["format"] != "python" or AMBIGUOUS_BREAK.search(item["text"]):
+        return None
+    try:
+        tree = ast.parse(item["text"].removeprefix("\ufeff"))
+    except (SyntaxError, ValueError, RecursionError, MemoryError):
+        return None
+    def first(node):
+        return min([node.lineno, *(decorator.lineno for decorator in getattr(node, "decorator_list", ()))])
+    return [(first(node), node.end_lineno, node) for node in ast.walk(tree) if isinstance(node, ast.stmt)]
+
+
+def statement_span(nodes, line):
+    """The first and last line of the innermost statement holding ``line``, or None.
+
+    A compound statement contributes only its header when the line is there,
+    and its whole extent for any other line it holds, such as an except clause.
+    """
+    holding = [(first, last, node) for first, last, node in nodes or () if first <= line <= last]
+    if not holding:
+        return None
+    first, last, node = max(holding, key=lambda item: (item[0], -item[1]))
+    if isinstance(node, COMPOUND):
+        inner = node.cases[0].pattern if isinstance(node, ast.Match) else node.body[0]
+        start = min([inner.lineno, *(decorator.lineno for decorator in getattr(inner, "decorator_list", ()))])
+        if line < start:
+            last = max(line, start - 1)
+    return first, last
+
+
+def error_sources(errors, selected, *, complete=True):
+    """Each error's selected source location and statement digests, in error order.
+
+    An entry is None unless the error names exactly one selected source as
+    ``path:line: diagnostic``; an incomplete discovery has no located errors.
+    ``span`` is the reported statement's first and last line, and ``lineSha256``
+    the SHA-256 of those LF-split lines' exact UTF-8 bytes, joined by LF. Each
+    ``line N`` the diagnostic names is a caller in the same source, with its
+    own statement span and digest. ``lineSha256`` is None outside Python
+    sources, for a whole-file or coverage-limit diagnostic, and when a statement
+    is unknown. Module acceptance compares these with recorded coverage gaps.
+    """
+    result, parsed = [], {}
+    for error in errors:
+        entry = None
+        located = [(path, match) for path in selected if complete and isinstance(error, str)
+                   and error.startswith(path + ":") and (match := LOCATED.match(error, len(path) + 1))]
+        if len(located) == 1:
+            path, match = located[0]
+            line, diagnostic, item = int(match[1]), match[2], selected[path]
+            if path not in parsed:
+                parsed[path] = statements(item)
+            # A final LF ends the last line; it does not start another one.
+            lines = item["text"].removesuffix("\n").split("\n")
+            def site(number):
+                span = statement_span(parsed[path], number) if number <= len(lines) else None
+                if span is None:
+                    return None, None
+                return list(span), hashlib.sha256("\n".join(lines[span[0] - 1:span[1]]).encode()).hexdigest()
+            span, digest = site(line)
+            callers = [dict(zip(("line", "span", "sha256"), (number, *site(number))))
+                       for number in map(int, CALLER_LINE.findall(diagnostic))]
+            if (diagnostic.startswith(WHOLE_FILE) or "limit exceeded" in diagnostic
+                    or any(caller["sha256"] is None for caller in callers)):
+                digest = None
+            entry = {"path": path, "line": line, "span": span, "diagnostic": diagnostic, "lineSha256": digest,
+                     "callers": callers}
+        result.append(entry)
+    return result
+
+
 def summary(report):
     lines = ["# Nightly cross-module duplicate scan: " + report["result"].upper(), "",
              "Detector: jscpd " + VERSION + ". Cross-module copies belong in Builds.", ""]
@@ -341,7 +425,8 @@ def scan(project, directory, *, transport=None, git_factory=rt.Git, detector_fac
             except Exception as error:
                 report["errors"].append(rt.clean(error))
             for index, module in enumerate(modules):
-                row = {"module": module, "revision": "", "result": "fail", "files": [], "errors": [], "observations": []}
+                row = {"module": module, "revision": "", "result": "fail", "files": [], "errors": [], "errorSources": [],
+                       "observations": []}
                 report["modules"].append(row)
                 try:
                     git = git_factory(scratch / "git" / str(index))
@@ -354,6 +439,11 @@ def scan(project, directory, *, transport=None, git_factory=rt.Git, detector_fac
                     selected, row["errors"] = discovery.discover()
                     # Test boundary sites record coverage loss without failing the row.
                     row["observations"] = discovery.observations
+                    # A coverage limit or a failed pinned-source acquisition
+                    # leaves discovery incomplete: none of its errors is located.
+                    complete = (getattr(discovery, "exhausted", True) is False
+                                and not getattr(discovery, "pin_errors", True))
+                    row["errorSources"] = error_sources(row["errors"], selected, complete=complete)
                     if pinned.acquired:
                         row["pinnedSources"] = pinned.acquired
                     root = scratch / "sources" / module
@@ -380,6 +470,8 @@ def scan(project, directory, *, transport=None, git_factory=rt.Git, detector_fac
                     row["result"] = "fail" if row["errors"] else "pass"
                 except Exception as error:
                     row["errors"].append(rt.clean(error))
+                    # A failure outside discovery leaves no error of the row located.
+                    row["errorSources"] = [None] * len(row["errors"])
             # Verify tools/config even for zero scope, so unavailable installation
             # cannot be presented as a successful scan. No detector invocation is
             # needed for empty roots (jscpd otherwise scans its cwd).
@@ -401,6 +493,7 @@ def scan(project, directory, *, transport=None, git_factory=rt.Git, detector_fac
         for module in report["modules"]:
             module["files"] = []
             module["observations"] = []
+            module["errorSources"] = [None] * len(module["errors"])
         persist(directory, report)
     return report
 
