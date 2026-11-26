@@ -1,5 +1,5 @@
 {
-  "recorded_at": "2026-11-26T00:36:26+01:00",
+  "recorded_at": "2026-11-26T09:42:34+01:00",
   "initial_recorded_at": "2026-11-17T21:16:00+00:00",
   "status": "incomplete",
   "adopted": true,
@@ -375,9 +375,131 @@
     },
     "hosted_verification": "Unverified in the local-only build step"
   },
+  "local_discovery_qualification": {
+    "python": "3.15.2",
+    "uv": "0.13.7",
+    "cicd_base_sha": "6ccbe64eb4daa29f5d06b031ba6bc666adf28521",
+    "cicd_base_tree": "f73cf31da905b5c8a36979ee692a0198bbeb965e",
+    "scanner_candidate_blob": "4e6bd0c7cb1c8d2478b11eaced880cafe179cc21",
+    "scanner_tests_candidate_blob": "66408c0793cd22461bbf6d10039c24ca33ba546c",
+    "scanner_docs_candidate_blob": "16e4def6030c614cd2ee4b31f1fafa7db6190b54",
+    "builds_tag": "v6.8.4",
+    "builds_sha": "a6abb7908ec38dcb3fbd99d69e7ed29ae25794d2",
+    "builds_tree": "3f492eb11a8f532302d24b6c551f8e9a34b1f9cb",
+    "committed_mcpcli": {
+      "sha": "66ccf751831d06ee36c893876db9f6169f247099",
+      "tree": "07356ba9492b7e006d14471cd39dfb9bafdad8c3",
+      "source_discovery": {
+        "result": "fail",
+        "files_discovered": 60,
+        "discovery_errors": 121,
+        "report_sha256": "c56cd5893f46a9f591827987682660ca82467fb081991382cac2932aac41a323"
+      }
+    },
+    "mcpcli_working_tree": {
+      "qualification_tree": "d7c02311fa0a6d1c4233656542f884ecc3ebf4fd",
+      "source": "Uncommitted edits over the pinned source, materialized in a disposable Git index and archive",
+      "changed_blobs": {
+        "README.md": "2521ec81748670bc8732b5a4fbb98a9b12ef11e9",
+        "scripts/tests/test_product_ci.py": "416f6eb4a6838c7cfb3166b6d5b90901c7fd7d8b",
+        "tools/live-topology/ci.py": "88acd2646aa3e7e6d5506a9640076ac41e4fde84",
+        "tools/live-topology/test_ci.py": "f66a5e9c3aa4cd2439b35642c039f090436d417b",
+        "tools/manual-release-tests/test_evidence_secret_scan.py": "95f46d7ec72015948d832a20a24b8bae2e55978f",
+        "tools/manual-release-tests/test_paired_acceptance_source.py": "325ccbbcd3d8eab8f9914628e92d0ddbe771c58d",
+        "tools/manual-release-tests/test_public_package_signatures.py": "ffa30ccb0e36dbaeca59d2b6dc711f6bda038856"
+      },
+      "source_discovery": {
+        "result": "fail",
+        "files_discovered": 51,
+        "discovery_errors": 101,
+        "report_sha256": "bc23d6c8169e8a83328543724a41b9f0b495cae9d99a24bb667538d3a2e58fa3",
+        "diagnostics": {
+          "computed_subprocess_working_directory": 31,
+          "computed_subprocess_environment": 20,
+          "bootstrap_consumer_shell": 23,
+          "dynamic_python_source_import": 6,
+          "other_execution_and_resolution": 21
+        }
+      },
+      "perimeter_comparison": {
+        "drift_records": 0,
+        "output_sha256": "d067a249ae0c0691e3951d59de7417e4590db30c877e73f4394c07e32b13e800"
+      },
+      "product_script_tests": {
+        "passed": 70,
+        "output_sha256": "02806e0b4f6c9713a3a077916e494e8280f4c38358ab7acc4f12169e17b5cc08"
+      },
+      "manual_release_tests": {
+        "passed": 24,
+        "output_sha256": "7752a3ce60585a67a3bbb9b2d5ae5bc4c2948028c18cb77ec4b24ea4cd326040"
+      },
+      "controlled_mcpcli_matrix": {
+        "passed": 9,
+        "output_sha256": "50f655887904d6a332a2ce61628876a61fd25227d55e8a65424eb66b9f26c7df",
+        "scope": "Prerequisite refusal, hosted namespace failure, source failure and timeout, live skip and case identity, source blob provenance, detached child cleanup, extra packages and mutated consumer bytes"
+      }
+    },
+    "source_discovery_note": "The stopped-container operations remove four of the previous 56 diagnostics. Following the two product unittest invocations through the launcher retains all 52 other diagnostics, adds 26 reachable test and script files and reports 69 diagnostics within that added scope. The working-tree candidate removes legacy release and story evidence checks from product unittest discovery, retains the current credential-refusal test, and gives Git show an option terminator. This is offline source discovery, independent of CAP-13 nightly release.",
+    "report_encoding": "UTF-8 JSON with sorted keys for revision, sorted files and sorted unique errors, without a trailing newline",
+    "scanner_tests": {
+      "passed": 18,
+      "output_sha256": "a086777c146517920db550f2a9271741efd6c3e8563949eb4a11d130c3437cd6"
+    },
+    "full_scanner_suite": {
+      "command": "uv run --locked --script --python 3.15.2 tools/tests/test_scan.py -v",
+      "result": "pass",
+      "passed": 161,
+      "duration_seconds": 1154.521,
+      "node": "26.4.0",
+      "output_sha256": "fa68a3c10ecc88f1dcb04471b67bfd35d09b14358d6a27da03828ed1514147d3"
+    },
+    "renderer_tests": {
+      "passed": 52,
+      "output_sha256": "072af3105e018e5d35a331d9d7510941798df09da0123eabf3b1df5a4d012790"
+    },
+    "builds_tests": {
+      "passed": 34,
+      "output_sha256": "fc087a0481a745ba9dc187911383dd11ecf1ceca9f4a02bbc57d7ab2cebca16e"
+    },
+    "locked_render_check": {
+      "result": "pass",
+      "output_sha256": "e215821c32266b776ada75616006777e1b263117ee0ee9ae22646a7d789879af"
+    },
+    "local_committed_candidate_checks": {
+      "result": "pass for App inventory, committed render inputs and outputs, repeated render equality, schemas and caller interfaces, McpCli direct gitlink, and zero perimeter drift at the committed module pin",
+      "output_sha256": "e092689e551eed1820d372fd1fe9f3578e248f3bcd38c0f8a8340e276eaf080f"
+    },
+    "full_online_verification": "Pending authenticated publication, provider and hosted readbacks"
+  },
+  "mcpcli_push_qualification": {
+    "recorded_at": "2026-11-26T09:51:17+01:00",
+    "base_sha": "f7908f80125dd627989729fb2a326646a1d00333",
+    "published_sha": "39dc7d07e6e864cd7a54811e948d56206834a342",
+    "published_tree": "9163e1ebab82574a66ff1b452f547981d9687adf",
+    "published_ref": "refs/heads/main",
+    "published_url": "https://github.com/Hexalith/Hexalith.McpCli/commit/39dc7d07e6e864cd7a54811e948d56206834a342",
+    "product_patch_sha256": "18aef9032e09153cc59d81f80179ead137c8d003205862289ed2889d048dbfc1",
+    "builds_tag": "v6.8.4",
+    "builds_sha": "a6abb7908ec38dcb3fbd99d69e7ed29ae25794d2",
+    "commitlint": {
+      "result": "pass",
+      "version": "21.2.4",
+      "module_message_sha256": "97393a08c4d15b39ae548535f68df57d01b6207bf95d2511bcc6f1722738cdce",
+      "cicd_builds_tag": "v6.8.5",
+      "cicd_builds_sha": "deccbc3bcf4ed687ecf4d556ebe356fe57148777",
+      "cicd_message_sha256": "4e9e56bcfa52b4397569808743e1b93daf747e6458daa0d47dce35d8aaf21b5b"
+    },
+    "checker": {
+      "command": "python3 references/Hexalith.Builds/check.py",
+      "python": "3.14.4",
+      "result": "pass for the guard, Release build and unit stages on the exact committed standalone tree",
+      "output_sha256": "c9e526c475ad1630a937f0b5cc187c08e153f031f4b78130b700b0a34c752400"
+    },
+    "hosted_acceptance": "Unverified at publication"
+  },
   "blockers": [
-    "Resolve the 56 remaining local discovery diagnostics at the committed McpCli pin, including computed shell interpreter invocations and Python process and import resolution. Verify a passing scan for the adopted main SHA.",
+    "Resolve incomplete discovery of the McpCli consumer shell, native launchers and product test helpers. The committed pin reports 121 diagnostics across 60 discovered files, and the local candidate reports 101 across 51. Verify an independent passing scan for the adopted main SHA.",
     "Verify green CI and completed Linux live and Windows/macOS product jobs at one adopted main SHA.",
-    "Verify a qualifying CAP-13 nightly for the same green SHA, including McpCli's scan and the approved pair publication or a valid nothing-to-release outcome."
+    "Verify a qualifying CAP-13 nightly for the same green SHA, with the approved pair publication or a valid nothing-to-release outcome."
   ]
 }

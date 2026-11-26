@@ -117,6 +117,9 @@ Recognized forms supply the exact working directory, import roots and language:
   `python -m unittest discover` accepts an explicit literal start directory
   and a literal filename pattern. It includes every matching test source and
   package initializer below that directory, and fails for unsafe sources.
+  A Python argv list or tuple that passes `sys.executable -m unittest discover`
+  to a wrapper is subject to the same discovery rules. A direct subprocess
+  call still uses its own working directory.
   A standalone Bash `python -` command on one line can read a closed, fully quoted heredoc.
   Its LF-delimited body is traversed as Python from every candidate working
   directory. Only literal words and quoted simple parameter expansions can
@@ -134,6 +137,13 @@ Recognized forms supply the exact working directory, import roots and language:
   also accept simple shell parameter expansion in the data operands.
   Bash `grep` accepts simple parameter expansion in its data operands and a
   literal trailing dollar in its pattern.
+- Python subprocess argv can pass data to four literal Docker forms used to
+  extract bytes from stopped containers. These are `pull --platform linux/amd64`,
+  `create --network none IMAGE /bin/true`, `cp SOURCE DESTINATION` and
+  `rm CONTAINER`. Discovery checks the command and argument positions, the
+  standard subprocess import and the absence of a tracked Docker executable.
+  Shell invocation, alternate executables, callbacks and unproved environment
+  changes fail. Literal script operands stay in discovery.
 - Python subprocess argv using the standard Git executable can read metadata
   with literal `rev-parse`, `ls-files`, `ls-tree`, `status`, `cat-file`,
   `diff`, `show`, `archive` and `remote get-url` and supported literal flags.

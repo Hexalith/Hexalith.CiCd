@@ -59,6 +59,14 @@ WRAPPERS = {"env": 0, "exec": 0, "command": 0, "builtin": 0, "coproc": 0, "time"
             "timeout": 0, "flock": 1, "chrt": 1}
 TIMEOUT_DURATION = r"[0-9]+(?:\.[0-9]+)?[smhd]?"
 DOTNET_BUILD_OPERATIONS = ("build", "pack", "restore", "msbuild")
+# These Docker forms manage image data and stopped containers without running
+# a container. Match the literal operation and option positions in argv.
+DOCKER_DATA_OPERATIONS = (
+    ("docker", "pull", "--platform", "linux/amd64", None),
+    ("docker", "create", "--network", "none", None, "/bin/true"),
+    ("docker", "cp", None, None),
+    ("docker", "rm", None),
+)
 SIMPLE_SHELL_PARAMETER = r"\$(?:\{[A-Za-z_]\w*\}|[A-Za-z_]\w*)"
 BASH_ENUM_ARGUMENT_GUARD = (
     r'(?P<option>[a-z][a-z0-9_]*)="\$\{1-[A-Za-z0-9_-]+\}"\n'
@@ -2546,6 +2554,18 @@ class Discovery:
                 modules.extend((getattr(node, "lineno", 1) + offset, module)
                                for module in self.references(sequence, path, getattr(node, "lineno", 1) + offset))
             try:
+                if (isinstance(node, (ast.List, ast.Tuple)) and len(node.elts) >= 4
+                        and "sys.executable" in names(ast.unparse(node.elts[0]))):
+                    command, = sequences(node)
+                    if command[1:4] == ["-m", "unittest", "discover"]:
+                        consumer = parents.get(node)
+                        direct = (isinstance(consumer, ast.Call) and consumer.args and consumer.args[0] is node
+                                  and names(ast.unparse(consumer.func)) & COMMAND_APIS)
+                        if not direct:
+                            # Keep test coverage even when a wrapper receives the argv.
+                            if any(word is None for word in command[4:]):
+                                raise DeliveryError("unresolved unittest discovery arguments")
+                            self.unittest_discovery(command[3:], path, cwd, action)
                 if isinstance(node, ast.Constant) and isinstance(node.value, str):
                     literals.append((getattr(node, "lineno", 1) + offset, node.value))
                     # The pinned writer exports one fixed variable and rejects
@@ -3343,19 +3363,35 @@ class Discovery:
                     return
                 except (ValueError, TypeError, SyntaxError):
                     raise DeliveryError("unresolved computed Python script invocation; unsafe or unresolved forwarding") from None
-            # Fixed .NET SDK operations consume project/output/property data.
-            # Their C#/MSBuild graph is outside this source-language perimeter;
-            # dynamic executable/verb/options expansion still cannot be certified.
             if isinstance(first, (ast.List, ast.Tuple)) and not any(isinstance(item, ast.Starred) for item in first.elts):
                 fixed = [item.value if isinstance(item, ast.Constant) else None for item in first.elts]
+                # The C#/MSBuild graph is outside this source-language perimeter.
                 compiler = (fixed[:1] == ["dotnet"] and len(fixed) > 1 and (
                     fixed[1] in DOTNET_BUILD_OPERATIONS
                     or (fixed[1:3] == ["tool", "run"] and len(fixed) > 3 and isinstance(fixed[3], str))))
-                if compiler:
+                docker_data = fixed[:1] == ["docker"] and any(
+                    len(fixed) == len(pattern) and all(word is None or actual == word
+                                                       for actual, word in zip(fixed, pattern))
+                    for pattern in DOCKER_DATA_OPERATIONS)
+                if compiler or docker_data:
                     if any(keyword.arg == "shell" and not (
                             isinstance(keyword.value, ast.Constant) and keyword.value.value in (False, None))
                            for keyword in node.keywords):
-                        raise DeliveryError("unsupported shell execution of a compiled operation")
+                        raise DeliveryError("unsupported shell execution of a fixed tool operation")
+                    if docker_data:
+                        if call in {"subprocess.getoutput", "subprocess.getstatusoutput"}:
+                            raise DeliveryError("unsupported shell execution of a fixed tool operation")
+                        if (not isinstance(node.func, ast.Attribute) or not isinstance(node.func.value, ast.Name)
+                                or not self.proof_import(node.func.value.id, "subprocess", nodes, parents)
+                                or self.import_module("subprocess", path, cwd, action, roots=roots)):
+                            raise DeliveryError("unproved subprocess API for Docker discovery")
+                        if any(posixpath.basename(item).lower() in {"docker", "docker.exe", "docker.cmd", "docker.bat", "docker.com"}
+                               for item in self.items):
+                            raise DeliveryError("unproved Docker executable: tracked Docker command")
+                        if any(keyword.arg == "preexec_fn" and not (
+                                isinstance(keyword.value, ast.Constant) and keyword.value.value is None)
+                               for keyword in node.keywords):
+                            raise DeliveryError("unsupported subprocess pre-execution callback")
                     return
             try:
                 if (isinstance(first, (ast.List, ast.Tuple)) and first.elts

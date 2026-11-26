@@ -389,6 +389,42 @@ class LauncherDiscoveryTests(unittest.TestCase):
         self.assertEqual(errors, [])
         self.assertIn("tools/child.py", selected)
 
+    def test_stopped_container_operations_keep_literal_source_references(self):
+        source = """import subprocess
+subprocess.run(["docker", "pull", "--platform", "linux/amd64", image], timeout=300)
+container = subprocess.check_output(["docker", "create", "--network", "none", image, "/bin/true"])
+subprocess.run(["docker", "cp", container + ":/tool", "tools/helper.py"])
+subprocess.run(["docker", "rm", container])
+"""
+        selected, errors, _ = self.discover([("bash", "python tools/bootstrap.py", "")],
+                                            {"tools/bootstrap.py": source, "tools/helper.py": "import child\n",
+                                             "tools/child.py": "pass\n"})
+        self.assertEqual(errors, [])
+        self.assertIn("tools/child.py", selected)
+
+    def test_docker_data_operations_refuse_unproved_execution(self):
+        for call, files, diagnostic in (
+                ('["docker", "run", image]', {}, "unresolved computed Python script invocation"),
+                ('["docker", operation, image]', {}, "unresolved computed Python script invocation"),
+                ('["docker", "create", "--network", settings, image, "/bin/true"]', {},
+                 "unresolved computed Python script invocation"),
+                ('["docker", "rm", *containers]', {}, "unsafe or unresolved forwarding"),
+                ('["docker", "rm", container], shell=True', {}, "unsupported shell execution"),
+                ('["docker", "rm", container], preexec_fn=callback', {}, "unsupported subprocess pre-execution callback"),
+                ('["docker", "rm", container], env={"PATH": "tools"}', {}, "environment affecting resolution"),
+                ('["docker", "rm", container]', {"tools/subprocess.py": "pass\n"}, "unproved subprocess API"),
+                ('["docker", "rm", container]', {"tools/docker": "#!/bin/bash\n:"}, "tracked Docker command")):
+            with self.subTest(call=call, files=files):
+                _, errors, _ = self.discover([("bash", "python tools/bootstrap.py", "")],
+                                             files | {"tools/bootstrap.py": f"import subprocess\nsubprocess.run({call})\n"})
+                self.assertEqual(len(errors), 1)
+                self.assertIn(diagnostic, errors[0])
+        _, errors, _ = self.discover([("bash", "python tools/bootstrap.py", "")], {
+            "tools/bootstrap.py": 'import subprocess\nsubprocess.getoutput(["docker", "rm", container])\n',
+        })
+        self.assertEqual(len(errors), 1)
+        self.assertIn("unsupported shell execution", errors[0])
+
     def test_native_hook_traverses_the_shared_prepared_python_target(self):
         command = ('timeout --signal=TERM --kill-after=30s 3600 '
                    '"${HEXALITH_CI_PYTHON:?Shared prepared Python is required}" tools/driver.py linux')
@@ -654,6 +690,29 @@ fi"""
         self.assertIn("unsafe unittest discovery source", errors[0])
         _, errors, _ = self.discover([("bash", "python -m unittest discover", "")], {})
         self.assertEqual(errors, [])
+
+    def test_unittest_argv_keeps_wrapped_tests_in_scope(self):
+        commands = [("bash", "python scripts/start.py", "")]
+        source = ("from sys import executable as python\n"
+                  "supervise([python, '-m', 'unittest', 'discover', '-s', 'checks', '-p', 'test_*.py'])\n")
+        files = {"scripts/start.py": source, "checks/test_suite.py": "import helper\n",
+                 "checks/helper.py": "pass\n", "ignored/test_hidden.py": "pass\n"}
+        selected, errors, _ = self.discover(commands, files)
+        self.assertEqual(errors, [])
+        self.assertIn("checks/test_suite.py", selected)
+        self.assertIn("checks/helper.py", selected)
+        self.assertNotIn("ignored/test_hidden.py", selected)
+
+        _, errors, _ = self.discover(commands, files | {"scripts/start.py": source.replace("'checks'", "directory")})
+        self.assertEqual(len(errors), 1, errors)
+        self.assertIn("unresolved unittest discovery arguments", errors[0])
+
+        direct = ("import subprocess, sys\n"
+                  "subprocess.run([sys.executable, '-m', 'unittest', 'discover', '-s', 'checks'], cwd='other')\n")
+        shell = {"scripts/start.py": direct, "other/checks/test_specific.py": "pass\n"}
+        selected, errors, _ = self.discover(commands, shell)
+        self.assertEqual(errors, [])
+        self.assertIn("other/checks/test_specific.py", selected)
 
     def test_git_can_read_the_superproject_directory(self):
         files = {"scripts/probe.py": "import subprocess\n"
