@@ -91,18 +91,21 @@ exception expires at App adoption; normal `check.py` is then mandatory.
   library tests — implement the narrow qualification/preparation contract with
   backward compatibility; release through the interactive shared process.
 - [ ] EventStore `.github/actions/`, `Hexalith.EventStore.slnx`, `scripts/`,
-  `tools/`, `tests/`, root npm files and `docs/ci.md` — retain package, consumer,
+  `tools/`, `tests/` and `docs/ci.md` — retain package, consumer,
   compatibility, browser, payload and broker checks; reuse shared Release
   outputs; route live projects explicitly; delete CI/governance assertions
-  and tool-only npm assets. Apply the approved preparation checks before pushes.
+  while preserving legacy publishing and tool-only npm/Husky assets until
+  adoption. Apply the approved preparation checks before pushes.
 - [ ] `templates/.github/workflows/ci.yml.j2`, `tools/tests/test_render.py`,
   `tools/tests/test_validate.py`, `setup/README.md` — render and validate the
   manual qualification contract with explicit secrets; test failures and old configs.
 - [ ] `builds-version`, `setup/Hexalith.EventStore.yml`, `rendered/`, EventStore
   gitlink — pin the acceptable release and validate one committed adoption
   candidate after actions exist on live main. Let delivery replace owned files.
-- [ ] `evidence/20/` — authenticate adoption, enable immutability, retire legacy
-  grants, and record normal-checker, CI, qualification and nightly outcomes.
+- [ ] `evidence/20/` and EventStore root npm/Husky files — authenticate adoption,
+  enable immutability, retire legacy grants and tool-only npm and Husky assets
+  after adoption, and record the normal checker, green adoption CI, applicable
+  on-premises qualification, offline Azure checks and EventStore's nightly outcome.
 
 **Acceptance Criteria:**
 
@@ -111,8 +114,17 @@ exception expires at App adoption; normal `check.py` is then mandatory.
 - Given a compatible released Builds API and satisfied preconditions, when
   delivery adopts EventStore, then its perimeter matches the accepted render
   and retained product checks stay enabled.
-- Given adopted green main, when a nightly run (CAP-13) after adoption completes, then
-  successful publication or a valid no-release result is recorded before done.
+- Given the approved MVP routes, record successful applicable on-premises
+  Kubernetes/kind qualification and passing offline Azure schema, payload,
+  invariant and security checks in ordinary CI without Azure secrets. Record
+  Azure live qualification and its runner, environment, authority and secret
+  custody provisioning as deferred until post-MVP.
+- Given green adopted CI, when a central `nightly.yml` run starts after adoption
+  on `main` by schedule or authorized dispatch with `qualify-bump` false, then
+  authenticate EventStore's own CAP-13/CAP-16 evidence. Require EventStore's
+  eligibility, passing CodeQL, verified publication or valid nothing-to-release,
+  qualifying scan evidence for its dispatch commit and any required post-bump
+  delivery evidence.
 
 ## Implementation Notes
 
@@ -140,6 +152,8 @@ exception expires at App adoption; normal `check.py` is then mandatory.
 ## Spec Change Log
 
 - 2026-11-18 — Human approved the [on-demand nightly sprint change](../planning-artifacts/sprint-change-proposal-2026-11-18-on-demand-nightly.md) (section 4.5): a nightly run on `main`, scheduled or dispatched with `qualify-bump` false, satisfies this story's nightly criterion, judged on this module's own rows (CAP-13, CAP-16). Reworded the scheduled-night lines; no other constraint changed.
+- 2026-11-27 — Recorded the 17 November MVP clarification and 18 November nightly decision in Tasks & Acceptance. The [migration-readiness correction](../planning-artifacts/sprint-change-proposal-2026-11-27.md) aligns the backlog and AD-21 with those decisions.
+- 2026-11-27 — Moved tool-only npm and Husky cleanup from pre-adoption product preparation into the post-adoption task to match `stories.yaml` and AD-21, per [readiness-blockers sprint change proposal](../planning-artifacts/sprint-change-proposal-2026-11-27-readiness-blockers.md).
 
 ## Review Triage Log
 

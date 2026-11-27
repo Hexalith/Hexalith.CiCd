@@ -54,7 +54,7 @@ baseline_commit: '66e3a5a3a0e9bb01dd161c19349953594e01a22f'
 ## Tasks & Acceptance
 
 **Execution:**
-- [ ] `prerequisite-19-long-running-nightly-hooks.md` — require its verified shared release before registering ChatBot. The prerequisite is a separate deliverable; story 19 does not implement shared timing support.
+- [ ] Story `29-3` (`prerequisite-19-long-running-nightly-hooks.md` items 4–5) — require the scheduled CiCd wait-continuation prerequisite to ship before registering ChatBot (items 1–3 already shipped in Builds `v6.1.0` and CiCd render). The prerequisite is a separate deliverable; story 19 does not implement shared timing support.
 - [ ] `evidence/19/` — verify/provision AD-21 App selection, exact rulesets, stale release/CodeQL cleanup, release environment with module-only Zot identity, scoped NuGet policy, publish switch and shared org access. Record sanitized before/after metadata. Rulesets/environment/switch/access are missing; App selection/NuGet policy are unverified; retention/push protection pass.
 - [x] ChatBot `tools/Hexalith.ChatBot.StoryEvidenceGate/`, `tests/Hexalith.ChatBot.StoryEvidenceGate.Tests/`, `story-evidence-policy.json`, `.github/scripts/`, mixed architecture tests and `Hexalith.ChatBot.slnx` — remove obsolete gates and workflow assertions using the investigation inventory; preserve product assertions and recovery code.
 - [x] ChatBot `package.json`, `package-lock.json` — remove tool-only release/commitlint dependencies. No `.husky/` or audit waiver was found.

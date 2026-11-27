@@ -48,7 +48,11 @@ retain their original schema, defaults, reader and rendered caller bytes.
 
 See [the setup contract](../../../setup/README.md) for the actual supported fields
 and action parameter protocol, and [ordered adoption](../../../docs/ordered-module-adoption.md)
-for remaining product preparation and delivery blockers. Live runner/environment
-protections, resource bounds, secret custody, elapsed workloads and fresh hosted
-success must be verified before adoption; local checks and synthetic candidate
-fixtures cannot establish them.
+for remaining product preparation and delivery blockers. Before each cutover,
+verify applicable live runner and environment protections, resource bounds,
+secret custody, elapsed workloads and fresh hosted success for the enabled
+qualification routes. EventStore's MVP requires applicable on-premises
+Kubernetes/kind qualification and offline Azure schema, payload, invariant and
+security checks without Azure secrets. Azure runner, approval environment,
+authority and secret custody provisioning and live qualification are post-MVP.
+Use hosted evidence to establish live outcomes.

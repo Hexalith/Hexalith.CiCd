@@ -459,10 +459,10 @@ These arrows are the allowed dependencies. Builds never names a module, module f
        - A module is **adopted** when `delivered/<Repo>` exists and its live `main` has `.github/hexalith-ci.json`. A module with the ref and no file has a failed adoption push, and fails the night. An adopted module with immutable releases off fails the night.
        - Each adopted module whose live `ci.yml` and `release.yml` equal those at `delivered/<Repo>` gets its `release.yml` dispatched, with `delivered-sha` set to that ref's commit. A drifted module is not dispatched, and fails the night.
        - Builds' `builds-release.yml` is dispatched too.
-    2. **`wait`** (App). Polls every 60 seconds until all runs complete, for at most 5 hours, and outputs each run's conclusion and outcome. It fails only when it can't list the runs.
+    2. **`wait`** (App). Polls every 60 seconds until all runs complete, for at most 5 hours by default—or across bounded continuation jobs when a dispatched module configures `nightlyTimeoutMinutes` beyond the single-job budget, each job staying under the 6-hour limit and re-minting fresh scoped tokens—and outputs each run's conclusion and outcome. It fails only when it can't list the runs.
     3. **`publish-ready`** (App, stdlib only), after `wait` whatever its result.
        - For each run whose conclusion is `success` and outcome `ready`, it reads the draft by the outcome's `draftId` and checks that it is still marked, against the outcome's `lastTag`. It checks that the API digest of the artifact named by `hexalith-release-artifact:`, in the run named by `hexalith-release-run:`, equals the trailer, and that no tag `v<version>` exists or that it points at `sha`. It then sends `publish` step 5's publishing request, without its tree comparison, and checks the returned release and that `v<version>` resolves to `sha`. Its tokens hold Contents and Workflows write and Actions read on that repo.
-       - It then writes the summary and the verdict per run: a conclusion other than `success` is failed, whatever the outcome; `success` with `published`, `nothing` or `disabled` passes; `ready` passes only if this job published that draft; no readable outcome, or still running after 5 hours, is failed. It fails if any verdict is failed.
+       - It then writes the summary and the verdict per run: a conclusion other than `success` is failed, whatever the outcome; `success` with `published`, `nothing` or `disabled` passes; `ready` passes only if this job published that draft; no readable outcome, or still running after the configured wait deadline, is failed. It fails if any verdict is failed.
     4. *(retired: the duplicate scan moved to `scan.yml`, below.)*
     5. **`bump`** (no secrets other than a read-only `GITHUB_TOKEN`), after `publish-ready` whatever its result. It fetches the current tip of CiCd `main`, never the run's `github.sha`. On that tip it moves `builds-version` (AD-10), re-renders, and runs the AD-3 pin checks: a bump changes only `builds-version` and `rendered/**`, so suites that don't read the pin can't be affected by it. If they fail, nothing is pushed and the night fails, naming the tag. If nothing changes, the later bump jobs do nothing. It outputs the commit as an artifact ID.
     6. **`bump-push`** (stdlib only, `GITHUB_TOKEN` with `contents: write` and `actions: write`). It takes the commit by that artifact ID and pushes it as `build(cicd): bump Builds to vX.Y.Z`, only if:
@@ -617,7 +617,12 @@ grants and stale-state cleanup.
      - turns on immutable releases;
      - deletes every other nuget.org policy for the repo;
      - removes the repo from every legacy org secret, removes its package IDs from the legacy `NUGET_API_KEY` scope, and revokes the legacy Zot identity's push on its repositories.
-  4. **Done** when the module's CI is green and its next nightly release succeeds, or reports nothing to release.
+  4. **Done** when the module's CI is green and its own outcome passes CAP-16
+     in a central `nightly.yml` run started after adoption on `main`. Use a
+     scheduled run or an authorized dispatch with `qualify-bump` false (CAP-13,
+     AD-18). Require the module's own eligibility, passing CodeQL, verified
+     publication or valid nothing-to-release, qualifying scan evidence for its
+     dispatch commit and any required post-bump delivery evidence.
 
   **AI.Tools applicability and preparation decisions (human-approved 2026-11-16):**
   - `Hexalith.AI.Tools` is a documentation/skills repository registered with
@@ -637,7 +642,7 @@ grants and stale-state cleanup.
     normal checker in a standalone clone with Builds as a direct dependency.
   - Both decisions apply only to AI.Tools; they do not extend the pilots'
     preparation exception or waive AD-21 requirements for any other module.
-    Adoption still waits for story 11's genuine scheduled-night checkpoint and
+    Adoption still waits for story 11's CAP-13 nightly checkpoint and
     acceptance. Local preparation and an unpushed registration are not adoption.
 
   **CiCd itself needs:**
@@ -655,9 +660,15 @@ grants and stale-state cleanup.
   failures block pushes; owner-authorized live prerequisites are reported
   separately. It never edits owned portions, initializes nested submodules,
   changes push credentials or supplies Azure authority. At accepted adoption
-  the exception expires and ordinary module `check.py` is mandatory. Legacy
-  publishing/tool assets remain until adoption; release/provisioning and an
-  actual scheduled-night outcome remain prerequisites for story completion.
+  the exception expires and ordinary module `check.py` is mandatory. Keep
+  legacy publishing and tool assets until adoption. EventStore requires a
+  compatible released Builds API, applicable provisioning and on-premises
+  Kubernetes/kind qualification, and offline Azure product and security checks
+  without Azure secrets. Defer live Azure qualification and its dedicated
+  runner, approval environment, authority and secret custody provisioning until
+  post-MVP. Close Story 20 with the normal checker, green adopted CI and
+  EventStore's own authenticated nightly evidence under step 4.
+  [Ordered adoption runbook](../../../../docs/ordered-module-adoption.md#adoption-blockers-and-evidence-boundaries)
 
 ## Consistency Conventions
 

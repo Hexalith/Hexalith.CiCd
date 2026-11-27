@@ -708,6 +708,30 @@
     the module. Right after adoption, the maintainer turns on immutable
     releases, deletes the other nuget.org policies, and removes the repo from
     the legacy org secrets, the NUGET_API_KEY scope, and the legacy Zot push.
+- id: "29-3"
+  title: "Long-running nightly wait continuation"
+  description: >-
+    Extend the central nightly wait controller, workflow and docs to cover a
+    module's configured nightlyTimeoutMinutes (up to 360 minutes) plus
+    subsequent version, build and publication stages without exceeding
+    GitHub's 6-hour job limit or reusing stale tokens, while preserving the
+    45-minute default and existing behavior for all other modules (CAP-5,
+    CAP-13; AD-7, AD-18).
+  spec_checkpoint: true
+  invoke_dev_with: >-
+    Implement the remaining CiCd items 4-5 of
+    _bmad-output/implementation-artifacts/prerequisite-19-long-running-nightly-hooks.md
+    (items 1-3 already shipped in Builds v6.1.0 and CiCd render). Per
+    _bmad-output/specs/spec-cicd/evidence/19/blockers-20261118.json, begin
+    implementation only after the maintainer decides ChatBot's product scope
+    (EventStore 5 net11.0 retarget and atomic participation). Work in
+    tools/nightly.py, tools/nightly_runtime.py, .github/workflows/nightly.yml,
+    docs/nightly.md, setup/README.md, their tests, and if a new cicd-app
+    continuation job is added, docs/cicd-app-inventory.md and
+    tools/app-workflow-policy.json (AD-7). Preserve fresh scoped App mints
+    under 50 minutes, exact run/attempt correlation, cancellation, truthful
+    timeouts and final verdicts; test boundaries with simulated clocks
+    without multi-hour sleeps.
 - id: "19"
   title: "Migrate ChatBot"
   description: >-
@@ -715,6 +739,9 @@
     delete its evidence gates and story-named jobs, and add the missing
     baseline (CAP-10, CAP-16).
   invoke_dev_with: >-
+    Wait for story 29-3 (the CiCd half of
+    prerequisite-19-long-running-nightly-hooks.md) and the maintainer's
+    ChatBot product-scope decision before registering or adopting ChatBot.
     Check the AD-21 maintainer preconditions first, including the
     hexalith-release environment with this module's own Zot push identity and
     a nuget.org policy scoped to its package IDs, added beside the existing
@@ -730,30 +757,34 @@
 - id: "20"
   title: "Migrate EventStore"
   description: >-
-    Move current EventStore off frozen domain-ci.yml, preserving package,
+    Move EventStore off frozen domain-ci.yml, preserving package,
     consumer, folded-snapshot, browser, payload and Dapr/broker product coverage
-    through managed actions. Retire workflow, agent and story-evidence gates
-    using the refreshed evidence/20 inventory. Add the approved manual private
-    Azure qualification contract as a compatible minor Builds API; ordinary
-    CI keeps offline Azure schema coverage without Azure secrets. Preserve
-    fixture runtimes and require green CI plus an actual nightly outcome.
+    through managed actions and retiring workflow, agent and story-evidence gates
+    using the refreshed evidence/20 inventory (CAP-10, CAP-16).
+    Qualify applicable on-premises Kubernetes/kind routes, retain offline Azure
+    schema, payload, invariant and security checks without Azure secrets, and
+    preserve the compatible manual Azure qualification contract (CAP-5).
   invoke_dev_with: >-
     Follow the approved spec-20-migrate-eventstore.md and AD-21 ordering.
-    Provision the private runner and approval environment without manufacturing
-    Azure authority or running faults. Use the EventStore-only pre-adoption
-    verifier in tools/qualification/pre-adoption/eventstore/ before preparation
-    pushes, with exact source/Builds identities, unchanged owned portions and
-    immediate freshness checks. This
-    exception expires at accepted adoption; normal check.py then becomes
-    mandatory. Product writes use module-agent, shared changes use CiCd-agent,
+    Verify applicable on-premises Kubernetes/kind qualification and offline
+    Azure checks for MVP. Defer the dedicated Azure runner, approval environment,
+    authority and secret custody provisioning, and live Azure qualification
+    until post-MVP. Preserve fixture runtimes. Use the EventStore-only
+    pre-adoption verifier in tools/qualification/pre-adoption/eventstore/
+    before preparation pushes, with exact source/Builds identities, unchanged
+    owned portions and immediate freshness checks. This exception expires at
+    accepted adoption; normal check.py then becomes mandatory.
+    Product writes use module-agent, shared changes use CiCd-agent,
     and approved administration uses command-local maintainer access. Preserve
     legacy publishing until delivery adopts the module; retire tool-only npm
     and Husky assets after adoption. Release a compatible Builds API before
     registration; require live-main actions, one committed setup/pin/render
     candidate and successful locked validation. Immediately after adoption,
-    enable immutable releases and retire legacy grants/policies. Record actual
-    normal-checker, CI, qualification prerequisites/outcome and nightly-run
-    (CAP-13) publication or valid no-release result before closing the story.
+    enable immutable releases and retire legacy grants/policies. Record the
+    normal checker, green adoption CI, applicable MVP qualification and
+    EventStore's own passing CAP-13/CAP-16 nightly evidence. The central
+    nightly.yml run must start after adoption on main, by schedule or by an
+    authorized workflow dispatch with qualify-bump false.
 - id: "21"
   title: "Migrate Parties"
   description: >-
@@ -792,25 +823,6 @@
     the module. Right after adoption, the maintainer turns on immutable
     releases, deletes the other nuget.org policies, and removes the repo from
     the legacy org secrets, the NUGET_API_KEY scope, and the legacy Zot push.
-- id: "23"
-  title: "Migrate Tenants"
-  description: >-
-    Move Tenants onto the shared pipelines, deleting story-guards and its 12
-    YAML-asserting tests (CAP-10, CAP-16). Its Python tooling under tests/ is
-    classified with the gate rule.
-  invoke_dev_with: >-
-    Check the AD-21 maintainer preconditions first, including the
-    hexalith-release environment with this module's own Zot push identity and
-    a nuget.org policy scoped to its package IDs, added beside the existing
-    one. Product-side changes (custom actions, gate-rule deletions, deleting
-    module NuGet audit waivers and a tool-only root package.json, its lockfile
-    and .husky/) go in references/Hexalith.Tenants with the module-agent
-    token; never edit owned files there. A CiCd agent adds the waivers to
-    Builds' Props/, and adoption waits for a builds-version that contains
-    them. Then commit submodule + setup file + render here; delivery adopts
-    the module. Right after adoption, the maintainer turns on immutable
-    releases, deletes the other nuget.org policies, and removes the repo from
-    the legacy org secrets, the NUGET_API_KEY scope, and the legacy Zot push.
 - id: "24"
   title: "Migrate FrontComposer"
   description: >-
@@ -829,7 +841,30 @@
     and .husky/) go in references/Hexalith.FrontComposer with the module-agent
     token; never edit owned files there. A CiCd agent adds the waivers to
     Builds' Props/, and adoption waits for a builds-version that contains
-    them. Then commit submodule + setup file + render here; delivery adopts
+    them. Cut over FrontComposer only after EventStore's accepted delivery and
+    green adoption CI, following the ordered adoption contract.
+    Then commit submodule + setup file + render here; delivery adopts
+    the module. Right after adoption, the maintainer turns on immutable
+    releases, deletes the other nuget.org policies, and removes the repo from
+    the legacy org secrets, the NUGET_API_KEY scope, and the legacy Zot push.
+- id: "23"
+  title: "Migrate Tenants"
+  description: >-
+    Move Tenants onto the shared pipelines, deleting story-guards and its 12
+    YAML-asserting tests (CAP-10, CAP-16). Its Python tooling under tests/ is
+    classified with the gate rule.
+  invoke_dev_with: >-
+    Check the AD-21 maintainer preconditions first, including the
+    hexalith-release environment with this module's own Zot push identity and
+    a nuget.org policy scoped to its package IDs, added beside the existing
+    one. Product-side changes (custom actions, gate-rule deletions, deleting
+    module NuGet audit waivers and a tool-only root package.json, its lockfile
+    and .husky/) go in references/Hexalith.Tenants with the module-agent
+    token; never edit owned files there. A CiCd agent adds the waivers to
+    Builds' Props/, and adoption waits for a builds-version that contains
+    them. Cut over Tenants only after FrontComposer's accepted delivery and
+    green adoption CI, following the ordered adoption contract.
+    Then commit submodule + setup file + render here; delivery adopts
     the module. Right after adoption, the maintainer turns on immutable
     releases, deletes the other nuget.org policies, and removes the repo from
     the legacy org secrets, the NUGET_API_KEY scope, and the legacy Zot push.

@@ -45,7 +45,7 @@ baseline_commit: '771cfd0f01416d9adb2bdb3ff8cf8d1437d385e1'
 | Preconditions or released prerequisites unavailable | Block adoption; distinguish absence from access refusal |
 | Backend receipt retained, malformed or mismatched | Refuse private material provisioning |
 | Product failure | Fix product while preserving assertions |
-| No releasable change | Accept authenticated scheduled “nothing to release” |
+| No releasable change | Accept authenticated CAP-13/CAP-16 “nothing to release” from a central nightly run started after adoption (scheduled or authorized dispatch with `qualify-bump` false) |
 
 </frozen-after-approval>
 
@@ -76,7 +76,7 @@ baseline_commit: '771cfd0f01416d9adb2bdb3ff8cf8d1437d385e1'
 
 **Acceptance Criteria:**
 - Given adopted Tenants, when shared CI runs, then preserved product tests and thresholds pass without CI/story/YAML gates or omitted live classes.
-- Given adoption, when publication is evaluated, then scoped credentials remain, pushes run CI and the next scheduled central release succeeds or reports nothing to release.
+- Given adoption, when publication is evaluated, then scoped credentials remain, pushes run CI, and Tenants' own CAP-13/CAP-16 rows pass in a central `nightly.yml` run started after adoption on `main` (scheduled or authorized `workflow_dispatch` with `qualify-bump` false): eligibility, passing CodeQL, verified publication or valid nothing-to-release, qualifying scan evidence for its dispatch commit and any required post-bump delivery evidence.
 
 ## Implementation Notes
 
@@ -185,6 +185,7 @@ baseline_commit: '771cfd0f01416d9adb2bdb3ff8cf8d1437d385e1'
 
 ## Spec Change Log
 
+- 2026-11-27 — Human approved [readiness-blockers sprint change proposal](../planning-artifacts/sprint-change-proposal-2026-11-27-readiness-blockers.md) renegotiating the frozen I/O matrix row (line 48) and aligning the acceptance criterion (line 79) and verification bullet (line 211) with AD-21 step 4, CAP-13 and CAP-16: a central `nightly.yml` run started after adoption on `main`, scheduled or authorized `workflow_dispatch` with `qualify-bump` false, satisfies Tenants' nightly acceptance. Scheduled performance workload requirements (lines 28, 72) and all other constraints are unchanged.
 - SESSION STOPPED BY USER, 2026-11-17: user requested “stop and save” and will continue in a new session. No further implementation, verification, commit, publication or administrative action is active/authorized during shutdown; finish only child cleanup and state preservation. Resume the existing step03 only when requested. The current authoritative [session handoff](../specs/spec-cicd/evidence/23/SESSION-HANDOFF.md) preserves source locations, qualified versus incomplete evidence, latest on-premises MVP decision and remaining acceptance. Story status remains in-progress, original baseline unchanged.
 - Shutdown complete: scanner suite session72798/PID1411240 exited130 on the user's stop request; wrapper/scratch and own descendant processes are closed. Two uncommitted CiCd source edits, exact patch/raw hashes, focused red/green and interrupted logs are saved in [`cicd-discovery-stop-handoff.md`](../specs/spec-cicd/evidence/23/cicd-discovery-stop-handoff.md). Parent independently verified saved source/patch hashes and backed up the unexecuted qualification utility as text. No shutdown commit or remote operation occurred. [`session-stop-state.json`](../specs/spec-cicd/evidence/23/session-stop-state.json) records the preserved workspace inventory.
 
@@ -208,4 +209,4 @@ Footprint spans Tenants tests/actions/graph, shared Builds contracts and CiCd re
 - Qualify shared receipt/config behavior, valid/invalid fixtures and callable contracts on supported Python versions. Preserve receipt refusal and product coverage tests.
 - Before module pushes use the standard checker or the explicitly approved bootstrap procedure, with pinned commitlint and exact owned-state comparisons.
 - Run locked renderer `--check`, then committed-candidate `tools/validate.py`; require global and Tenants verdicts, including schema/lint/perimeter/live-action checks.
-- Authenticate hosted CI, actual product-hook execution, adoption cleanup and the next scheduled release outcome.
+- Authenticate hosted CI, actual product-hook execution, adoption cleanup and Tenants' own CAP-13/CAP-16 nightly outcome from a central `nightly.yml` run started after adoption on `main` (scheduled or authorized dispatch with `qualify-bump` false).

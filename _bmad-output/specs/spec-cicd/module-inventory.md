@@ -14,7 +14,7 @@ The 18 repositories in `references/`, all prefixed `Hexalith.`, are public, with
   3. McpCli: the first Aspire AppHost tests in shared stage 4.
   4. Conversations: the first job on another runner (Windows).
   5. Folders: the first kept product checks (browser end-to-end and accessibility) turned into custom actions.
-  6. Then by local workflow YAML size: Projects, ChatBot, EventStore, Parties, Memories, Tenants, FrontComposer.
+  6. Then Projects, ChatBot, EventStore, Parties, Memories, FrontComposer, Tenants. The [ordered adoption contract](adoption-execution.md) governs the EventStore → FrontComposer → Tenants cutovers.
   7. Last, because their checkouts here are stale: Timesheets and Platform.
 - **Each migration** follows the onboarding sequence in AD-21: maintainer preconditions, then product-side changes by module agents, then the setup file here, then one delivery commit that adopts the module.
 - **Custom actions today:** no module has a `.github/actions/**` action yet. Kept product checks become the first ones.

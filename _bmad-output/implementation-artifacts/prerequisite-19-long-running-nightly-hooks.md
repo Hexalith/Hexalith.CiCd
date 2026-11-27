@@ -22,17 +22,20 @@ continuation needed for the complete release. Do not add another scheduler,
 retain tokens past their limits, raise every module's hook timeout, reduce
 product scenarios or silently skip failed/due recovery runs.
 
-## Status, 2026-11-18
+## Status, 2026-11-18 (updated 2026-11-27)
 
 Items 1–3 below have shipped. Builds commit
 `42625e511967a65cec8df045352fdfe027f0ac5f`, first released in `v6.1.0`, adds
 `nightlyTimeoutMinutes` (1–360, default 45) and carries it into the hook job.
-CiCd renders it at `tools/render.py:619-620` and pins Builds `v6.3.1`. Items 4–5
-remain. `tools/nightly.py:140` still sets one 300-minute wait deadline, and
-`.github/workflows/nightly.yml:597` still limits the wait job to 330 minutes, with
-no continuation. The prerequisite is therefore not shipped. The human chose
-to build items 4–5 only after deciding ChatBot's product scope, because
-ChatBot's required release cases cannot pass yet. See
+CiCd renders it at `tools/render.py` and pins Builds `v6.8.5` (was `v6.3.1` on
+2026-11-18). Items 4–5 remain: `tools/nightly.py:154` still sets one 300-minute
+wait deadline, and `.github/workflows/nightly.yml:653` still limits the wait job
+to 330 minutes, with no continuation. The prerequisite is therefore not shipped.
+On 2026-11-27, items 4–5 were scheduled in `stories.yaml` as story `29-3`
+immediately before story `19` (`spec_checkpoint: true`) per
+[sprint-change-proposal-2026-11-27-readiness-blockers.md](../planning-artifacts/sprint-change-proposal-2026-11-27-readiness-blockers.md).
+The human chose to build items 4–5 only after deciding ChatBot's product scope,
+because ChatBot's required release cases cannot pass yet. See
 [story 19 blockers](../specs/spec-cicd/evidence/19/blockers-20261118.json).
 
 ## Current evidence (2026-11-16)

@@ -567,6 +567,239 @@ context:
   qualified transport that completes the retained authorization observations
   within two seconds.
 
+#### Projects Story 6.7 v4 requalification
+
+The standalone `run-with-temp` fixture used Debug source references on .NET
+`11.0.100` with private Dapr `1.19.1`. The source revision is the staged
+candidate's base commit `2067b57d8c72af9f83a404eefd80d33033d51268`. The exact
+tested tree is `6b5066ae7b1b6eaf267a6d22476b1d59362c83fd`, including all
+14 pinned dependency gitlinks. The normalized contract SHA-256 is
+`d0c83bbad389498757c84e3d5f4c7b4a850aa45ba9af64dbf428102f2310c4c8`.
+The staged index checksum matched before and after the run.
+[Source identity, dependency trees and receipt hashes](../specs/spec-cicd/evidence/18/projects-story-6.7-v4-20261127.json)
+
+| Check | Executed | Passed | Failed | Skipped | Unrun |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| v4 comparison cells | 77 | 77 | 0 | 0 | 0 |
+| v4 comparison cells in the configured rollback run | 77 | 77 | 0 | 0 | 0 |
+| Authenticated retained reads after explicit rollback | 7 | 7 | 0 | 0 | 0 |
+| Focused host, client and identity tests | 7 | 7 | 0 | 0 | 0 |
+
+The production selector chose `Supported` for the hash-bound v4 packet.
+Explicit `LegacyRollback` on that packet produced seven HTTP 200 reads with
+current authority and persisted no-domain-write proof. Removing one required
+legacy security slice selected `Unavailable`. The regression control also
+selected `Unavailable` and the previously selected mode stayed `Supported`.
+
+| Artifact | SHA-256 |
+| --- | --- |
+| v4 packet | `34d5c974bf3ac9360a65b2e39e82cf07a48e997f17f876622c7dc16c47c4ea7f` |
+| Rollback proof referencing the v4 packet SHA-256 | `184f3bf8d7685a13200600eb322713721ec63da0fd96694c391311c338037606` |
+| Native matrix xUnit XML | `0c22601dd5b69a6c49da4ea3800cf017fe00016d7ad569844657bcf05c3f6fb0` |
+| Native rollback xUnit XML | `57639d29368a2090c8a54b80382ca9b4c68dd06a2f7541b270cc8838eecdbef7` |
+| Source manifest | `17f4f18c7925f181931199213b928065142546f8bf468c0f4c21ae95aa8ed54c` |
+| Handoff archive | `31314c59afea258561638089ce7673f4d1bb8242af7660e249f2a8b747a56140` |
+
+The initial client filter discovered zero tests. The corrected exact-method
+run passed all three client checks, and both receipts are retained. The
+source mapper returned `prepared` with diagnostics `HXW011` and `HXW010`.
+
+The local `projects-story-18-v4-evidence-20261127.tar.gz` archive sits alongside
+the repository checkouts for the Projects maintainer and Test Architect.
+The source-mode run preceded the acceptance decision below.
+
+The handoff verifier reproduced the recorded packet, rollback and native
+receipt results from the archived artifact directory. A copied Git index
+resolved to the exact staged tree above, and the archive digest matched.
+
+#### User acceptance, 2026-11-27
+
+The user accepted the Story 6.7 v4 handoff for Projects base
+`2067b57d8c72af9f83a404eefd80d33033d51268`, staged tree
+`6b5066ae7b1b6eaf267a6d22476b1d59362c83fd`, packet SHA-256
+`34d5c974bf3ac9360a65b2e39e82cf07a48e997f17f876622c7dc16c47c4ea7f`,
+and rollback proof SHA-256
+`184f3bf8d7685a13200600eb322713721ec63da0fd96694c391311c338037606`.
+The decision covers the 77 source-mode comparisons, seven authenticated
+rollback reads, and their bound native receipts and persisted-state checks.
+Release/package browser qualification and CiCd registration remain open.
+
+#### Independent Test Architect verdict, 2026-11-27
+
+**PASS.** Murat, BMAD Test Architect, signs off on the Story 6.7 v4 source
+handoff for Projects base `2067b57d8c72af9f83a404eefd80d33033d51268` and
+staged tree `6b5066ae7b1b6eaf267a6d22476b1d59362c83fd`. The decision binds
+packet SHA-256 `34d5c974bf3ac9360a65b2e39e82cf07a48e997f17f876622c7dc16c47c4ea7f`
+and rollback proof SHA-256 `184f3bf8d7685a13200600eb322713721ec63da0fd96694c391311c338037606`.
+
+An independent `run-with-temp` audit extracted the hash-verified archive,
+reconstructed the archived patch in a private index, and matched all 14
+dependency commit/tree pairs. It matched the 77 distinct cases in each matrix
+to the production operation/scenario list and the named native xUnit test.
+It reconciled all seven HTTP 200 rollback reads with the second matrix by
+operation, correlation ID and response. Each read retained current authority,
+required native membership, and equal byte hashes and ETags across 27
+persisted records, with zero unexpected SDK writes. All nine native tests in
+the six bound receipts passed with zero failures, skips or unrun tests. The
+separate empty-filter receipt remains recorded as a discovery attempt.
+
+The reviewed handoff receipt SHA-256 is
+`7e899e0a4aa131a3e0021f702a8a46263def49ff554129fed866fa815e5724b4`.
+The matrix producer blob is `665ac23c0d16f811208a3da80aa5af1bdb615015` and
+the independent audit result SHA-256 is
+`49417c2347a6e5bda1f6a7dc7bdd145abd4e1966fe8829b11d28f8ee993a7ad2`.
+This verdict releases the source evidence for the isolated compatibility
+browser lane. Release/package and adoption gates remain open.
+
+#### Pre-adoption ownership verification
+
+The base commit `2067b57d8c72af9f83a404eefd80d33033d51268` and candidate tree
+`6b5066ae7b1b6eaf267a6d22476b1d59362c83fd` have identical Git modes and blob IDs
+for the workflow, CI configuration, Dependabot, instruction and settings
+paths, with the same Builds gitlink
+`a6abb7908ec38dcb3fbd99d69e7ed29ae25794d2`. Comparing `.gitmodules` blobs
+`bd26b49368994f97e8b053b790411b012145a78b` and
+`28be8b5f3b15b169ea073b5eb93e6ced664250e6` byte for byte confirmed that the
+candidate adds only the approved `Hexalith.EventStore.PackageMode` section.
+The shared path-and-module projection SHA-256 is
+`8fb56be5c8a2d1af7515f9e97535b63f8f8606394ac1f0770fc70c7fa587081a`.
+
+### Release/package browser requalification, 2026-11-27
+
+The standalone `run-with-temp` job rebuilt Projects base
+`2067b57d8c72af9f83a404eefd80d33033d51268`, staged tree
+`6b5066ae7b1b6eaf267a6d22476b1d59362c83fd`, with .NET 11.0.100, Node
+26.4.0 and Playwright 1.65.1. GitHub readback confirmed the Projects base was
+still `main`, EventStore `v5.6.0` pointed to
+`295b5a6ba584167f21cfef40787477b8814e32da`, and Folders
+`2791d7a82825238da15a1bfb77c544079a7f7d09` was reachable from Folders `main`.
+The five direct checkout identities match the Release/package table above.
+The browser lockfile blob is `a57537efd4f9a0960858fd1d6761dd2ef13786c5`,
+the driver blob is `c05e13a55a490a54e4d7c836179416aaca89220a` and the
+actual-owner browser specification blob is `c09b31faeddd8d701923b6fd2c20c2a7707411ae`.
+
+| Check | Outcome | Log or result SHA-256 |
+| --- | --- | --- |
+| Released Builds v6.8.5 Dapr archive verification | CLI 1.19.1 and runtime 1.19.2 archives verified against blob `b8f2dde95a78fd750200991e495a31ebbb0c3add`. | `0abef3bbda8a84f77f0cd61910823768db071f90cbe6ad640702539e908ee403` |
+| Trusted audited Restore | Exit 0. | `90cc7cb0e3813db3afa9671b4ace604394e14554fa602066474bf3473f002cee` |
+| Analyzer-enabled Release/package build | Exit 0, zero warnings and errors. | `5d2fff9ded45ed7cd37074a47dab4760fef4ecfc6e27cc51a7a0ec0c5d8b71c6` |
+| npm lock and signature checks | Exit 0 for locked install and signature verification. | `54d26afcfdd511f6e28011e09278646926b0a27373b914452cf279f67799e795`, `2398fdccabfc01c506fdb9b533ab2d74dffda14f18594d95fe7d2c2d9428c3f6` |
+| TypeScript and Chromium setup | Exit 0 for both. | `7c9d1fd4106c42b1dc2d3fe817493910eb1bf28e39e82213b1901e2a440861e9`, `80b4ee2c721e7ae8e953ab6d2007596552636db146bb2442ebe5c9739ff394dd` |
+| Released audit lint | Passed on the exact staged tree. | `b79322e229d97c5bfe75e715c2f8631582fe7ae0999be9c7caaa03de45a52b57` |
+| Released and Projects commitlint | One disposable commit `0fafab09fb14175f2ad2db29c0c08bd03b97d31a` passed with pinned npm installation and signature verification. | `1c400bbde50d5aca32554dcc43ff15c5aaede47b2385d8f3be34066e46dbb43d` |
+
+The commitlint probe used the exact message `build(cicd): prepare Projects
+shared pipeline migration` (SHA-256
+`948e69952e90807c6570ea15fa77d338345ec167d22f6944d10f9c8a7fb95780`). The
+released guard lock blob is `58ba60b48f1ef0d0f5b43a36d511779be25cb4c5`,
+SHA-256 `5741670cc02027a35ffa002c24e7b99162addade92016cda0995d5b813e49ca0`.
+The final fresh range still requires pre-push readback and verification.
+
+The disposable UI's ordinary `appsettings.json` selected `LegacyRollback`
+with the accepted packet, its SHA-256, exact source revision and contract
+fingerprint. Aspire launched the prebuilt UI with no environment name, so
+the base configuration file supplied these values. Config SHA-256
+`c6df573636431ccebf6b2a4954663313b0e67c26b3ddba71f9ae29ecc0f2dffb`.
+Compatibility smoke passed 8/8 with zero skips, including the protected
+detail route before and after reload under the server-side token relay.
+The authentication test blob is `cbeeb9a4c0a56c5238344251addce4f46a0c9903`,
+and smoke log excerpt SHA-256 is
+`1de5a70954cd92693c009915f5a83acd6a7fdec33502aff7cc5f05dd5010c6e9`.
+The unchanged Release SDK host/store-client restart test also passed 1/1
+with zero skips (log excerpt SHA-256
+`2764be0b13c8779429e9043c9b14c5ec5650596fb21c026c478126ab8b2afd59`).
+The restored AppHost and Server resolved published EventStore 5.6.0
+packages (assets SHA-256 `2ffadd244da5341e8b7e9b4a13a48948cf807a47f011848dd644a9d626f1ac28`
+and `ad0719b12590eade7705dc412f0e89d8bc68d5e3c7f2ebe63b5999ffd20fd070`).
+
+Full compatibility Chromium collected 146 tests with 90 passed, 56 failed
+and zero skips. The 27.7-minute Playwright result SHA-256 is
+`978b552548639a288e3d251125374b402fee52cb6ecc340f8ef523de859f703e`.
+The full run's protected-detail authentication case failed during Project
+creation acceptance after 30,000 ms. Other failures include missing
+`project-detail-section-audit`, `project-detail-section-references` and
+`project-detail-section-resolution`, plus inventory axe rules
+`label-content-name-mismatch` and `target-size`. The failure report spans
+14 specs, including all five File Reference cases. The driver's repeat,
+retry and final compatibility persisted-state check were unrun after
+Playwright exited 1.
+
+**Compatibility gate owner and resume evidence.** Hexalith.Projects owns
+the UI, browser fixtures and seed path. Resume with zero-skip results for
+the unchanged smoke, full, repeat and retry suites, and a passing final
+persisted-state check. The native and browser failure receipts must identify
+the exact source and runtime tuple. The positive explicit rollback smoke
+result remains valid for its recorded tuple.
+
+The first package driver used Dapr 1.19.2 sidecars (executable SHA-256
+`96d2a0aeaafc8993ed41151e184e2b1c67dc03fc21c9ba561c92e34cb5696596`).
+The staged AppHost's Builds Module CLI 6.4.2 embedded catalog selected Dapr
+1.19.1 for Sentry, placement and scheduler. The full driver exited 1
+(runtime log SHA-256 `28cfae8b3e78e8a952776d121d4267cb59b10e83d9430d0f5bd86b8584e7ca06`).
+Its four native phases recorded zero passes. `main` and `full-replay`
+canceled in Folder seed `SendHumanAsync`, `duplicate` failed in
+`VerifyBootstrapAsync`, and `tenant-access-recovery` canceled in
+`VerifyTenantAccessRecoveryAsync`. The actual-owner browser phase also
+canceled in `SendHumanAsync` while submitting the second Folder create.
+The mixed-version run reached neither Folder advisory readiness nor its
+Chromium case.
+
+#### Actual-owner Folder lane with Dapr 1.19.2
+
+The focused `run-with-temp` retry used the same Projects source tree and
+direct checkout revisions. It passed `-p:HexalithBuildsModuleCliVersion=6.8.5`
+to select the released tooling package whose embedded catalog sets the
+control plane to Dapr 1.19.2. The compiled tooling assembly SHA-256 was
+`421e3755833f5da5aa9cc2140d976f53f532e12c4b54977b53d57e0f93e01a77`.
+The temporary phase selector called the existing `RunPhaseAsync` browser phase
+through the standard `npm run test:package` entry point. Its diff SHA-256
+was `1df7eb67b6df5fe585d223e344d7558473045aebb4d29e4533fc503835572a30`.
+The phase, owner and browser assertions were byte-for-byte the staged ones.
+The two-second executor deadline is in blob `89eb6ece32e451de54de36655866d1188ee7de2a`.
+
+The first standalone launcher aborted with `TargetInvocationException`
+before creating the fixture, exit 134, SHA-256
+`28d16f285895a8dd2c704f15b4dae4a482e4da0d2138f304272f095e1bb71770`.
+The normal-driver retry passed trusted audited Restore (SHA-256
+`5693dd63b68aeca9492bc19a7de11e58a8bc5a48c4d0b0321c6c60e60eb2b774`) and
+the Release/package build (SHA-256
+`d743e63c4ab8646343d699c54788e7a8d2e384349fa3fb98f984c1edf9526ea7`).
+Locked npm, signatures, TypeScript and Chromium setup passed again.
+
+The running sidecar executable matched the verified 1.19.2 binary. The owned
+Sentry, placement and scheduler images all used 1.19.2. The authenticated
+bootstrap delivery receipt SHA-256 was
+`65a754e7c00826f3282c337d2e09beb821d0f81e6ab52f176c6cfb6d48e0b31f`.
+The fresh writer protocol activated, and both foreign-tenant Folder/Project
+seeds completed. On the primary tenant, `CreateTenant` and `AddUserToTenant`
+completed. The authenticated read of the persisted membership stream then
+canceled at `PackageReadFixture.SendHumanAsync` through `StreamAsync` in
+`SeedAsync` (`POST /api/v1/streams/read`). The fixture source blob is
+`125e69e4ed64dc8ba5a353eea52b8a56e92174fc`. Gateway diagnostics included
+`RouteCatalogUnavailableException`, `DaprException` and `RpcException`.
+
+**Actual-owner gate failed.** The focused runtime exited 1 with
+`browser:TaskCanceledException` (log SHA-256
+`ff9ea51908cf99fc95a02080a97dc4b6f07b402e9815401fcc47a91c5b127c1d`). The
+advisory readiness observer recorded zero requests, and Chromium ran zero
+actual-owner tests. The runtime observer confirmed zero remaining owned
+control-plane containers (result SHA-256
+`21714bfaaed11bcd27895af8ddd6585ebdef048f0dcb38eef3e6d83fcf366f3a`).
+
+**Owners and resume evidence.** Hexalith.EventStore owns the Gateway stream
+transport. Hexalith.Projects owns the seed fixture, with Hexalith.Tenants
+owning the membership source. Resume with an authenticated HTTP 200 Tenant
+stream read and the completed membership event, followed by the unchanged
+owner projection and persisted seed checks. For `DW-80`, Hexalith.EventStore
+and Hexalith.Folders own the delegated transport and owner authorization.
+The positive single- and multiple-Folder readiness observations, actual
+Chromium case, authorization observations and before/after persisted-state
+checks must pass on Dapr 1.19.2 with the existing two-second deadline.
+
+**Story 18 remains in progress.** The browser failures hold the preparation
+push and active CiCd registration. App adoption, the normal Builds checker,
+adopted CI and the qualifying nightly outcome remain pending.
+
 ### Scanner diagnostic, 2026-11-27
 
 On CiCd `554f61708709fc6d708064fd7a528d3b8d84a026`, tree
@@ -578,6 +811,15 @@ while the next PowerShell discovery case was executing. Exit 143, log SHA-256
 A simple noninteractive PowerShell 7.6.2 startup took 15.166 seconds with its
 update check and telemetry disabled for that process. The full scanner and
 global validation results remain pending.
+
+The complete scanner suite subsequently passed on CiCd
+`6803c761d5979b0c7639b3b762f3a0d53fdbff9e`, tree
+`5db92e398b50280cd9bca60cc8055a96a362b100`, using the test blob
+`f7d216cdcda15aaf9d01ed3ed025e7b2bd80c9dc`. Python 3.14.4 ran 228 tests with
+zero failures or skips in 286.807 seconds against the existing 600-second
+budget. The locked run verified the detector's npm signatures and exited 0.
+Log SHA-256 is `56d460136711867f59915fc41d058cf0c006fcbbe471375b4cba8bd2f0a56b86`.
+The full global and live-module validation verdict remains pending.
 
 ### Folders owner qualification, 2026-11-27
 
@@ -636,6 +878,17 @@ registration preview using CiCd `554f61708709fc6d708064fd7a528d3b8d84a026`
 and Builds v6.8.5 `deccbc3bcf4ed687ecf4d556ebe356fe57148777`. The rendered
 Projects CI configuration SHA-256 is
 `d15f3a39c071dde7e342d1ac37313df149fa1dd8d3a306f6c3244baca5ceb103`.
+
+The current CiCd snapshot `6803c761d5979b0c7639b3b762f3a0d53fdbff9e` also
+passed the baseline render and local global checks for App inventory, reviewed
+coverage, committed inputs and outputs, schemas, and caller interfaces.
+Adding the inactive setup candidate in scratch produced exactly five Projects
+files and preserved all seven existing renders. Render check, schemas, and
+caller interfaces passed for all eight registrations. The preview reproduced
+the CI configuration digest above. Setup SHA-256 is
+`db5d710f2be6596755dd8dd63a5b2864cbd5dad4753ea454cf7f01117be15068` and the
+verification log SHA-256 is
+`97fb6bac0a6cba186232ff10865ac256f87013e1ee6b1c4997b385c67fb087d3`.
 
 ## Spec Change Log
 
