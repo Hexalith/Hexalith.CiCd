@@ -349,7 +349,10 @@ These fail coverage with a diagnostic naming the source file and line:
   Options that redirect execution fail as well: `pwsh -WorkingDirectory`,
   `-EncodedCommand` and `-CommandWithArgs`, `uv --directory`/`-C`, unknown `uv`
   options, `uv --project` recipe-root selection, wrapper options and task-runner
-  options. Bash `--rcfile` and `--init-file` startup sources fail explicitly.
+  options. The one exception is a leading `env` whose only options unset
+  workflow command file variables, described under
+  [Test boundary](#test-boundary). Bash `--rcfile` and `--init-file` startup
+  sources fail explicitly.
   An interpreter behind an unknown consumer still establishes execution
   positions: `xvfb-run python "$TARGET"` fails. An unknown consumer also cannot
   certify a computed operand as nonexecuting data, so `xvfb-run "$COMMAND"`
@@ -384,6 +387,9 @@ These fail coverage with a diagnostic naming the source file and line:
   Path-file records split on CRLF, lone CR and LF, matching the runner's path
   reader. Source line numbers and Linux environment-file parsing keep LF semantics.
   A word containing `GITHUB_PATH` cannot conceal computed emitted output.
+  The unset operands of a leading `env`, as described under
+  [Test boundary](#test-boundary), only name these variables; every other
+  word of that command still counts.
 - A `$GITHUB_ENV` write with a computed key or unmodeled computed emitted output.
   Only an exact understood redirection target is a destination. A word such as
   `$CONFIG$GITHUB_ENV` or `GITHUB_ENV$CONFIG` remains computed emitted output.
@@ -396,7 +402,11 @@ These fail coverage with a diagnostic naming the source file and line:
   Other producers, `%b`, octal/hex
   escapes and unmodeled formatting fail; no module command runs to derive
   output. Fully understood harmless writes pass. Python code that names `GITHUB_ENV` or
-  `GITHUB_PATH` fails too.
+  `GITHUB_PATH` fails too. Two literal uses only remove the variable and pass:
+  an unset operand in the leading `env` prefix of a list or tuple passed
+  straight to a call, and a removal key whose value is discarded from a local
+  name bound once to an `os.environ` copy, as described under
+  [Test boundary](#test-boundary).
 - Reflective use of a process or import API. That means storing it in an
   attribute, a class body, a tuple or a container; passing it as an argument;
   using it as a default, a return value or a walrus target; or fetching it with
@@ -461,6 +471,43 @@ script that runs it, a launch, a literal reference or an import from other
 code, including any import that [the import index](#import-index) matches to
 it. Only imports between test sources keep the boundary.
 
+A test source also keeps the boundary only when every reached unittest
+invocation that selects it provably starts without `GITHUB_ENV`,
+`GITHUB_PATH`, `GITHUB_OUTPUT`, `GITHUB_STATE` and `GITHUB_STEP_SUMMARY`.
+Two proofs are accepted, and they combine:
+
+- A literal `env` prefix whose only options unset these names exactly, as
+  `-u NAME`, `-uNAME`, `--unset NAME` or `--unset=NAME`, followed directly by
+  the Python interpreter running `-m unittest`. In a shell command, `env` is the first
+  command word after reserved words and assignments, and no assignment, other
+  wrapper or runner follows its options. In a Python list or tuple, the prefix
+  starts the argv and `sys.executable` follows it. The proof is carried through
+  a direct process call, a proved forwarded wrapper, and the literal
+  `[sys.executable, '-m', 'unittest', 'discover', ...]` recognition for an argv
+  that another call receives; that last form needs the argv passed straight to
+  the call, not bound to a name. Any other `env` option, such as `-i`, `-`,
+  `-C`, `-S` or `--`, a computed or other name, or an `env` that is not first
+  keeps the ordinary wrapper rules. A tracked file named `env`, `env.exe`,
+  `env.cmd`, `env.bat` or `env.com` voids the prefix proof.
+- A subprocess `env` that is a proved `os.environ` copy bound once to a local
+  name, from which these names are removed by statements in the binding's own
+  block, after the binding and before the statement holding the call:
+  `ENV.pop(NAME)` or `ENV.pop(NAME, DEFAULT)` statements, `del ENV[NAME]`, a
+  loop over literal names whose only statement is one of these, or the prefix
+  loop over `tuple(ENV)` or `list(ENV)`. The argv is a list or tuple run
+  without `shell=True`. Every addition to a proved copy uses a literal key, so
+  no string literal or keyword name in the source may spell one of these
+  variables, case-insensitively, except such a removal key or an `env` unset
+  operand.
+
+In a shell command, a word outside the `env` options that names one of these
+variables, such as a redirection target, refuses the proof. Without the proof,
+every boundary site in that test source stays an error ending `no test
+boundary: a unittest invocation can start it with the GitHub workflow command
+file variables`. A wrapper or copy proof that only its imports reach stays an
+error too. A test source that a proved and an unproved invocation both select
+keeps these errors.
+
 In a test source that only unittest selection and other test sources reach,
 rule 2 diagnostics at process launches, execution literals and dynamic loads are
 boundary observations instead. These sites are calls to `subprocess`,
@@ -479,8 +526,9 @@ working-directory changes, `GITHUB_ENV` or `GITHUB_PATH` access and reflective
 use of a process or import API. When a module exceeds its file, byte or
 traversal limit, every observation fails again.
 
-A test source keeps its boundary sites as errors when its literal text names a
-GitHub workflow command file or form: `GITHUB_ENV`, `GITHUB_PATH`,
+A test source that keeps the boundary still keeps its boundary sites as errors
+when its literal text names a GitHub workflow command file or form, including
+in an `env` unset prefix of its own: `GITHUB_ENV`, `GITHUB_PATH`,
 `GITHUB_OUTPUT`, `GITHUB_STATE`, `GITHUB_STEP_SUMMARY`, `::set-env`,
 `::add-path`, `::set-output` or `::save-state`, compared case-insensitively
 in every string or bytes constant. That text includes each command line,
@@ -589,10 +637,19 @@ neither selected nor duplicate-scanned, and changes such a child makes to its
 own or the job's environment are unchecked. The workflow command check reads
 only the test source's own literal text. A fully computed child, such as a
 script path, command line or program read from a file, assembled from
-fragments, imported from another module or produced at run time, can still
-write those files through the inherited `GITHUB_*` variables without a
-diagnostic, and so can a product function that a test source calls with
-computed arguments.
+fragments, imported from another module or produced at run time, and a product
+function that a test source calls with computed arguments, start without the
+workflow command file variables, but they are not otherwise confined:
+
+- they can still find the runner's command files through the runner temporary
+  directory, which `RUNNER_TEMP` names, and append to them without a diagnostic;
+- they can print stdout workflow commands, such as `::set-output` or
+  `::save-state`, which the runner reads from the job log;
+- a file that the launcher itself hands to the invocation, such as a Python
+  `stdout` argument, is the launcher's own write, and only the launcher's
+  rules check it;
+- a literal argv that a call receives is trusted to run unchanged; the code
+  that launches it keeps its own diagnostic or reviewed gap.
 
 ### Lines, comments and data
 

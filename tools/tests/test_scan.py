@@ -754,10 +754,17 @@ def sites(diagnostics):
     return {":".join(entry.split(":", 2)[:2]) for entry in diagnostics}
 
 
+# A literal env prefix that starts unittest without the workflow command file variables.
+UNSET = "env -u GITHUB_ENV -u GITHUB_PATH -u GITHUB_OUTPUT -u GITHUB_STATE -u GITHUB_STEP_SUMMARY "
+UNSET_ARGV = ("'env', '-u', 'GITHUB_ENV', '-u', 'GITHUB_PATH', '-u', 'GITHUB_OUTPUT', '-u', 'GITHUB_STATE', "
+              "'-u', 'GITHUB_STEP_SUMMARY', ")
+INHERITED = "; no test boundary: a unittest invocation can start it with the GitHub workflow command file variables"
+
+
 class TestBoundaryTests(unittest.TestCase):
     """A test source reached only through unittest selection records its unresolved launches."""
 
-    DISCOVER = ("bash", "python -m unittest discover -s tests -p 'test_*.py'", "")
+    DISCOVER = ("bash", UNSET + "python -m unittest discover -s tests -p 'test_*.py'", "")
     UNRESOLVED = "import subprocess\nsubprocess.run(command)\n"
     # Lines 2-10: computed argv, cwd and env, an unfollowed process API, exec
     # text, a computed import, a file loader, an oversized execution literal and
@@ -796,7 +803,7 @@ class TestBoundaryTests(unittest.TestCase):
         for command in ("python -m unittest tests.test_named", "python -m unittest -v tests.test_named.Case.test_x",
                         "python3 -m unittest --failfast --buffer tests.test_named json.tests"):
             with self.subTest(command=command):
-                selected, errors, observations = discover_boundary([("bash", command, "")], files)
+                selected, errors, observations = discover_boundary([("bash", UNSET + command, "")], files)
                 self.assertEqual(errors, [])
                 self.assertIn("tests/test_named.py", selected)
                 self.assertNotIn("tests/helper.py", selected)
@@ -845,9 +852,12 @@ class TestBoundaryTests(unittest.TestCase):
 
     def test_nested_and_recursive_discovery_keep_full_rules_outside_tests(self):
         outer = ("import subprocess, sys\n"
-                 "subprocess.run([sys.executable, '-m', 'unittest', 'discover', '-s', 'tests', '-p', 'test_*.py'])\n"
-                 "subprocess.run([sys.executable, '-m', 'unittest', 'discover', '-s', 'nested', '-p', 'test_*.py'])\n"
-                 "subprocess.run([sys.executable, '-m', 'unittest', 'discover', '-s', '.', '-p', 'test_*.py'])\n")
+                 "subprocess.run([" + UNSET_ARGV + "sys.executable, '-m', 'unittest', 'discover', '-s', 'tests', "
+                 "'-p', 'test_*.py'])\n"
+                 "subprocess.run([" + UNSET_ARGV + "sys.executable, '-m', 'unittest', 'discover', '-s', 'nested', "
+                 "'-p', 'test_*.py'])\n"
+                 "subprocess.run([" + UNSET_ARGV + "sys.executable, '-m', 'unittest', 'discover', '-s', '.', "
+                 "'-p', 'test_*.py'])\n")
         files = {"tests/test_outer.py": outer, "nested/__init__.py": self.UNRESOLVED,
                  "nested/empty/__init__.py": self.UNRESOLVED,
                  "nested/test_inner.py": "import helper\n" + self.UNRESOLVED, "nested/helper.py": self.UNRESOLVED,
@@ -978,7 +988,7 @@ class TestBoundaryTests(unittest.TestCase):
         files = {"tests/test_named.py": self.UNRESOLVED, "tests/helper_named.py": self.UNRESOLVED,
                  "tests/Test_upper.py": self.UNRESOLVED, "tests/check_named.py": self.UNRESOLVED}
         _, errors, observations = discover_boundary(
-            [("bash", "python -m unittest discover -s tests -p '*.py'", "")], files)
+            [("bash", UNSET + "python -m unittest discover -s tests -p '*.py'", "")], files)
         self.assertEqual(sites(errors), {"tests/helper_named.py:2", "tests/Test_upper.py:2", "tests/check_named.py:2"},
                          errors)
         self.assertEqual(sites(observations), {"tests/test_named.py:2"}, observations)
@@ -987,6 +997,203 @@ class TestBoundaryTests(unittest.TestCase):
             with self.subTest(command=command):
                 _, errors, observations = discover_boundary([("bash", command, "")], files)
                 self.assertEqual((sites(errors), observations), ({path + ":2"}, []))
+
+
+class UnittestEnvironmentProofTests(unittest.TestCase):
+    """The boundary holds only for unittest invocations that start without the workflow command file variables."""
+
+    LAUNCH = {"tests/test_launch.py": TestBoundaryTests.UNRESOLVED}
+    SITE = ("tests/test_launch.py:2: local-script discovery: unresolved computed Python script invocation; "
+            "unsafe or unresolved forwarding")
+    DISCOVER = "python3 -m unittest discover -s tests -p 'test_*.py'"
+    ARGV = "sys.executable, '-m', 'unittest', 'discover', '-s', 'tests', '-p', 'test_*.py']"
+
+    def assert_boundary(self, commands, files=None, *, proved=True, extra=()):
+        _, errors, observations = discover_boundary(commands, {**self.LAUNCH, **(files or {})})
+        if proved:
+            self.assertEqual((errors, observations), (list(extra), [self.SITE]))
+        else:
+            self.assertEqual((errors, observations), (sorted([self.SITE + INHERITED, *extra]), []))
+
+    def run_python(self, source, files=None):
+        return [("bash", "python3 tools/run.py", "")], {"tools/run.py": "import os, subprocess, sys\n" + source,
+                                                          **(files or {})}
+
+    def test_env_unset_options_parse_only_workflow_command_file_names(self):
+        names = frozenset({"GITHUB_ENV", "GITHUB_PATH"})
+        for words, expected in (
+                (["env", "-u", "GITHUB_ENV", "--unset=GITHUB_PATH", "python3"], (names, 4)),
+                (["/usr/bin/env", "-uGITHUB_ENV", "--unset", "GITHUB_PATH", "python3"], (names, 4)),
+                (["env", "-u", "GITHUB_ENV"], (frozenset({"GITHUB_ENV"}), 3)),
+                (["env", "-u", "GITHUB_ENV", None], (frozenset({"GITHUB_ENV"}), 3)),
+                (["env", "python3"], None), (["nice", "env", "-u", "GITHUB_ENV", "python3"], None),
+                (["env", "-u", None, "python3"], None), (["env", "-u", "$NAME", "python3"], None),
+                (["env", "-u", "github_env", "python3"], None), (["env", "-u", "PATH", "python3"], None),
+                (["env", "-u"], None), (["env", "-i", "python3"], None), (["env", "-", "python3"], None),
+                (["env", "-u", "GITHUB_ENV", "-i", "python3"], None), (["env", "-u", "GITHUB_ENV", "--", "python3"], None),
+                (["env", "-C", "tests", "python3"], None), (["env", "-S", "python3 -m unittest"], None),
+                (["env", "--uns=GITHUB_ENV", "python3"], None), (["env", "-u=GITHUB_ENV", "python3"], None)):
+            with self.subTest(words=words):
+                self.assertEqual(sys.modules[sc.Discovery.__module__].env_unsets(words), expected)
+
+    def test_shell_env_unset_prefix_proves_the_invocation(self):
+        for command in (UNSET + self.DISCOVER, "/usr/bin/" + UNSET + self.DISCOVER, "MODE=fast " + UNSET + self.DISCOVER,
+                        "env --unset=GITHUB_ENV -uGITHUB_PATH --unset GITHUB_OUTPUT -u GITHUB_STATE "
+                        "-u GITHUB_STEP_SUMMARY " + self.DISCOVER,
+                        UNSET + "python3 -I -m unittest discover -s tests", UNSET + "python3 -m unittest tests.test_launch",
+                        "if " + UNSET + self.DISCOVER + "; then echo passed; fi"):
+            with self.subTest(command=command):
+                self.assert_boundary([("bash", command, "")])
+
+    def test_shell_invocations_without_the_proof_keep_boundary_sites_errors(self):
+        for command in (self.DISCOVER, "env " + self.DISCOVER,
+                        # A missing name, and -u after the command word, which is the interpreter's own option.
+                        UNSET.replace("-u GITHUB_STATE ", "") + self.DISCOVER,
+                        "env python3 -u -m unittest discover -s tests -p 'test_*.py'",
+                        # An assignment, another wrapper or a second env after the options.
+                        UNSET + "GITHUB_OUTPUT=/tmp/out " + self.DISCOVER, UNSET + "nice " + self.DISCOVER,
+                        UNSET + "env " + self.DISCOVER, UNSET + "timeout 60 " + self.DISCOVER,
+                        # The launcher hands a command file to the child.
+                        UNSET + self.DISCOVER + ' >> "$GITHUB_STEP_SUMMARY"',
+                        UNSET + self.DISCOVER + ' 2> "$GITHUB_OUTPUT"'):
+            with self.subTest(command=command):
+                self.assert_boundary([("bash", command, "")], proved=False)
+        # A tracked file can stand in for env.
+        for name in ("tools/env", "bin/env.exe", "env.cmd"):
+            with self.subTest(tracked=name):
+                self.assert_boundary([("bash", UNSET + self.DISCOVER, "")], {name: "pass\n"}, proved=False)
+
+    def test_shell_env_forms_outside_the_proof_still_fail(self):
+        for command, diagnostic in (
+                ('env -u "$NAME" ' + self.DISCOVER, "unsupported shell wrapper options"),
+                ("env -i " + self.DISCOVER, "unsupported shell wrapper options"),
+                ("env - " + self.DISCOVER, "unsupported shell wrapper options"),
+                ("env -C tests " + self.DISCOVER, "unsupported shell wrapper options"),
+                ("env -S 'python3 -m unittest discover -s tests'", "unsupported shell wrapper options"),
+                ("env -u GITHUB_OUTPUT -- " + self.DISCOVER, "unsupported shell wrapper options"),
+                ("nice env -u GITHUB_OUTPUT " + self.DISCOVER, "unsupported shell wrapper options"),
+                # The workflow command file names outside a proof are still unmodeled writes.
+                ("nice " + UNSET + self.DISCOVER, "unresolved $GITHUB_ENV write"),
+                ('env -u "$NAME" -u GITHUB_ENV ' + self.DISCOVER, "unresolved $GITHUB_ENV write"),
+                (UNSET + self.DISCOVER + ' > "$GITHUB_ENV"', "unsupported $GITHUB_ENV write output producer"),
+                (UNSET + '"$PYTHON" -m unittest discover -s tests', "unresolved computed command: $PYTHON"),
+                (UNSET + '$COMMAND', "unresolved computed command: $COMMAND")):
+            with self.subTest(command=command):
+                _, errors, observations = discover_boundary([("bash", command, "")], self.LAUNCH)
+                self.assertEqual(observations, [])
+                self.assertTrue(errors and all(error.startswith(".github/actions/dormant/action.yml:") for error in errors),
+                                errors)
+                self.assertIn(diagnostic, errors[0])
+
+    def test_python_argv_prefix_is_carried_through_calls_wrappers_and_receivers(self):
+        for label, source in {
+            "direct": "subprocess.run([" + UNSET_ARGV + self.ARGV + ", check=True)\n",
+            "tuple": "subprocess.check_call((" + UNSET_ARGV + self.ARGV[:-1] + "))\n",
+            "unset_forms": "subprocess.run(['/usr/bin/env', '--unset=GITHUB_ENV', '-uGITHUB_PATH', '--unset', "
+                           "'GITHUB_OUTPUT', '-u', 'GITHUB_STATE', '-u', 'GITHUB_STEP_SUMMARY', " + self.ARGV + ")\n",
+            "forwarded_wrapper": "def run(argv):\n    subprocess.run(argv, check=True)\nrun([" + UNSET_ARGV + self.ARGV + ")\n",
+            # A receiver in another module, which keeps its own diagnostic.
+            "received": "from runner import execute\nexecute([" + UNSET_ARGV + self.ARGV + ", timeout=900)\n",
+            "shell_string": "subprocess.run(" + repr(UNSET + self.DISCOVER) + ", shell=True)\n",
+        }.items():
+            with self.subTest(case=label):
+                commands, files = self.run_python(source, {"tools/runner.py": "def execute(command, timeout):\n    pass\n"})
+                self.assert_boundary(commands, files)
+
+    def test_python_argvs_without_the_proof_keep_boundary_sites_errors(self):
+        missing = UNSET_ARGV.replace("'-u', 'GITHUB_STATE', ", "")
+        for label, source in {
+            "plain": "subprocess.run([" + self.ARGV + ")\n",
+            "missing_name": "subprocess.run([" + missing + self.ARGV + ")\n",
+            "received_missing_name": "execute([" + missing + self.ARGV + ")\n",
+            # Only the first argv proves its invocation; the second one selects the same file.
+            "one_of_two": "execute([" + UNSET_ARGV + self.ARGV + ")\nexecute([" + self.ARGV + ")\n",
+            "one_of_two_direct": "subprocess.run([" + UNSET_ARGV + self.ARGV + ")\nsubprocess.run([" + self.ARGV + ")\n",
+        }.items():
+            with self.subTest(case=label):
+                self.assert_boundary(*self.run_python(source), proved=False)
+        # A received argv bound to a name can change before it runs; its names also stay unsupported access.
+        access = "tools/run.py:2: local-script discovery: unsupported Python access to {}; coverage unsupported"
+        self.assert_boundary(*self.run_python("argv = [" + UNSET_ARGV + self.ARGV + "\nexecute(argv)\n"), proved=False,
+                             extra=[access.format("GITHUB_ENV"), access.format("GITHUB_PATH")])
+        for label, source, diagnostic in (
+                ("computed_name", "subprocess.run(['env', '-u', name, " + self.ARGV + ")\n",
+                 "unresolved computed Python script invocation"),
+                ("env_not_first", "subprocess.run(['nice', " + UNSET_ARGV + self.ARGV + ")\n",
+                 "unresolved computed Python script invocation"),
+                ("other_option", "subprocess.run(['env', '-i', " + self.ARGV + ")\n",
+                 "unresolved computed Python script invocation"),
+                ("unset_after_command", "subprocess.run(['env', sys.executable, '-u', 'GITHUB_STEP_SUMMARY', '-m', "
+                 "'unittest', 'discover', '-s', 'tests'])\n", "unresolved computed Python script invocation")):
+            with self.subTest(case=label):
+                _, errors, observations = discover_boundary(*self.run_python(source))
+                self.assertEqual(observations, [])
+                self.assertIn("tools/run.py:2: local-script discovery: " + diagnostic, errors)
+
+    def test_workflow_command_file_names_outside_the_proofs_still_fail(self):
+        access = "local-script discovery: unsupported Python access to GITHUB_ENV; coverage unsupported"
+        for label, source in {
+            "bound_argv": "argv = [" + UNSET_ARGV + self.ARGV + "\nexecute(argv)\n",
+            "read_value": "path = os.environ['GITHUB_ENV']\nexecute([" + UNSET_ARGV + self.ARGV + ")\n",
+            "popped_value": "environment = os.environ.copy()\npath = environment.pop('GITHUB_ENV')\n",
+            "other_mapping": "settings = load()\nsettings.pop('GITHUB_ENV', None)\n",
+            "unset_after_command": "execute(['env', sys.executable, '-u', 'GITHUB_ENV'])\n",
+        }.items():
+            with self.subTest(case=label):
+                _, errors, _ = discover_boundary(*self.run_python(source))
+                self.assertTrue(any(error.startswith("tools/run.py:") and error.endswith(access) for error in errors),
+                                errors)
+
+    COPY = ("environment = os.environ.copy()\n"
+            "for name in ('GITHUB_ENV', 'GITHUB_PATH', 'GITHUB_OUTPUT'):\n"
+            "    environment.pop(name, None)\n"
+            "del environment['GITHUB_STATE']\n"
+            "environment.pop('GITHUB_STEP_SUMMARY')\n")
+
+    def test_environment_copy_removals_prove_the_invocation(self):
+        call = "subprocess.run([" + self.ARGV + ", env=environment, check=True)\n"
+        prefix = ("environment = dict(os.environ)\nfor key in tuple(environment):\n"
+                  "    if key.startswith(('GITHUB_', 'RUNNER_TOOL_')):\n        del environment[key]\n")
+        for label, source in {
+            "removals": self.COPY + call,
+            "in_function": "def main():\n" + "".join("    " + line + "\n" for line in (self.COPY + call).splitlines())
+                           + "main()\n",
+            "prefix_loop": prefix + call,
+            # The copy removes two names and the env prefix the other three.
+            "combined": "environment = {**os.environ}\nenvironment.pop('GITHUB_ENV', None)\n"
+                        "del environment['GITHUB_PATH']\nsubprocess.run(['env', '-u', 'GITHUB_OUTPUT', '-u', "
+                        "'GITHUB_STATE', '-u', 'GITHUB_STEP_SUMMARY', " + self.ARGV + ", env=environment)\n",
+            "forwarded_wrapper": self.COPY + "def run(argv, env):\n    subprocess.run(argv, env=env)\n"
+                                 "run([" + self.ARGV + ", environment)\n",
+            "safe_change": self.COPY + "environment['MODE'] = 'fast'\n" + call,
+        }.items():
+            with self.subTest(case=label):
+                self.assert_boundary(*self.run_python(source))
+
+    def test_environment_copies_without_complete_removals_keep_boundary_sites_errors(self):
+        call = "subprocess.run([" + self.ARGV + ", env=environment)\n"
+        for label, source in {
+            "missing_name": self.COPY.replace("environment.pop('GITHUB_STEP_SUMMARY')\n", "") + call,
+            "conditional": self.COPY.replace("del environment['GITHUB_STATE']\n",
+                                             "if ready:\n    del environment['GITHUB_STATE']\n") + call,
+            "after_the_call": "environment = os.environ.copy()\n" + call + self.COPY.split("\n", 1)[1],
+            "in_try": "try:\n" + "".join("    " + line + "\n" for line in self.COPY.splitlines())
+                      + "except KeyError:\n    pass\n" + call,
+            "loop_with_more": ("environment = os.environ.copy()\nfor name in ('GITHUB_OUTPUT', 'GITHUB_STATE'):\n"
+                               "    print(name)\n    environment.pop(name, None)\n"
+                               "for name in ('GITHUB_ENV', 'GITHUB_PATH', 'GITHUB_STEP_SUMMARY'):\n"
+                               "    environment.pop(name, None)\n" + call),
+            "readded": self.COPY + "environment.update(GITHUB_OUTPUT='/tmp/out')\n" + call,
+            "readded_case_variant": self.COPY + "environment['github_output'] = '/tmp/out'\n" + call,
+            "added_in_copy": self.COPY.replace("os.environ.copy()", "dict(os.environ, GITHUB_STATE='x')") + call,
+            "wrapper_readds": self.COPY + "def run(argv, env):\n    env['GITHUB_STATE'] = 'x'\n"
+                              "    subprocess.run(argv, env=env)\nrun([" + self.ARGV + ", environment)\n",
+            "shell_true": self.COPY + call.replace(")\n", ", shell=True)\n"),
+            "shell_string": self.COPY + "subprocess.run(" + repr(self.DISCOVER) + ", env=environment, shell=True)\n",
+            "other_copy": self.COPY + "other = os.environ.copy()\n" + call.replace("env=environment", "env=other"),
+        }.items():
+            with self.subTest(case=label):
+                self.assert_boundary(*self.run_python(source), proved=False)
 
 
 class ImportIndexTests(unittest.TestCase):
@@ -3275,7 +3482,7 @@ class ScanTests(acceptance_tests.Harness):
     def test_test_boundary_observations_pass_the_row_summary_and_acceptance(self):
         alpha = acceptance_tests.MODULES[0]
         w = self.workspace((alpha,))
-        w.action(alpha, "python -m unittest discover -s tests -p 'test_*.py'")
+        w.action(alpha, UNSET + "python -m unittest discover -s tests -p 'test_*.py'")
         w.write(alpha, "tests/test_launch.py", "import subprocess\nsubprocess.run(command)\n")
         head = w.commit(w.paths[alpha])
         report = w.scan(self.factory)

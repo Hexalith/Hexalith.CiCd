@@ -12,7 +12,9 @@ import roots and language. They never bound coverage:
 2. Indirection that the model does not resolve fails with a source diagnostic.
 3. In a test source that only unittest selection and other test sources reach,
    an unresolved process launch, execution literal or dynamic load is a
-   boundary observation instead of a diagnostic.
+   boundary observation instead of a diagnostic, provided every unittest
+   invocation that selects it provably starts without the workflow command
+   file variables.
 """
 from __future__ import annotations
 
@@ -243,6 +245,15 @@ TEST_SOURCE = "test*.py"
 # Workflow command files and stdout commands that change later steps, compared case-insensitively.
 WORKFLOW_COMMANDS = ("github_env", "github_path", "github_output", "github_state", "github_step_summary",
                      "::set-env", "::add-path", "::set-output", "::save-state")
+# The variables that locate the workflow command files. A selected test source
+# keeps the boundary only when every unittest invocation reaching it provably
+# starts without all of them.
+WORKFLOW_FILES = frozenset({"GITHUB_ENV", "GITHUB_PATH", "GITHUB_OUTPUT", "GITHUB_STATE", "GITHUB_STEP_SUMMARY"})
+# How a source was reached: a unittest selection proved to start without the
+# workflow command file variables, and one that can inherit them.
+TEST_ORIGIN = ("test",)
+INHERITING_TEST_ORIGIN = ("test", "inherits workflow command files")
+WORKFLOW_FILE_NAME = re.compile(r"github_(?:env|path|output|state|step_summary)", re.I)
 ENVIRONMENT_PROTECTED = RESOLUTION | {"PATH", "BASH_ENV", "ENV", "SHELLOPTS", "BASHOPTS", "ZDOTDIR", "FPATH"}
 ENVIRONMENT_PROTECTED_PREFIXES = ("PYTHON", "NODE", "NPM_CONFIG_", "PS", "POWERSHELL")
 ENVIRONMENT_LOCATIONS = {"HOME", "USERPROFILE", "HOMEDRIVE", "HOMEPATH", "APPDATA", "LOCALAPPDATA", "XDG_CONFIG_HOME",
@@ -384,6 +395,34 @@ def json_has_key(value, name, depth=0):
 def tool(word):
     """An absolute wrapper or runner path names the same tool."""
     return PurePosixPath(word).name if word.startswith("/") else word
+
+
+def env_unsets(words):
+    """(names, end) for words that start with env and only its workflow command file unset options.
+
+    Each option is -u NAME, -uNAME, --unset NAME or --unset=NAME, and NAME is
+    exactly one of WORKFLOW_FILES; end indexes the word after the options. Any
+    other option or name, a computed (None) word or an env without options
+    gives None, so the ordinary wrapper rules apply.
+    """
+    if not words or not isinstance(words[0], str) or tool(words[0]) != "env":
+        return None
+    names, index = set(), 1
+    while index < len(words) and isinstance(words[index], str) and words[index].startswith("-"):
+        option = words[index]
+        if option in {"-u", "--unset"}:
+            name = words[index + 1] if index + 1 < len(words) else None
+            index += 2
+        elif option.startswith("--unset="):
+            name, index = option[len("--unset="):], index + 1
+        elif option.startswith("-u"):
+            name, index = option[2:], index + 1
+        else:
+            return None
+        if name not in WORKFLOW_FILES:
+            return None
+        names.add(name)
+    return (frozenset(names), index) if names else None
 
 
 def shebang(first):
@@ -755,6 +794,9 @@ class Discovery:
         # execution-literal and dynamic-load sites, decided once all paths are known.
         self.origins, self.tentative, self.observations = {}, [], []
         self.window, self.importer, self.exhausted = None, None, False
+        # Literal argvs that a proved forwarded wrapper ran, keyed by id and
+        # holding the node so that the id stays unique.
+        self.forwarded_argvs = {}
 
     def index_directories(self, paths):
         for item in paths:
@@ -1022,8 +1064,11 @@ class Discovery:
         if name in RECIPES and self.recipe(RECIPES[name], bases):
             raise DeliveryError("unsupported task runner with tracked module recipes: " + clean(name))
 
-    def unittest_discovery(self, args, path, cwd, action):
-        """Follow unittest discover with an explicit directory and a literal filename pattern."""
+    def unittest_discovery(self, args, path, cwd, action, *, proved=False):
+        """Follow unittest discover with an explicit directory and a literal filename pattern.
+
+        proved: the invocation starts without the workflow command file variables.
+        """
         options, index = {}, 1
         while index < len(args):
             argument = args[index]
@@ -1055,9 +1100,9 @@ class Discovery:
                 if name == "__init__.py":
                     self.add_module(item, cwd, action, (start,))
                 elif fnmatchcase(name, pattern.lower()):
-                    self.add_module(item, cwd, action, (start,), test=True)
+                    self.add_module(item, cwd, action, (start,), test=True, proved=proved)
 
-    def unittest_invocation(self, args, path, cwd, action):
+    def unittest_invocation(self, args, path, cwd, action, *, proved=False):
         """Follow unittest with literal test module or file names; False for other forms.
 
         The loader imports a dotted name's longest importable prefix, so the
@@ -1100,7 +1145,7 @@ class Discovery:
                 if parts[0].casefold() in self.tracked_module_names():
                     raise DeliveryError("unsupported test runner with tracked module tests: unittest")
         for target in selected:
-            self.add_module(target, cwd, action, (cwd,), test=True)
+            self.add_module(target, cwd, action, (cwd,), test=True, proved=proved)
         return True
 
     def tracked_module_names(self):
@@ -1502,9 +1547,11 @@ class Discovery:
             self.error(path, lines[-1][0], "local-script discovery: " + clean(error))
         return True
 
-    def commands(self, path, text, cwd, action, *, offset=0, powershell=False, sourced=False):
+    def commands(self, path, text, cwd, action, *, offset=0, powershell=False, sourced=False, unset=frozenset()):
         # Recognized calls carry the literal working directory. Literal words
         # naming tracked scripts are included afterwards from every base.
+        # unset applies to the first simple command only: the argv a Python
+        # process call starts with a proved environment.
         text = text.removeprefix("\ufeff")
         # Replace spaced Actions expressions before shell tokenization.
         text = re.sub(r"\$\{\{\s*github\.(workspace|action_path)\s*\}\}",
@@ -1594,7 +1641,8 @@ class Discovery:
                     segments.append(words)
                 self.environment(segments, line[:cut], powershell)
                 for words in segments:
-                    cwd = self.segment(words, path, cwd, action, cwds, number, powershell, sourced)
+                    cwd = self.segment(words, path, cwd, action, cwds, number, powershell, sourced, unset)
+                    unset = frozenset()
             except (ValueError, RecursionError) as error:
                 self.error(path, number, "local-script discovery: " + clean(error))
         for candidate_cwd in dict.fromkeys(cwds):
@@ -1775,10 +1823,18 @@ class Discovery:
     @staticmethod
     def environment(segments, text, powershell):
         """Unmodeled environment writes that change script or import resolution fail."""
-        flat = [word for words in segments for word in words]
-        if any(environment_names(word) for word in flat):
+        def named(words, test):
+            # A leading env's unset options name a workflow command file
+            # variable only to remove it; every other word still counts.
+            start = 0
+            while start < len(words) and (words[start] in KEYWORDS or re.match(r"[A-Za-z_]\w*\+?=", words[start])):
+                start += 1
+            prefix = None if powershell else env_unsets(words[start:])
+            options = range(start + 1, start + prefix[1]) if prefix is not None else range(0)
+            return any(test(word) for index, word in enumerate(words) if index not in options)
+        if any(named(words, environment_names) for words in segments):
             outputs = [Discovery.environment_output(words, powershell=powershell) for words in segments
-                       if any(environment_names(word) for word in words)]
+                       if named(words, environment_names)]
             keys = []
             for output in outputs:
                 for part in output.split("\n"):
@@ -1796,10 +1852,10 @@ class Discovery:
                     raise DeliveryError("unsupported $GITHUB_ENV write affecting script resolution")
                 if name.upper() == "PATH":
                     check_path(value, message="unsupported $GITHUB_ENV PATH write affecting script resolution")
-        if any(path_names(word) for word in flat):
+        if any(named(words, path_names) for words in segments):
             try:
                 outputs = [Discovery.environment_output(words, marker="GITHUB_PATH", powershell=powershell)
-                           for words in segments if any(path_names(word) for word in words)]
+                           for words in segments if named(words, path_names)]
                 # AddPathFileCommand uses File.ReadAllLines, whose records
                 # split on CRLF, lone CR and LF. GITHUB_ENV and source offsets
                 # retain their separate LF-based parsing contracts.
@@ -1841,17 +1897,42 @@ class Discovery:
             raise DeliveryError("unresolved timeout duration")
         return words[index + 1:]
 
-    def segment(self, words, path, cwd, action, cwds, number, powershell, sourced):
-        """Discover one simple command; return the working directory after it."""
+    def segment(self, words, path, cwd, action, cwds, number, powershell, sourced, unset=frozenset()):
+        """Discover one simple command; return the working directory after it.
+
+        unset holds the workflow command file variables that the caller proved
+        absent from this command's starting environment.
+        """
+        # Outside a leading env's unset options, a word that names a workflow
+        # command file, such as a redirection target, hands the file to the child.
+        mentions = sum(1 for word in words if WORKFLOW_FILE_NAME.search(word))
         words, stdin = redirections(words)
+        # The workflow command file variables this command's child provably starts without.
+        removed = set(unset)
         while words and (words[0] in KEYWORDS or assignment(words[0])):
+            if words[0] not in KEYWORDS:
+                # An assignment can give the command any variable again.
+                removed = set()
             words = words[1:]
         if not words:
             return cwd
-        bases, runner = self.bases(path, action, [*cwds, cwd]), None
+        bases, runner, first = self.bases(path, action, [*cwds, cwd]), None, True
         while words and (tool(words[0]) in WRAPPERS or tool(words[0]) in PYTHON_RUNNERS):
             name = tool(words[0])
+            # Only a leading env's own unset options are read; any later
+            # wrapper or runner can change the child's environment.
+            prefix = env_unsets(words) if first and name == "env" and not powershell else None
+            first = False
             words = words[1:]
+            if prefix is not None:
+                # A tracked env file could run in place of the standard tool.
+                removed = removed | prefix[0] if self.standard_env() else set()
+                mentions -= sum(1 for word in words[:prefix[1] - 1] if WORKFLOW_FILE_NAME.search(word))
+                words = words[prefix[1] - 1:]
+                if words and assignment(words[0]):
+                    removed = set()
+            else:
+                removed = set()
             if name in PYTHON_RUNNERS:
                 runner = name
                 if words[:1] and words[0] in {"--version", "-V", "--help", "-h", "help", "version"}:
@@ -2054,8 +2135,10 @@ class Discovery:
                         self.segment([name, *remaining], path, cwd, action, cwds, number, powershell, sourced)
                     elif (value == "unittest" and remaining[:1] == ["discover"]
                           and {"-s", "--start-directory"}.intersection(remaining[1:])):
-                        self.unittest_discovery(remaining, path, cwd, action)
-                    elif not (value == "unittest" and self.unittest_invocation(remaining, path, cwd, action)):
+                        self.unittest_discovery(remaining, path, cwd, action,
+                                                proved=removed >= WORKFLOW_FILES and not mentions)
+                    elif not (value == "unittest" and self.unittest_invocation(
+                            remaining, path, cwd, action, proved=removed >= WORKFLOW_FILES and not mentions)):
                         self.task_runner(name, remaining, bases)
                 return cwd
             if mode == "c":
@@ -2837,14 +2920,19 @@ class Discovery:
             if prefix in self.items and prefix not in self.pins:
                 raise DeliveryError("unsafe non-directory Python import path component: " + clean(prefix))
 
-    def add_module(self, target, cwd, action, roots, *, test=False):
-        """Importing a module executes every enclosing package initializer."""
+    def add_module(self, target, cwd, action, roots, *, test=False, proved=False):
+        """Importing a module executes every enclosing package initializer.
+
+        A test selection is proved when its unittest invocation starts without
+        the workflow command file variables.
+        """
         self.import_path(str(PurePosixPath(target).parent))
         if target in self.items:
             # Only a selected test*.py module keeps the test boundary; other
             # files a broader discovery pattern selects keep full rules.
             test = test and fnmatchcase(PurePosixPath(target).name, TEST_SOURCE)
-            self.add(target, "python", cwd=cwd, action=action, python_roots=roots, origin=("test",) if test else None)
+            origin = (TEST_ORIGIN if proved else INHERITING_TEST_ORIGIN) if test else None
+            self.add(target, "python", cwd=cwd, action=action, python_roots=roots, origin=origin)
         for parent in PurePosixPath(target).parents:
             init = str(parent / "__init__.py")
             if init != target and init in self.items:
@@ -3082,6 +3170,9 @@ class Discovery:
 
         literals, modules, bases, cwds = [], [], [cwd, *roots], [cwd]
         uses = self.import_uses(path, nodes, parents, offset)
+        # unittest discover argvs that a wrapper receives, selected after the
+        # walk unless a proved forwarded wrapper already ran them.
+        received = []
         for node in nodes:
             for sequence in sequences(node):
                 modules.extend((getattr(node, "lineno", 1) + offset, module)
@@ -3089,25 +3180,33 @@ class Discovery:
                                                              boundary=True))
             launch = False
             try:
-                if (isinstance(node, (ast.List, ast.Tuple)) and len(node.elts) >= 4
-                        and "sys.executable" in names(ast.unparse(node.elts[0]))):
+                start = (self.argv_interpreter(node.elts, names)
+                         if isinstance(node, (ast.List, ast.Tuple)) and len(node.elts) >= 4 else None)
+                if start is not None and len(node.elts) >= start + 4:
                     command, = sequences(node)
-                    if command[1:4] == ["-m", "unittest", "discover"]:
+                    if command[start + 1:start + 4] == ["-m", "unittest", "discover"]:
                         consumer = parents.get(node)
                         direct = (isinstance(consumer, ast.Call) and consumer.args and consumer.args[0] is node
                                   and names(ast.unparse(consumer.func)) & COMMAND_APIS)
                         if not direct:
                             # Keep test coverage even when a wrapper receives the argv.
-                            if any(word is None for word in command[4:]):
+                            if any(word is None for word in command[start + 4:]):
                                 raise DeliveryError("unresolved unittest discovery arguments")
-                            self.unittest_discovery(command[3:], path, cwd, action)
+                            # Only the leading env unset prefix of an argv passed
+                            # straight to a call proves the child's environment here.
+                            unset = env_unsets(command[:start])[0] if start else frozenset()
+                            passed = isinstance(consumer, ast.Call) and consumer.args and consumer.args[0] is node
+                            received.append((node, command[start + 3:],
+                                             bool(passed) and unset >= WORKFLOW_FILES and self.standard_env()))
                 if isinstance(node, ast.Constant) and isinstance(node.value, str):
                     literals.append((getattr(node, "lineno", 1) + offset, node.value))
                     # The pinned writer exports one fixed variable and rejects
                     # CR/LF before writing its verified tool-directory value.
                     platform_export = (node.value == "GITHUB_ENV" and path == WORKS_PLATFORM_PREPARE
                                        and node.lineno == 65 and self.works_platform_context(path, cwd, action, offset))
-                    if node.value in {"GITHUB_ENV", "GITHUB_PATH"} and not platform_export:
+                    if (node.value in {"GITHUB_ENV", "GITHUB_PATH"} and not platform_export
+                            and not self.unset_operand(node, parents)
+                            and not self.environment_removal_key(node, parents, nodes, names)):
                         raise DeliveryError("unsupported Python access to " + node.value + "; coverage unsupported")
                 elif isinstance(node, (ast.Name, ast.Attribute)) and isinstance(node.ctx, ast.Load):
                     if proven_paths and any(search_path(candidate) for candidate in names(ast.unparse(node))):
@@ -3248,6 +3347,15 @@ class Discovery:
                 for message in getattr(error, "messages", [error]):
                     self.error(path, getattr(node, "lineno", 1) + offset, "local-script discovery: " + clean(message),
                                boundary=launch)
+        for node, arguments, proved in received:
+            # A proved forwarded wrapper selected these tests with the proof of
+            # the call it ran; otherwise keep the coverage without knowing it.
+            if self.forwarded_argvs.get(id(node)) is node:
+                continue
+            try:
+                self.unittest_discovery(arguments, path, cwd, action, proved=proved)
+            except (ValueError, RecursionError) as error:
+                self.error(path, node.lineno + offset, "local-script discovery: " + clean(error))
         for candidate_cwd in dict.fromkeys(cwds):
             self.include(literals, path, candidate_cwd, action, self.bases(path, action, bases))
             self.include_modules(modules, path, candidate_cwd, action, self.bases(path, action, bases))
@@ -3732,6 +3840,168 @@ class Discovery:
         values = test.args[0].elts if isinstance(test.args[0], ast.Tuple) else [test.args[0]]
         return bool(values) and all(isinstance(value, ast.Constant) and isinstance(value.value, str)
                                     and self.environment_prefix(value.value, prefixes) for value in values)
+
+    def standard_env(self):
+        """No tracked file can stand in for the env command that an unset prefix relies on."""
+        return not any(posixpath.basename(item).lower() in {"env", "env.exe", "env.cmd", "env.bat", "env.com"}
+                       for item in self.items)
+
+    def argv_interpreter(self, elements, names):
+        """Index of sys.executable in a literal argv: first, or right after a leading env unset prefix."""
+        if not elements:
+            return None
+        if "sys.executable" in names(ast.unparse(elements[0])):
+            return 0
+        prefix = env_unsets([item.value if isinstance(item, ast.Constant) and isinstance(item.value, str) else None
+                             for item in elements])
+        if (prefix is not None and prefix[1] < len(elements)
+                and "sys.executable" in names(ast.unparse(elements[prefix[1]]))):
+            return prefix[1]
+        return None
+
+    @staticmethod
+    def unset_operand(node, parents):
+        """A literal that only the leading env unset prefix of an argv passed straight to a call reads."""
+        sequence = parents.get(node)
+        consumer = parents.get(sequence)
+        if (not isinstance(sequence, (ast.List, ast.Tuple)) or not isinstance(consumer, ast.Call)
+                or not consumer.args or consumer.args[0] is not sequence):
+            return False
+        prefix = env_unsets(sequences(sequence)[0])
+        index = next(index for index, item in enumerate(sequence.elts) if item is node)
+        return prefix is not None and 0 < index < prefix[1] < len(sequence.elts)
+
+    @staticmethod
+    def removal_statement(statement):
+        """(receiver, key) for ENV.pop(KEY[, DEFAULT]) as a statement or del ENV[KEY]."""
+        if (isinstance(statement, ast.Expr) and isinstance(statement.value, ast.Call)
+                and isinstance(statement.value.func, ast.Attribute) and statement.value.func.attr == "pop"
+                and isinstance(statement.value.func.value, ast.Name) and not statement.value.keywords
+                and 1 <= len(statement.value.args) <= 2):
+            return statement.value.func.value, statement.value.args[0]
+        if (isinstance(statement, ast.Delete) and len(statement.targets) == 1
+                and isinstance(statement.targets[0], ast.Subscript) and isinstance(statement.targets[0].value, ast.Name)):
+            return statement.targets[0].value, statement.targets[0].slice
+        return None
+
+    def local_environment_copy(self, name, parents, nodes, names):
+        """The one assignment binding a local name to a proved os.environ copy, a plain dict, or None."""
+        scope, _, bindings = self.owning_scope(name.id, name, parents, nodes)
+        if scope is None or len(bindings) != 1 or not isinstance(bindings[0], ast.Name):
+            return None
+        definition = parents.get(bindings[0])
+        targets = (definition.targets if isinstance(definition, ast.Assign)
+                   else [definition.target] if isinstance(definition, ast.AnnAssign) else [])
+        if len(targets) != 1 or targets[0] is not bindings[0] or definition.value is None:
+            return None
+        copy = self.environment_copy(definition.value, names, nodes)
+        if copy is None or not self.environment_source_proved(copy[0], names, parents, nodes):
+            return None
+        return definition
+
+    def environment_removal_key(self, node, parents, nodes, names):
+        """A literal key that only removes a variable from a local os.environ copy, discarding its value.
+
+        The forms are ENV.pop(KEY[, DEFAULT]) as a statement, del ENV[KEY] and
+        a loop over literal keys whose only statement is one of these with the
+        loop name as its key. ENV is bound once to a proved copy, a plain dict,
+        so the removal cannot read the value or reach the file it names.
+        """
+        container = parents.get(node)
+        loop = parents.get(container)
+        if isinstance(container, (ast.Tuple, ast.List)) and isinstance(loop, ast.For) and loop.iter is container:
+            found = self.removal_statement(loop.body[0]) if len(loop.body) == 1 and not loop.orelse else None
+            if (found is None or not isinstance(loop.target, ast.Name) or not isinstance(found[1], ast.Name)
+                    or found[1].id != loop.target.id):
+                return False
+        else:
+            # loop is the statement holding the call or subscript.
+            found = self.removal_statement(loop) if loop is not None else None
+            if found is None or found[1] is not node:
+                return False
+        return self.local_environment_copy(found[0], parents, nodes, names) is not None
+
+    def removed_names(self, statement, carrier, nodes):
+        """The literal variable names one statement in a copy's own block removes from it."""
+        def removal(entry, key=None):
+            found = self.removal_statement(entry)
+            if found is None or found[0].id != carrier:
+                return None
+            if key is None:
+                return found[1].value if isinstance(found[1], ast.Constant) and isinstance(found[1].value, str) else None
+            return key if isinstance(found[1], ast.Name) and found[1].id == key else None
+        single = removal(statement)
+        if single is not None:
+            return {single}
+        if not isinstance(statement, ast.For) or statement.orelse or len(statement.body) != 1 or not isinstance(
+                statement.target, ast.Name):
+            return set()
+        key, body = statement.target.id, statement.body[0]
+        if isinstance(statement.iter, (ast.Tuple, ast.List)):
+            if removal(body, key) is None or not all(
+                    isinstance(item, ast.Constant) and isinstance(item.value, str) for item in statement.iter.elts):
+                return set()
+            return {item.value for item in statement.iter.elts}
+        # for KEY in tuple(ENV) / list(ENV): if KEY.startswith(PREFIXES): remove KEY.
+        iterate = statement.iter
+        if not (isinstance(iterate, ast.Call) and isinstance(iterate.func, ast.Name) and iterate.func.id in {"tuple", "list"}
+                and len(iterate.args) == 1 and not iterate.keywords and isinstance(iterate.args[0], ast.Name)
+                and iterate.args[0].id == carrier and self.unshadowed(iterate.func.id, nodes)):
+            return set()
+        if not isinstance(body, ast.If) or body.orelse or len(body.body) != 1 or removal(body.body[0], key) is None:
+            return set()
+        test = body.test
+        if not (isinstance(test, ast.Call) and isinstance(test.func, ast.Attribute) and test.func.attr == "startswith"
+                and isinstance(test.func.value, ast.Name) and test.func.value.id == key
+                and len(test.args) == 1 and not test.keywords):
+            return set()
+        values = test.args[0].elts if isinstance(test.args[0], ast.Tuple) else [test.args[0]]
+        if not values or not all(isinstance(value, ast.Constant) and isinstance(value.value, str) for value in values):
+            return set()
+        return {name for name in WORKFLOW_FILES if name.startswith(tuple(value.value for value in values))}
+
+    def environment_removals(self, value, parents, nodes, names):
+        """The workflow command file variables that a proved local os.environ copy no longer holds at this read.
+
+        The copy is a local name bound once. Each removal is a statement in the
+        binding's own block, after the binding and before the statement that
+        holds this read: ENV.pop(KEY[, DEFAULT]), del ENV[KEY], a loop over
+        literal keys whose only statement is one of these, or the prefix loop
+        over tuple(ENV). Every addition to a proved copy uses a literal key, so
+        no literal anywhere in the source may name one of these variables except
+        as such a removal key or an env unset operand.
+        """
+        if not isinstance(value, ast.Name) or not isinstance(value.ctx, ast.Load):
+            return frozenset()
+        definition = self.local_environment_copy(value, parents, nodes, names)
+        holder = parents.get(definition) if definition is not None else None
+        block = next((field for field in (getattr(holder, name, None) for name in ("body", "orelse", "finalbody"))
+                      if isinstance(field, list) and any(statement is definition for statement in field)), None)
+        if block is None:
+            return frozenset()
+        statement = value
+        while statement is not None and not any(statement is item for item in block):
+            statement = parents.get(statement)
+        begin = next(index for index, item in enumerate(block) if item is definition)
+        end = next((index for index, item in enumerate(block) if item is statement), None)
+        if end is None or end <= begin:
+            return frozenset()
+
+        def only_removals():
+            for entry in nodes:
+                if isinstance(entry, ast.keyword) and entry.arg and entry.arg.upper() in WORKFLOW_FILES:
+                    return False
+                if (isinstance(entry, ast.Constant) and isinstance(entry.value, str)
+                        and entry.value.upper() in WORKFLOW_FILES and not self.unset_operand(entry, parents)
+                        and not self.environment_removal_key(entry, parents, nodes, names)):
+                    return False
+            return True
+        if not self.proof_memo(nodes, "workflow-file-removals", only_removals):
+            return frozenset()
+        removed = set()
+        for item in block[begin + 1:end]:
+            removed |= self.removed_names(item, value.id, nodes)
+        return frozenset(removed & WORKFLOW_FILES)
 
     def standard_process_call(self, call, names, parents, nodes):
         """A subprocess API call through the standard module, which reads but never changes its arguments."""
@@ -4720,6 +4990,8 @@ class Discovery:
         prefix = f"forwarded wrapper call at line {caller.lineno + offset}: "
         try:
             self.python_call(call, synthetic, path, cwd, action, roots, offset, names, parents, nodes)
+            if "argv" in substitutes:
+                self.forwarded_argvs[id(substitutes["argv"])] = substitutes["argv"]
         except ForwardedWrapperErrors as error:
             # A wrapper this caller forwards through failed at several of its own callers.
             raise ForwardedWrapperErrors([prefix + message for message in error.messages]) from None
@@ -4772,6 +5044,8 @@ class Discovery:
             first = node.args[0]
             git_argv = ()
             target_cwd = cwd
+            # Workflow command file variables a proved env copy removes from the child.
+            unset = frozenset()
             if call.startswith("subprocess."):
                 if len(node.args) > 1:
                     raise DeliveryError("unresolved subprocess positional/options expansion")
@@ -4796,6 +5070,7 @@ class Discovery:
                                                    protected_process_prefixes=GIT_ENV_PREFIXES if git_argv
                                                    else DOTNET_ENV_PREFIXES if dotnet or assembly else (),
                                                    exports=exports):
+                            unset = self.environment_removals(keyword.value, parents, nodes, names)
                             continue
                     try:
                         option = ast.literal_eval(keyword.value)
@@ -4900,7 +5175,8 @@ class Discovery:
                         command = [ast.literal_eval(item) for item in variant]
                         if not command or not all(isinstance(item, str) for item in command):
                             raise ValueError("unresolved forwarded executable or argument")
-                        self.commands(path, shlex.join(command), target_cwd, action, offset=node.lineno - 1 + offset)
+                        self.commands(path, shlex.join(command), target_cwd, action, offset=node.lineno - 1 + offset,
+                                      unset=unset)
                     self.export_wrappers(wrappers, path, node.lineno + offset, parents)
                     return
                 except (ValueError, TypeError, SyntaxError):
@@ -4930,11 +5206,13 @@ class Discovery:
                            for keyword in node.keywords):
                         raise DeliveryError("unsupported subprocess pre-execution callback")
                     return
+            # sys.executable first, or right after a leading env unset prefix.
+            interpreter = self.argv_interpreter(first.elts, names) if isinstance(first, (ast.List, ast.Tuple)) else None
             try:
-                if (isinstance(first, (ast.List, ast.Tuple)) and first.elts
-                        and "sys.executable" in names(ast.unparse(first.elts[0]))):
+                if interpreter is not None:
                     # sys.executable, or an alias of it, is the Python interpreter.
-                    value = ["python", *(ast.literal_eval(element) for element in first.elts[1:])]
+                    value = [*(ast.literal_eval(element) for element in first.elts[:interpreter]), "python",
+                             *(ast.literal_eval(element) for element in first.elts[interpreter + 1:])]
                 else:
                     value = ast.literal_eval(first)
             except (ValueError, TypeError, SyntaxError):
@@ -4954,7 +5232,7 @@ class Discovery:
                     if isinstance(first, (ast.List, ast.Tuple)):
                         value = []
                         for index, element in enumerate(first.elts):
-                            if index == 0 and "sys.executable" in names(ast.unparse(element)):
+                            if index == interpreter and "sys.executable" in names(ast.unparse(element)):
                                 if (not isinstance(element, ast.Attribute) or not isinstance(element.value, ast.Name)
                                         or not self.proof_import(element.value.id, "sys", nodes, parents)):
                                     raise ValueError("untrusted Python interpreter binding")
@@ -4988,7 +5266,14 @@ class Discovery:
             elif isinstance(value, str):
                 self.commands(path, value, target_cwd, action, offset=node.lineno - 1 + offset)
             elif isinstance(value, (list, tuple)) and all(isinstance(v, str) for v in value):
-                self.commands(path, shlex.join(value), target_cwd, action, offset=node.lineno - 1 + offset)
+                # A proved copy applies to the argv itself, never to a shell command line.
+                argv = (isinstance(first, (ast.List, ast.Tuple)) and call.startswith("subprocess.")
+                        and call not in {"subprocess.getoutput", "subprocess.getstatusoutput"}
+                        and not any(keyword.arg == "shell" and not (isinstance(keyword.value, ast.Constant)
+                                                                    and keyword.value.value in (None, False))
+                                    for keyword in node.keywords))
+                self.commands(path, shlex.join(value), target_cwd, action, offset=node.lineno - 1 + offset,
+                              unset=unset if argv else frozenset())
             else:
                 raise DeliveryError("unresolved Python subprocess target")
 
@@ -5040,6 +5325,9 @@ class Discovery:
         # Who can import each selected source, by name under any search path.
         importers, unresolved = self.import_index(), set(self.unresolved_imports)
         sources, observations = self.test_sources(importers), set()
+        # Test sources that keep the boundary only if every unittest invocation
+        # reaching them started without the workflow command file variables.
+        inheriting = self.test_sources(importers, inheriting=True) - sources
         # A test source whose literal text names a workflow command file keeps
         # its boundary sites errors: a child it starts could write that file.
         boundary = sources - self.workflow_text
@@ -5083,6 +5371,9 @@ class Discovery:
             elif path in sources:
                 self.errors.append(f"{clean(path)}:{line}: {clean(message)}; no test boundary: "
                                    "the source names a GitHub workflow command file")
+            elif path in inheriting:
+                self.errors.append(f"{clean(path)}:{line}: {clean(message)}; no test boundary: a unittest invocation "
+                                   "can start it with the GitHub workflow command file variables")
             else:
                 self.errors.append(f"{clean(path)}:{line}: {clean(message)}")
         self.observations = [{"path": path, "line": line, "reason": reason}
@@ -5090,9 +5381,11 @@ class Discovery:
                                  item[0], item[1] if isinstance(item[1], int) else -1, str(item[1]), item[2]))]
         return self.files, sorted(set(self.errors))
 
-    def test_sources(self, importers):
+    def test_sources(self, importers, *, inheriting=False):
         """Selected test modules that only unittest selection and other such modules reach.
 
+        Each unittest invocation that selects one must provably start without
+        the workflow command file variables; inheriting also counts the others.
         Any other path, such as an action, a launch, a literal reference or an
         import from other code, keeps full rules. Imports count by name under
         any search path, and an import that names no module can reach every
@@ -5100,13 +5393,14 @@ class Discovery:
         """
         if self.exhausted:
             return set()
-        sources = {path for path, origins in self.origins.items() if ("test",) in origins}
+        tests = {TEST_ORIGIN, INHERITING_TEST_ORIGIN} if inheriting else {TEST_ORIGIN}
+        sources = {path for path, origins in self.origins.items() if origins & tests}
         unresolved = set(self.unresolved_imports)
         changed = True
         while changed:
             changed = False
             for path in sorted(sources):
-                if (any(origin != ("test",) and not (origin[0] == "import" and origin[1] in sources)
+                if (any(origin not in tests and not (origin[0] == "import" and origin[1] in sources)
                         for origin in self.origins[path])
                         or not (importers.get(path, set()) | unresolved) <= sources):
                     sources.discard(path)
