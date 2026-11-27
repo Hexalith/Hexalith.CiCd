@@ -51,7 +51,7 @@ context:
 
 **Execution:**
 - [ ] `evidence/22/` — complete/provision AD-21 App selection, stale release/CodeQL cleanup, exact rulesets, main-only release environment, module-scoped Zot/NuGet policy and org grants; retain sanitized readbacks. Environment/tag rules/grants are missing; App selection and external policies are unverified. Existing switch, retention and default-scanning settings pass.
-- [ ] `evidence/22/code-investigation.md`, shared Builds `Github/lib/{ci_environment,ci_pipeline}.py` and contracts — require separately shipped support for rollout tools/prepared OCI inputs and the approved source/composition design before registration. Qualify browser/SQL/runtime dependencies without hook-side setup. This story does not implement an independent shared-runtime deliverable.
+- [ ] Story `31-2` (`evidence/22/code-investigation.md`, shared Builds `Github/lib/{ci_environment,ci_pipeline}.py` and contracts) — require the scheduled shared prerequisite for rollout tools/prepared OCI inputs and the approved source/composition design to ship before registration. Qualify browser/SQL/runtime dependencies without hook-side setup. This story does not implement an independent shared-runtime deliverable.
 - [x] Memories `tests/`, `tools/`, `Hexalith.Memories.slnx` — apply the companion's gate inventory: extract product assertions from eleven YAML-reading files, delete story/agent/CI assertions and dedicated suites, preserve telemetry authorization, publishing/content and container-base checks.
 - [x] Memories `Directory.Build.props`, root `package.json`, `package-lock.json`, `.githooks/`, `.releaserc.json`, `commitlint.config.mjs`, installed `bmad-testarch-ci` — remove audit bypasses and obsolete tooling. Preserve browser workspace dependencies. Centralize only justified remaining waivers in Builds `Props/`, awaiting their release.
 - [ ] Memories integration projects, browser `playwright.config.ts`, `.github/actions/{after-unit-tests,after-integration-tests,nightly}/action.yml` — retain complete project execution and fast/slow cadence through project separation; route benchmarks nightly. Reuse prepared Release outputs/environment for browser, SQL and disposable rollout checks. Qualify combined runtime without truncation.
@@ -81,6 +81,7 @@ context:
 ## Spec Change Log
 
 - 2026-11-18 — Human approved the [on-demand nightly sprint change](../planning-artifacts/sprint-change-proposal-2026-11-18-on-demand-nightly.md) (section 4.5): a nightly run on `main`, scheduled or dispatched with `qualify-bump` false, satisfies this story's nightly criterion, judged on this module's own rows (CAP-13, CAP-16). Reworded the scheduled-night lines, including frozen ones; no other constraint changed.
+- 2026-11-27 — Linked Execution task 2 (line 54) to newly scheduled prerequisite story `31-2` and aligned the non-frozen `## Verification` bullet (line 96) with CAP-13, CAP-16 and AD-21 step 4 (scheduled `nightly.yml` or authorized `workflow_dispatch` with `qualify-bump` false), per [readiness-concerns sprint change proposal](../planning-artifacts/sprint-change-proposal-2026-11-27-readiness-concerns.md). Frozen intent unchanged.
 
 ## Review Triage Log
 
@@ -93,4 +94,4 @@ Footprint spans Memories tests/actions/tooling and CiCd registration/render/evid
 - Use `run-with-temp` for disposable jobs; preserve exact-commit logs under `evidence/22/`.
 - Before pushes require the approved procedure; after adoption require `python3 references/Hexalith.Builds/check.py` from the module root.
 - Run `uv run --locked --script tools/render.py --check`, then committed-candidate `tools/validate.py`; require global and Memories verdicts, including schema/lint/perimeter/live-action checks.
-- Authenticate hosted execution of retained checks, cleanup and the next scheduled release outcome.
+- Authenticate hosted execution of retained checks, cleanup and Memories' own CAP-13/CAP-16 nightly outcome from a central `nightly.yml` run started after adoption on `main` (scheduled or authorized `workflow_dispatch` with `qualify-bump` false).

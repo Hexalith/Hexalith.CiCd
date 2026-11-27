@@ -42,7 +42,7 @@ context: []
 
 ## Code Map
 
-- Current preparation and exact-input verification: [implementation handoff](../specs/spec-cicd/evidence/21/implementation-handoff.md), [accepted local verification](../specs/spec-cicd/evidence/21/accepted-local-verification.json), and [dispositions](../specs/spec-cicd/evidence/21/preparation-dispositions.md). Consult these before the earlier planning investigation. [Native build reuse prerequisite](prerequisite-21-native-build-reuse.md) and the owner-emission boundary evidence record the remaining shared interfaces.
+- Current preparation and exact-input verification: [implementation handoff](../specs/spec-cicd/evidence/21/implementation-handoff.md), [accepted local verification](../specs/spec-cicd/evidence/21/accepted-local-verification.json), and [dispositions](../specs/spec-cicd/evidence/21/preparation-dispositions.md). Consult these before the earlier planning investigation. Story `31-1` ([native build reuse prerequisite](prerequisite-21-native-build-reuse.md)) and the owner-emission boundary evidence record the remaining shared interfaces.
 - `evidence/21/code-investigation.md`, `planning-preflight.json`, `pre-adoption-check.json` under `_bmad-output/specs/spec-cicd/`: exact revisions, gate inventory, dependencies and observed failures; read for implementation.
 - Parties `Hexalith.Parties.Standalone.slnx`, `Directory.Build.{props,targets}`, `Directory.Packages.props`: graph/cohort and container provenance; three native suites currently have obsolete build exclusions.
 - Parties `tests/Hexalith.Parties.Ci.Tests/`, `tests/ci-lifecycle/`, `scripts/`: mixed workflow/controller assertions and product runtime/package/asset checks; retain product coverage per inventory.
@@ -91,6 +91,7 @@ context: []
 
 - 2026-11-18 — Human approved the [on-demand nightly sprint change](../planning-artifacts/sprint-change-proposal-2026-11-18-on-demand-nightly.md) (section 4.5): a nightly run on `main`, scheduled or dispatched with `qualify-bump` false, satisfies this story's nightly criterion, judged on this module's own rows (CAP-13, CAP-16). Reworded the scheduled-night lines; no other constraint changed.
 - 2026-11-19 — Human approved qualifying EventStore 5.3.0 and 5.3.1 in this story and shipping it as an early standalone preparation push, so that ChatBot can host the Parties owner beside Tenants. Extended the EventStore task and added an implementation note. No other constraint changed.
+- 2026-11-27 — Linked Code Map line 45 to newly scheduled prerequisite story `31-1` and aligned the non-frozen `## Verification` bullet (line 106) with CAP-13, CAP-16 and AD-21 step 4 (scheduled `nightly.yml` or authorized `workflow_dispatch` with `qualify-bump` false), per [readiness-concerns sprint change proposal](../planning-artifacts/sprint-change-proposal-2026-11-27-readiness-concerns.md). Frozen intent unchanged.
 
 ## Review Triage Log
 
@@ -103,7 +104,7 @@ External effects include settings, product pushes, delivery, credential revocati
 - Use `run-with-temp` for disposable work; preserve exact-input results in `evidence/21/`.
 - Before product pushes require the approved substitute and pinned exact-message commitlint; after adoption require the normal checker from a standalone module clone.
 - Run `uv run --locked --script tools/render.py --check`, then committed-candidate `tools/validate.py`; require global/Parties lint, schema, perimeter and live-action verdicts.
-- Verify actual native/browser execution, container provenance/OCI identity, hosted CI, App delivery and scheduled-night outcomes; no mock or unavailable permission proves acceptance.
+- Verify actual native/browser execution, container provenance/OCI identity, hosted CI, App delivery and Parties' own CAP-13/CAP-16 nightly outcome from a central `nightly.yml` run started after adoption on `main` (scheduled or authorized `workflow_dispatch` with `qualify-bump` false); no mock or unavailable permission proves acceptance.
 
 ## Preparation Publication
 

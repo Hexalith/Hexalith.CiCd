@@ -87,6 +87,8 @@ baseline_commit: '66e3a5a3a0e9bb01dd161c19349953594e01a22f'
 
 ## Spec Change Log
 
+- 2026-11-27 — Aligned the non-frozen `## Verification` bullet (line 101) with CAP-13, CAP-16 and AD-21 step 4 (accepting either a scheduled `nightly.yml` run or an authorized `workflow_dispatch` with `qualify-bump` false), per [readiness-concerns sprint change proposal](../planning-artifacts/sprint-change-proposal-2026-11-27-readiness-concerns.md). Frozen intent unchanged.
+
 ## Review Triage Log
 
 ## Design Notes
@@ -98,4 +100,4 @@ External effects include product pushes, delivery, settings, credential revocati
 - Use `run-with-temp` for disposable jobs; preserve logs under `evidence/19/`.
 - Before product pushes run the approved procedure and pinned commitlint; after adoption run `python3 references/Hexalith.Builds/check.py` from a suitable standalone module checkout.
 - Run `uv run --locked --script tools/render.py --check`, then committed-candidate `tools/validate.py` with the intended read credential. Require global and ChatBot verdicts, including lint/schema/perimeter/live-action checks.
-- Authenticate hosted CI, actual recovery execution and the next scheduled release outcome.
+- Authenticate hosted CI, actual recovery execution and ChatBot's own CAP-13/CAP-16 nightly outcome from a central `nightly.yml` run started after adoption on `main` (scheduled or authorized `workflow_dispatch` with `qualify-bump` false).

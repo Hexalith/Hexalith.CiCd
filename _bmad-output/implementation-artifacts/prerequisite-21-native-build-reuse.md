@@ -44,3 +44,7 @@ Ship and qualify this capability through the authorized shared release process
 before enabling package-mode native hooks for Parties. The frozen-created
 prerequisite remains separate. Neither prerequisite authorizes adoption,
 registration, a credential change, publication or a bypass in this local phase.
+
+## Status
+
+- 2026-11-27: Scheduled in `_bmad-output/specs/spec-cicd/stories.yaml` as backlog story `31-1` (`spec_checkpoint: true`) immediately before story `21` (Parties).

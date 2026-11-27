@@ -147,6 +147,7 @@ Platform product change, registration, adoption or CAP-16 claim was made here.
 ## Spec Change Log
 
 - 2026-11-18 — Human approved the [on-demand nightly sprint change](../planning-artifacts/sprint-change-proposal-2026-11-18-on-demand-nightly.md) (section 4.5): a nightly run on `main`, scheduled or dispatched with `qualify-bump` false, satisfies this story's nightly criterion, judged on this module's own rows (CAP-13, CAP-16). Reworded the scheduled-night lines; no other constraint changed.
+- 2026-11-27 — Aligned the non-frozen `## Verification` bullet (lines 168–169) with CAP-13, CAP-16 and AD-21 step 4 (scheduled `nightly.yml` or authorized `workflow_dispatch` with `qualify-bump` false), per [readiness-concerns sprint change proposal](../planning-artifacts/sprint-change-proposal-2026-11-27-readiness-concerns.md). Frozen intent unchanged.
 
 ## Review Triage Log
 
@@ -166,4 +167,6 @@ effects; none has run.
 - Run `run-with-temp uv run --locked --script tools/render.py --check` and
   committed-candidate `tools/validate.py`; require global and Platform verdicts.
 - Inspect authenticated delivery report, accepted/pushed full revisions,
-  perimeter/preservation, adopted CI and actual next scheduled nightly outcome.
+  perimeter/preservation, adopted CI and Platform's own CAP-13/CAP-16 nightly
+  outcome from a central `nightly.yml` run started after adoption on `main`
+  (scheduled or authorized `workflow_dispatch` with `qualify-bump` false).

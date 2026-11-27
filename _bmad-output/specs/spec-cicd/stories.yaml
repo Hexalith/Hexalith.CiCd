@@ -785,6 +785,30 @@
     EventStore's own passing CAP-13/CAP-16 nightly evidence. The central
     nightly.yml run must start after adoption on main, by schedule or by an
     authorized workflow dispatch with qualify-bump false.
+- id: "31-1"
+  title: "Shared native build reuse in Builds.Module.Cli"
+  description: >-
+    Add an explicit, validated way for Hexalith.Builds.Module.Cli to reuse
+    original audited Release test and composition artifacts in module hooks
+    without restoring or compiling them, while keeping default behavior for
+    existing consumers (CAP-5, CAP-10; AD-2, AD-10, AD-14). Ship and qualify
+    the capability through an authorized Builds release before enabling
+    package-mode native hooks in story 21.
+  spec_checkpoint: true
+  invoke_dev_with: >-
+    Implement the required shared capability in
+    _bmad-output/implementation-artifacts/prerequisite-21-native-build-reuse.md
+    (inspected interfaces in
+    _bmad-output/specs/spec-cicd/evidence/21/runner-build-reuse.json). Work in
+    references/Hexalith.Builds with CiCd-agent (module-agnostic per AD-2). Bind
+    reused artifacts to source, package cohort, target framework, configuration
+    and composition model; reject missing, stale, foreign or changed bytes;
+    preserve private credential issuance, descriptor ownership, authenticated
+    endpoints, persisted-state observation, cancellation, expiry, cleanup and
+    native TRX validation. Prove reuse across profiles without compiler
+    invocations and mismatch rejection through the same production boundary,
+    then ship through an authorized Builds release. Separate from frozen-created
+    support (done) and grants no Parties adoption or publication authority.
 - id: "21"
   title: "Migrate Parties"
   description: >-
@@ -792,7 +816,10 @@
     and the story-named jobs, and classifying its two CI-owner gates (CAP-10,
     CAP-16). It has 11 YAML-asserting tests to delete.
   invoke_dev_with: >-
-    Check the AD-21 maintainer preconditions first, including the
+    Wait for story 31-1 (prerequisite-21-native-build-reuse.md) to ship in an
+    acceptable Builds release before enabling package-mode native hooks,
+    registering or adopting Parties. Check the AD-21 maintainer preconditions
+    first, including the
     hexalith-release environment with this module's own Zot push identity and
     a nuget.org policy scoped to its package IDs, added beside the existing
     one. Product-side changes (custom actions, gate-rule deletions, deleting
@@ -804,6 +831,33 @@
     the module. Right after adoption, the maintainer turns on immutable
     releases, deletes the other nuget.org policies, and removes the repo from
     the legacy org secrets, the NUGET_API_KEY scope, and the legacy Zot push.
+- id: "31-2"
+  title: "Shared rollout tools, prepared OCI inputs and Debug/source composition support"
+  description: >-
+    Extend Builds' module-agnostic CI preparation, pipeline and schema contract
+    with narrowly scoped Debug/source catalog composition, shared rollout tool
+    preparation and hash-bound prepared OCI inputs, while keeping normal builds
+    and releases in Release/package mode (CAP-5, CAP-10; AD-2, AD-10, AD-12,
+    AD-14). Ship and qualify the compatible Builds release and CiCd render
+    support before registering or adopting Memories in story 22.
+  spec_checkpoint: true
+  invoke_dev_with: >-
+    Implement the shared Builds and CiCd prerequisites required by
+    _bmad-output/implementation-artifacts/spec-22-migrate-memories.md (lines
+    30-31, 54) and
+    _bmad-output/specs/spec-cicd/evidence/22/prerequisite-handoff.md (contract
+    table). Audit what already shipped through current builds-version (e.g.
+    npmWorkspaces) and add only demonstrated remaining gaps: narrowly scoped
+    Debug/source compilation and source-selected catalog behavior with exact
+    direct dependency pins and separate outputs (no general command runner or
+    build matrix), packaged Aspire runtime composition, shared Coverlet/MTP
+    coverage collection, SQL/rollout tool preparation (kind/kubectl/pinned
+    runtime deps) and hash-bound immutable prepared OCI inputs. Work in
+    references/Hexalith.Builds (Github/lib/{ci_environment,ci_pipeline}.py and
+    schemas) and CiCd templates/render as needed with CiCd-agent, keep Builds
+    module-agnostic (AD-2), amend AD-12/AD-14 at spec_checkpoint if contract
+    knobs change, qualify the existing 45-minute hook allowance before adding
+    timeout settings, and ship an acceptable Builds release before story 22.
 - id: "22"
   title: "Migrate Memories"
   description: >-
@@ -811,7 +865,10 @@
     its 11 YAML-asserting tests (CAP-10, CAP-16). Its Python tooling under
     tests/ is classified with the gate rule.
   invoke_dev_with: >-
-    Check the AD-21 maintainer preconditions first, including the
+    Wait for story 31-2 (shared rollout tools, prepared OCI inputs and
+    Debug/source composition support) to ship in an acceptable Builds release
+    before registering or adopting Memories. Check the AD-21 maintainer
+    preconditions first, including the
     hexalith-release environment with this module's own Zot push identity and
     a nuget.org policy scoped to its package IDs, added beside the existing
     one. Product-side changes (custom actions, gate-rule deletions, deleting
