@@ -1,0 +1,372 @@
+{
+  "recorded_at": "2026-11-27",
+  "spec": "_bmad-output/implementation-artifacts/spec-19-chatbot-latest-dependencies.md",
+  "targets_file": "_bmad-output/specs/spec-cicd/evidence/19/latest-dependencies/targets-20261127.json",
+  "decision": "Stopped before committing on story/19-chatbot-latest-dependencies due to upstream sibling cohort blockers under targets-20261127.json. Release build succeeds (0 errors, 0 ChatBot warnings, 6 upstream Platform CS0618 Aspire 17 deprecation warnings allowed via WarningsNotAsErrors), 13/14 core test suites plus NativeReviewQueueTests and test_require_runtime.py pass 100% (6,729 passed, 0 failed), and all 4 EventStore domain owners (tenants, parties, projects, chatbot) clear owner preparation after ChatBot composition/harness updates. However, two frozen-cohort upstream blockers prevent green Architecture, Live, and Release gates without editing sibling repos, changing targets-20261127.json SHAs, or weakening assertions: (1) EventStore 5484fae6 (v5.6.0-67) adds ResultPayloadOmissionReason to SubmitCommandResponse (commit 360ed041d), causing eventstore's ObservedRouteCatalogHost to reject catalog.json built against published EventStore 5.6.0; (2) FrontComposer b3342381 (commit adcc8b32) and Parties ca637a01 (commit ea6c6fd2) override Builds v6.8.5 catalog versions in their Directory.Packages.props, failing ScaffoldArchitectureTests.RootDeclaredSiblingPackageWrappersShouldDelegateVersionsToSharedBuildsCatalog. A disposable diagnostic probe with EventStore archived at v5.6.0 (295b5a6b) cleared catalog commit across all 5 hosts and passed CorrectionPropagationWorkflowRuntimeShouldBeHealthyInRealDaprTopology, while surfacing a third cohort runtime issue in Memories 830484ee tenant provisioning workflow (FAILED) and HTTP timeouts under concurrent host load. No ChatBot commit, push, remote fetch, sibling edit, registration, or adoption occurred.",
+  "method": "Standalone package-mode Release copies under run-with-temp populated from /home/administrator/projects/hexalith/chatbot-story-19-latest plus git archive of all 16 references/* from CiCd's local object stores at targets-20261127.json SHAs. Serialized MSBuild (-m:1 /nr:false, matching ChatBot ci.yml) to avoid MSB3026/MSB4018 file locks on multi-path project outputs. No remote fetches, no nested submodule initialization, no sibling edits.",
+  "chatbot": {
+    "worktree": "/home/administrator/projects/hexalith/chatbot-story-19-latest",
+    "branch": "story/19-chatbot-latest-dependencies",
+    "base_commit": "0fd555f3ac5eabc3df7f5a4e1d35dcabbe2272e6",
+    "head_unchanged": true,
+    "source_clone_untouched": "/home/administrator/projects/hexalith/chatbot",
+    "cicd_submodule_untouched": "references/Hexalith.ChatBot",
+    "candidate_uncommitted": {
+      "diff_head_binary_sha256": "7cfb64b55b44df92778688f031fdf8f232d7c97066923cc1d00713439e68c279",
+      "gitlinks_updated": 16,
+      "files_modified": [
+        ".config/dotnet-tools.json",
+        ".github/actions/after-unit-tests/require-runtime.py",
+        "Directory.Build.targets",
+        "eng/ChatBot.Composition.props",
+        "eng/ChatBot.Composition.Restore.targets",
+        "tests/Hexalith.ChatBot.IntegrationTests/LiveCatalogFixture.cs"
+      ]
+    },
+    "candidate_changes_summary": [
+      "Pinned all 16 references/* gitlinks in the worktree index to targets-20261127.json (Hexalith.Builds bf8a28b4 -> deccbc3b v6.8.5).",
+      ".config/dotnet-tools.json: bumped hexalith.builds.module.cli 6.7.0 -> 6.8.5.",
+      "eng/ChatBot.Composition.props, Directory.Build.targets, eng/ChatBot.Composition.Restore.targets, .github/actions/after-unit-tests/require-runtime.py: forwarded ChatBot's references/Hexalith.Builds/Props/Directory.Packages.props via Hexalith1BuildPackageProps and Hexalith2BuildPackageProps so Parties ca637a01 selects the Builds v6.8.5 EventStore 5.6.0 catalog instead of falling back to 5.4.0 (clearing VerifySharedSdkIdentity).",
+      "tests/Hexalith.ChatBot.IntegrationTests/LiveCatalogFixture.cs: adapted projects owner preparation to Hexalith.Projects 2067b57d's split-artifact layout (Hexalith.Projects.Contracts.dll + Hexalith.Projects.EventStoreExtensions.dll) and added its new domain routes (replay-state, project/v2/reconcile, project/rebuild/part/v1)."
+    ]
+  },
+  "owned_content_comparison": {
+    "against": "0fd555f3ac5eabc3df7f5a4e1d35dcabbe2272e6",
+    "byte_and_mode_identical": {
+      ".claude/settings.json": {
+        "mode": "100644",
+        "sha256": "7dbbb10d7c9fa28e4363b7fdf83291ed1f26bd8486503c50384461187cb16116"
+      },
+      ".github/copilot-instructions.md": {
+        "mode": "100644",
+        "sha256": "82ec521bb89649fe4e45a3995c9de1de4f4a37434ff14d9fb2e80e703768ed48"
+      },
+      ".github/workflows/ci.yml": {
+        "mode": "100644",
+        "sha256": "a8064c26ff0c574dbf893d5217c22f25b47907f4f2f8eb5d424c3a263ab88637"
+      },
+      ".github/workflows/release.yml": {
+        "mode": "100644",
+        "sha256": "80a942f131810b0a7dd951e1ae12e2d82f92a0df509c1f72fac27b71eafe2d50"
+      },
+      ".gitmodules": {
+        "mode": "100644",
+        "sha256": "aa37a80a3309238eae41a784c2028698d9f828ef6ced9885693e8496834ba959"
+      },
+      "AGENTS.md": {
+        "mode": "100644",
+        "sha256": "82ec521bb89649fe4e45a3995c9de1de4f4a37434ff14d9fb2e80e703768ed48"
+      },
+      "CLAUDE.md": {
+        "mode": "100644",
+        "sha256": "82ec521bb89649fe4e45a3995c9de1de4f4a37434ff14d9fb2e80e703768ed48"
+      }
+    },
+    "absent_in_base_and_candidate": [
+      ".github/hexalith-ci.json",
+      ".github/dependabot.yml"
+    ],
+    "only_owned_change": "references/Hexalith.Builds bf8a28b4bbcec619e8d9764d335f786f2bafb69e -> deccbc3bcf4ed687ecf4d556ebe356fe57148777 (v6.8.5)"
+  },
+  "environment": {
+    "sdk": "11.0.100",
+    "runtime": "Microsoft.NETCore.App 11.0.0",
+    "dapr_cli": "1.19.1",
+    "dapr_runtime": "1.19.1",
+    "playwright_chrome": "Google Chrome for Testing 159.0.8154.6",
+    "builds_module_cli": "6.8.5"
+  },
+  "builds": [
+    {
+      "variant": "parallel default (without -m:1)",
+      "command": "dotnet build Hexalith.ChatBot.slnx -c Release -warnaserror -p:UseHexalithProjectReferences=false",
+      "exit_code": 1,
+      "result": "10 parallel file-lock errors (MSB3026/MSB4018 on shared project outputs, matching the race documented in ChatBot ci.yml); 6 upstream Platform CS0618 warnings",
+      "log_sha256": "ba33271b062a81bbdf456572a525a90640079ecbdd0137f23e3fc13ec685dea4"
+    },
+    {
+      "variant": "serialized final candidate (after composition and LiveCatalogFixture updates)",
+      "command": "dotnet build Hexalith.ChatBot.slnx -c Release -warnaserror -p:UseHexalithProjectReferences=false -m:1 /nr:false",
+      "exit_code": 0,
+      "errors": 0,
+      "chatbot_warnings": 0,
+      "upstream_sibling_warnings": 6,
+      "upstream_warning_note": "6 CS0618 warnings (Aspire 17 AddProject obsolete) in references/Hexalith.Platform/src/Hexalith.Platform.Composition (AgentsHostComposition.cs:156, PlatformAppModel.cs:383, WorksPreviewModel.cs:160,183,199,260), permitted under -warnaserror by WarningsNotAsErrors in Hexalith.Platform.Composition.csproj and Hexalith.Builds Props/Directory.Packages.props",
+      "log_sha256": "3d94da5a8205d43a24e235bdaa80b1d954b61b7c892f1178986173e42a852c6f"
+    }
+  ],
+  "core_test_suites": {
+    "notes": "Executed in standalone package-mode Release copy with CHROME_EXECUTABLE_PATH from require-runtime.py so UI.E2E.Tests ran real Chromium with 0 skips. Architecture.Tests was re-run on the final candidate tree after composition edits.",
+    "python_and_helper_gates": [
+      {
+        "name": "test_require_runtime.py",
+        "passed": 3,
+        "failed": 0,
+        "skipped": 0,
+        "log_sha256": "e524a6fc1e0c92104e6bf5f40c967888ef0d9d8de232bb85798e166e944ddff0"
+      },
+      {
+        "name": "run-native-review-queues.sh (NativeReviewQueueTests)",
+        "passed": 2,
+        "failed": 0,
+        "skipped": 0,
+        "log_sha256": "e1d9cf4b16af9be8c4b69d2720c08abfc5560b3f815dbeedfe7f7ce2df5e4370"
+      }
+    ],
+    "dotnet_projects": [
+      {
+        "project": "Hexalith.ChatBot.AppHost.Tests",
+        "tests": 19,
+        "passed": 19,
+        "failed": 0,
+        "skipped": 0,
+        "log_sha256": "5c49cde86fc892260bd9335863914bb10df7733bd95e8762f45e7cc2a0b6ba14",
+        "ctrf_sha256": "a857910125ccc69a4f056688ca04a895fe78b8f651d2959c25793f8e89ed3f37"
+      },
+      {
+        "project": "Hexalith.ChatBot.Architecture.Tests",
+        "tests": 126,
+        "passed": 125,
+        "failed": 1,
+        "skipped": 0,
+        "failed_tests": [
+          "Hexalith.ChatBot.Architecture.Tests.ScaffoldArchitectureTests.RootDeclaredSiblingPackageWrappersShouldDelegateVersionsToSharedBuildsCatalog"
+        ],
+        "failure_reason": "references/Hexalith.FrontComposer/Directory.Packages.props (b3342381) changes Hexalith.Memories.Aspire from 4.1.2 to 4.1.1 (12 diffs total); references/Hexalith.Parties/Directory.Packages.props (ca637a01) also diverges on 31 packages when evaluated by AssertSiblingAuthority",
+        "log_sha256": "ef124faa0bba2501d68050f264c3a402d210dd6e6fb9b8d9bce94101f3847b53",
+        "ctrf_sha256": "62afb90d108ab51b704b15b463849d21ea6b830799e378640e1bb7c47d0811e1"
+      },
+      {
+        "project": "Hexalith.ChatBot.Cli.Tests",
+        "tests": 61,
+        "passed": 61,
+        "failed": 0,
+        "skipped": 0,
+        "log_sha256": "3e4eac43135cd8c23f35045f9c3a797dc0c44be224267397310efaee8e561a41",
+        "ctrf_sha256": "95335b7ccd1490bc20df6766e5f4df0cee1e5284f76909f532370271467c0f7f"
+      },
+      {
+        "project": "Hexalith.ChatBot.Client.Tests",
+        "tests": 143,
+        "passed": 143,
+        "failed": 0,
+        "skipped": 0,
+        "log_sha256": "9b2082f0a20b0308611872371104b2e2689ac74e39258d0712b55a66ed01a3af",
+        "ctrf_sha256": "4cd700131ce119cf42bf15d88654522ffadab11bedd951c1ea54e3870c18793a"
+      },
+      {
+        "project": "Hexalith.ChatBot.Conformance.Tests",
+        "tests": 152,
+        "passed": 152,
+        "failed": 0,
+        "skipped": 0,
+        "log_sha256": "3574a7eb2ed129295dc91982cae5b47b778ab511af1a8d8030adb70929163334",
+        "ctrf_sha256": "29c62425f0ed0f453c61fa6c2237b136e7fe01bd57849028f31066c71bd79686"
+      },
+      {
+        "project": "Hexalith.ChatBot.Contracts.Tests",
+        "tests": 539,
+        "passed": 539,
+        "failed": 0,
+        "skipped": 0,
+        "log_sha256": "479a7d83644339d715358d4b0538dfb105546e0eed4c091b087088fb3d9b9656",
+        "ctrf_sha256": "a66c6cd94edb9b51b42916ed6a7a259614a1c971ac68d965b02e6a477f5985d0"
+      },
+      {
+        "project": "Hexalith.ChatBot.IntegrationTests",
+        "tests": 619,
+        "passed": 610,
+        "failed": 0,
+        "skipped": 9,
+        "skipped_note": "Ordinary merge-lane run (TIER3 unset): skipped only the 2 NativeReviewQueueTests (passed separately via run-native-review-queues.sh), 3 Tier3/Release live topology tests (run via Live.IntegrationTests and Release.Tests), 2 destructive LiveContinuityAspireE2eTests, 1 retained-evidence replay test, and 1 optional manual observer PolicyRefusalPreflightTests",
+        "log_sha256": "05467142ab156e1c6836bc311c75f96a7e9865c2cd77120a840df65af8673aa4",
+        "ctrf_sha256": "60ba702482e00b8b14f9e2dff7ed8da8a67308039b3c9db854215699329c000f"
+      },
+      {
+        "project": "Hexalith.ChatBot.Mcp.Tests",
+        "tests": 70,
+        "passed": 70,
+        "failed": 0,
+        "skipped": 0,
+        "log_sha256": "55145f6ca84ff0c948dc86f49003bd2059a25e20ad6d0a77aff66019d2a01890",
+        "ctrf_sha256": "06a905b7ca7653ddb7bc7d4a122639464225cf752a4d518cd5a2eefd4047bab1"
+      },
+      {
+        "project": "Hexalith.ChatBot.Server.Tests",
+        "tests": 3760,
+        "passed": 3760,
+        "failed": 0,
+        "skipped": 0,
+        "log_sha256": "25b110452f1ec28c7647884c2b0dee53ca8a5343ecd1a90dd62fbc068cfd56d8",
+        "ctrf_sha256": "72fab91b171ad2caefa96e35cf3bcc6140e31a6238ed270a3a2e086b7e348c99"
+      },
+      {
+        "project": "Hexalith.ChatBot.StoryEvidenceGate.Tests",
+        "tests": 344,
+        "passed": 344,
+        "failed": 0,
+        "skipped": 0,
+        "log_sha256": "841654e2c74d48204d033f0c5d93f046f30d0ca4167a988eeaf6791b6baa2a44",
+        "ctrf_sha256": "c42849a3eb9c05009c3bbf8856e8504d787d84208d4d7f43b3d385ec820c3896"
+      },
+      {
+        "project": "Hexalith.ChatBot.Testing.Tests",
+        "tests": 41,
+        "passed": 41,
+        "failed": 0,
+        "skipped": 0,
+        "log_sha256": "2a8e7f3c20e4d8bc61ca7a9c500ca871414c7cd16531b33b52d4b811eddf18e0",
+        "ctrf_sha256": "10371117534971f45af53d27c2947bdf660cd66979c82672570d3292af603282"
+      },
+      {
+        "project": "Hexalith.ChatBot.UI.E2E.Tests",
+        "tests": 303,
+        "passed": 303,
+        "failed": 0,
+        "skipped": 0,
+        "log_sha256": "ebece44f730866ffc1c17df70517536bed86a2480adefa12c116a3ccf7737023",
+        "ctrf_sha256": "e102bc42348503a4eae734edef7d55b43235adc0af10a927f1d642adcd1f25ac"
+      },
+      {
+        "project": "Hexalith.ChatBot.UI.Tests",
+        "tests": 653,
+        "passed": 653,
+        "failed": 0,
+        "skipped": 0,
+        "log_sha256": "9e7e249b7272a51d6f70a4d29e8d14dd3855020e1b88d8776b5e8e8fd0e925fb",
+        "ctrf_sha256": "12b1e59be4f43a0b61e0938975c505163b721cbaf3d2f8fd49fc6fe891393a1c"
+      },
+      {
+        "project": "Hexalith.ChatBot.Workers.Tests",
+        "tests": 32,
+        "passed": 32,
+        "failed": 0,
+        "skipped": 0,
+        "log_sha256": "b35409bf6b694c9838ce0990911240760c24b1e7a6e326ca272d58fde1463944",
+        "ctrf_sha256": "539247b25a7cca7048bf6c56ed5d8c049e9d12fbde176488f4d0d2edfd1eb2c3"
+      }
+    ]
+  },
+  "live_and_release_runs": [
+    {
+      "stage": "targets-20261127.json before ChatBot composition/harness updates",
+      "live": {
+        "passed": 0,
+        "failed": 3,
+        "skipped": 0,
+        "cause": "Parties ca637a01 defaulted HexalithEventStoreVersion=5.4.0 -> VerifySharedSdkIdentity refused Hexalith.EventStore.Contracts mismatch against AppHost 5.6.0",
+        "log_sha256": "09b3d69a6dbafaa367c4c671b24c7e4e8f8ab52dade19ee67c02fa59a32085c6",
+        "ctrf_sha256": "92d131fa587eef061b11b813962ed782fcab10dc5d0d24dbd06ac042ae5b2318"
+      },
+      "release": {
+        "passed": 0,
+        "failed": 2,
+        "skipped": 0,
+        "cause": "Same Parties 5.4.0 vs 5.6.0 VerifySharedSdkIdentity refusal",
+        "log_sha256": "627bbd8f398ba0235a7da4f9a8d6f395ef9c7a6eb41d66a11e5ef985fa35332c",
+        "ctrf_sha256": "334ea77febc03aed9c2f91f9b1334020cf5b21fe0b9149dd4a8e3c87f989a124"
+      }
+    },
+    {
+      "stage": "targets-20261127.json with catalog forwarding, before Projects split-artifact update",
+      "live": {
+        "passed": 0,
+        "failed": 3,
+        "skipped": 0,
+        "cause": "Tenants and Parties cleared owner preparation; Projects 2067b57d refused with RouteCatalogUnavailableException: No compiled owner declaration source was enrolled (moved from Projects.Server.dll to Projects.Contracts.dll + Projects.EventStoreExtensions.dll)",
+        "log_sha256": "12612c000b2a03969957f361ffe4c8b67e6848aae630e3290212e8030fd34202",
+        "ctrf_sha256": "e729fbef4f464e0a3084d35199921f52c6ed75ea582d550e19cd30b6d50507ae"
+      },
+      "release": {
+        "passed": 0,
+        "failed": 2,
+        "skipped": 0,
+        "cause": "Same Projects split-artifact refusal",
+        "log_sha256": "fedba9a1a1dbe0e241fada597ec14783074c9e1fdcc19c32c2e993bd2e11a0c4",
+        "ctrf_sha256": "37223c402d965a25db895ee5b5e3d1d0000e4608e66d0a6f1ed8144b857681bf"
+      }
+    },
+    {
+      "stage": "targets-20261127.json final candidate (catalog forwarding + Projects split-artifact LiveCatalogFixture)",
+      "owners_prepared": ["tenants", "parties", "projects", "chatbot"],
+      "live": {
+        "passed": 0,
+        "failed": 3,
+        "skipped": 0,
+        "cause": "All 4 owners cleared PrepareEventStoreDevelopmentOwnerAsync, then eventstore (5484fae6) crashed in ObservedRouteCatalogHost.ObserveAsync:109 with RouteCatalogUnavailableException: The installed owner operation schemas or eligibility differ from the proposed generation -> LiveCatalogFixture timed out waiting for eventstore.committed.json (3m)",
+        "log_sha256": "a9c14f8916020a80c490a068b1346a1f5a556de4c830c29ba9999c1f9a52c501",
+        "ctrf_sha256": "2b9fea3350186f1d57e4483436d9a4f980431e8a5c76302221dd9c3f4f28ecc3"
+      },
+      "release": {
+        "passed": 0,
+        "failed": 2,
+        "skipped": 0,
+        "cause": "Same eventstore 5484fae6 vs 5.6.0 operation schema refusal -> timeout waiting for eventstore.committed.json (3m)",
+        "log_sha256": "50b14db1b8d381af5336a1c647d8e0870d50be99cc811a06df66cfb1fb8d8721",
+        "ctrf_sha256": "e80827747012f919a88bb09c51fa19f93cc2ffd94d054b263c725c2c04940a5a"
+      }
+    },
+    {
+      "stage": "disposable diagnostic probe only (EventStore archived at v5.6.0 295b5a6b + GITHUB_SHA set; worktree gitlink unchanged at 5484fae6)",
+      "owners_prepared": ["tenants", "parties", "projects", "chatbot"],
+      "catalog_committed": true,
+      "live": {
+        "passed": 1,
+        "failed": 2,
+        "skipped": 0,
+        "tests": {
+          "CorrectionPropagationWorkflowRuntimeShouldBeHealthyInRealDaprTopology": "passed (61.6s)",
+          "GovernedCommandsShouldFailClosedWithoutAtomicParticipationInRealDaprTopology": "failed: Memories tenant provisioning for tenant-alpha ended in workflow state FAILED",
+          "AuthenticatedProductionClientShouldFailClosedWithoutPersistingAcrossRequiredChromeMatrix": "failed: HttpClient 60s timeout during live topology execution"
+        },
+        "log_sha256": "3dad1a3e9e133cd285cfa0f141f28f14207f0a2c623ff1808b534e65d8bda3d6",
+        "ctrf_sha256": "eb27ef159d16797e76abe6566bc9ca5683dcb8c0d1e80aa4bc472513cc7ae152"
+      },
+      "release": {
+        "passed": 0,
+        "failed": 2,
+        "skipped": 0,
+        "tests": {
+          "CommittedGovernedStateShouldPassM2StopShipSweepsInRealDaprTopology": "failed before ValidateAtomicParticipationAsync: Memories tenant provisioning for tenant-alpha ended in workflow state FAILED",
+          "GovernedNoteShouldProjectIdenticalDurableEndStateRegardlessOfDeclaredOrigin": "failed before ValidateAtomicParticipationAsync: HttpClient 15s timeout in SubmitOwnerCommandAndWaitAsync"
+        },
+        "log_sha256": "705089f90de1081c851413214600a3126c6c8b4977f11b5e35d2f876772600a4",
+        "ctrf_sha256": "2e563bf562bc09da34a5b81dcddce3be986f9b3549bddbc7707b1163678778cf"
+      }
+    }
+  ],
+  "cleanup": {
+    "chatbot_live_containers_remaining": 0,
+    "temp_workspaces": "all run-with-temp directories removed on exit",
+    "processes_remaining": 0
+  },
+  "blockers": [
+    {
+      "id": "eventstore-main-5484fae6-vs-published-5.6.0-operation-schema-drift",
+      "blocks": ["Hexalith.ChatBot.Live.IntegrationTests (3/3)", "Hexalith.ChatBot.Release.Tests (2/2)"],
+      "summary": "targets-20261127.json pins references/Hexalith.EventStore to 5484fae6 (v5.6.0-67), where commit 360ed041d added ResultPayloadOmissionReason to SubmitCommandResponse. In package mode, AppHost (Hexalith.EventStore.Aspire 5.6.0) and prepared owners generate catalog.json operation digests from published EventStore.Contracts 5.6.0 (295b5a6b, 3 properties), while the source-built eventstore executable compiles EventStore.Contracts from 5484fae6 (4 properties). ObservedRouteCatalogHost.ObserveAsync:109 refuses the catalog with 'The installed owner operation schemas or eligibility differ from the proposed generation.' Proved by disposable probe at v5.6.0 (295b5a6b), which immediately committed eventstore.committed.json across all 5 hosts.",
+      "resolution_options": [
+        "Release a new Hexalith.EventStore package carrying 360ed041d and promote Hexalith.Builds catalog to it.",
+        "Approve pinning references/Hexalith.EventStore to v5.6.0 (295b5a6ba584167f21cfef40787477b8814e32da) so the source executable matches Builds v6.8.5's published 5.6.0 SDK."
+      ]
+    },
+    {
+      "id": "sibling-package-wrappers-override-builds-v6.8.5",
+      "blocks": ["Hexalith.ChatBot.Architecture.Tests (1/126: RootDeclaredSiblingPackageWrappersShouldDelegateVersionsToSharedBuildsCatalog)"],
+      "summary": "Two target sibling commits override Builds v6.8.5 catalog versions in Directory.Packages.props: (1) Hexalith.FrontComposer b3342381 (commit adcc8b32) unconditionally sets HexalithMemoriesVersion=4.1.1 (vs 4.1.2) and HexalithTenantsVersion=8.0.4 (vs 8.1.0), diverging on 12 packages; (2) Hexalith.Parties ca637a01 (commit ea6c6fd2) sets EventStore=5.4.0, Tenants=8.0.2, FrontComposer=6.0.1, Memories=4.1.0 whenever _PartiesUsesDefaultCatalog is true (which holds under PackageCatalogTestHelper.AssertSiblingAuthority), diverging on 31 packages.",
+      "resolution_options": [
+        "Repair FrontComposer and Parties Directory.Packages.props upstream to delegate to the shared Builds catalog (matching the McpCli repair recorded in ChatBot commit eaf1d54) and refresh targets-20261127.json.",
+        "Approve a scoped ChatBot pin/test adjustment if upstream wrapper repairs are deferred."
+      ]
+    },
+    {
+      "id": "memories-830484ee-tenant-provisioning-workflow-failed-in-diagnostic-probe",
+      "blocks": ["GovernedCommandsShouldFailClosedWithoutAtomicParticipationInRealDaprTopology", "CommittedGovernedStateShouldPassM2StopShipSweepsInRealDaprTopology"],
+      "summary": "When EventStore was pinned to v5.6.0 (295b5a6b) in the disposable diagnostic probe, catalog bootstrap succeeded and CorrectionPropagationWorkflowRuntimeShouldBeHealthyInRealDaprTopology passed, but Memories 830484ee tenant provisioning workflow for tenant-alpha ended in FAILED during ProvisionMemoriesProbeTenantsAsync (and two cases hit HttpClient 15s/60s timeouts). Needs investigation once Blockers 1 and 2 are resolved."
+    }
+  ],
+  "not_run": [
+    "Local commit on story/19-chatbot-latest-dependencies (held pending blocker resolution)",
+    "Push / remote operations (forbidden by spec)"
+  ]
+}

@@ -1,97 +1,85 @@
 ---
 title: '19 follow-up: Move ChatBot to latest dependencies'
 type: 'chore'
-created: '2026-11-18'
+created: '2026-11-27'
 status: 'in-progress'
 route: 'dispatch'
 review_loop_iteration: 0
 context: []
-baseline_commit: '53857b9e4223e3a161ed0731cebbe415761f3576'
+baseline_commit: 'b00126c0a8d6159e7cb527282f9811eda9b852f4'
 ---
 
 <frozen-after-approval reason="human-owned intent — do not modify unless human renegotiates">
 
 ## Intent
 
-**Problem:** ChatBot's required live and release cases fail in the pinned EventStore 4 owner loader, which refuses the host's app-local System.Text.Json. Its Hexalith dependencies also lag the net11.0 releases that the shared catalog now provides. This blocks story 19.
+**Problem:** ChatBot `main` (`0fd555f3`) already runs on `net11.0` and Builds `v6.8.1`, but its Builds pin (`bf8a28b4`), CLI tool (`6.7.0`), and 15 sibling `references/*` gitlinks lag CiCd's `builds-version` (`v6.8.5`) and latest local submodule `main` commits, and its package-mode build and live/release suites are unverified on that cohort.
 
-**Approach:** Human decision, 2026-11-18 ("yes move to latest"): move ChatBot to net11.0 and the latest Hexalith dependency releases through the shared catalog. First prove, with one required live case, that the EventStore 5 loader admits ChatBot's owner children.
+**Approach:** Advance ChatBot from `0fd555f3` to Builds `v6.8.5` (`deccbc3b`, CLI `6.8.5`) and CiCd's current `references/*` commits, fix only incompatibilities required for zero-warning package-mode compilation, and verify the build, core suites, required live refusal cases, and release-gate loader clearance.
 
 ## Boundaries & Constraints
 
-**Always:** Do ChatBot product work from current ChatBot main, and make writes only with module-agent. Keep SDK 11.0.100. Keep every test and assertion. Change only expectations that encode the target framework itself. Keep story 19's topology exception: gitlink-pinned AppHost executable/composition sources, with library references in package mode. Use the shared catalog's versions and override a Hexalith version property only when a dependency minimum or the loader's byte-identity rule requires it. Any push follows story 19's pre-adoption verification exception, freshly rerun for the exact candidate.
+**Always:** Work from fresh ChatBot `main` (`0fd555f3ac5eabc3df7f5a4e1d35dcabbe2272e6`) in a dedicated local worktree; keep SDK `11.0.100`, `net11.0`, Aspire `17.0.0`, and every existing test and assertion. Keep story 19's topology exception (gitlink-pinned AppHost composition sources, libraries in package mode). Use Builds `v6.8.5` catalog versions; override a Hexalith version only if a dependency minimum or EventStore loader byte-identity rule requires it. Build and test in standalone copies under `run-with-temp`; keep raw logs under `$TMPDIR` and record only revisions, results, and SHA-256 digests in git.
 
-**Never:** Edit ChatBot's other CiCd-owned files: workflows, `.claude/settings.json`, instruction blocks and Dependabot. Never copy framework DLLs or weaken loader, authentication or admission guards. Never skip or filter tests. Never change sibling repositories or initialize nested submodules in the umbrella checkout. Never register or adopt ChatBot.
+**Never:** Edit ChatBot's other CiCd-owned files (`.github/workflows/*`, `.claude/settings.json`, `.github/copilot-instructions.md`, `AGENTS.md`, `CLAUDE.md`, `.gitmodules`, Dependabot). Never copy framework DLLs, weaken loader/auth/admission guards, skip or filter tests, edit sibling repos, initialize nested submodules, push or run remote ops, delete `StoryEvidenceGate` (belongs to `spec-19-migrate-chatbot.md`), or register/adopt ChatBot.
 
-**Human decisions, 2026-11-18:**
+**Human decisions, 2026-11-27 (supersedes 2026-11-18/19 pins):**
 
-- Builds gitlink: approve a one-time pre-adoption move of ChatBot's `references/Hexalith.Builds` to the exact commit of CiCd's `builds-version`, v6.3.1 (`db7bb7179244ce33483231687486381305c7c3db`). This amends story 19's ownership check for this one gitlink only; every other owned file and gitlink section stays byte-identical. Local overrides that duplicate the catalog are rejected.
-- Atomic participation and the positive M2/origin release cases are out of scope. They stay ChatBot Story 1.8's work and need an EventStore owner-transaction capability that no release up to v5.3.1 provides. Both cases remain honest release blockers; do not change, filter or reroute them.
-
-**Human decisions, 2026-11-19** ("1 c; 2 b; 3 b; use latest submodules main version"; these supersede the Builds bullet above where they conflict):
-
-- Gitlinks: every `references/*` gitlink, Builds included, pins its submodule's latest `main` commit, read again when work resumes. This replaces the release-tag targets and the v6.3.1 Builds pin. Builds main carries Aspire 17, so the AppHost keeps `Aspire.AppHost.Sdk` 17.0.0. The one-time Builds-gitlink exception to story 19's ownership check now applies to that Builds main commit.
-- Parties: this story makes no Parties change. It waits for Parties story 21 to qualify EventStore 5.3.x on Parties main.
-- Projects: no older Projects pin. It waits for a Conversations release and a Projects main that builds in package mode.
-- Builds (later the same day: "use latest builds packages version", then "use builds version 6.4.2"; this replaces the Builds part of the Gitlinks bullet): pin Builds v6.4.2. The Builds gitlink pins its tag commit `8ad2c2285e2d0cec0a173882b3a3a926d555fe48`, which was also Builds `main` that day, and `.config/dotnet-tools.json` pins `hexalith.builds.module.cli` 6.4.2. v6.4.2 keeps the Aspire 17.0.0 and EventStore 5.3.1 catalog defaults and includes the AppHost NU1009 catalog fix (`758f2605`). The one-time Builds-gitlink exception applies to this commit.
+- **Builds pin:** One-time pre-adoption move of `references/Hexalith.Builds` to `v6.8.5` (`deccbc3bcf4ed687ecf4d556ebe356fe57148777`) and `.config/dotnet-tools.json` `hexalith.builds.module.cli` to `6.8.5`. Every other owned file and `.gitmodules` stays byte- and mode-identical.
+- **Sibling gitlinks:** Pin the other 15 `references/*` gitlinks to CiCd's current `references/*` `main` commits recorded in `targets-20261127.json` without remote fetches.
+- **Atomic participation & M2/origin release cases:** Out of scope (ChatBot Story 1.8). Keep `ValidateAtomicParticipationAsync` and `Hexalith.ChatBot.Release.Tests` unchanged; both release cases must clear owner preparation and fail only at admission.
 
 ## I/O & Edge-Case Matrix
 
 | Scenario | Input / State | Expected Output / Behavior | Error Handling |
 |----------|--------------|---------------------------|----------------|
-| Loader proof passes | net11 host and Tenants owner child on EventStore 5.3.x | One required live case gets past owner preparation | Continue the full move |
-| Loader still refuses | Same | Record the exact refusal and stop before the full move | No workaround; report it |
-| Submodule main still blocks | Parties main lacks EventStore 5.3.x, or Projects main fails the package-mode compile | Record the exact commit and stop | Wait for the sibling fix; no older pin and no sibling change |
-| Required refusal cases | Atomic participation still refuses | All three required live cases pass, zero skipped | Fix the product; keep assertions |
-| Positive M2/origin release cases | Atomic participation still refuses | Both run and fail at admission, no longer at the loader | Record the result; it is not a story failure |
+| Package-mode Release build | Updated ChatBot on Builds `v6.8.5` and target gitlinks | `dotnet build Hexalith.ChatBot.slnx -c Release -warnaserror -p:UseHexalithProjectReferences=false` exits 0 with 0 warnings | Fix ChatBot code; if a sibling `main` breaks package-mode compile, record SHA and stop |
+| Core product test suites | Standalone package-mode copy under `run-with-temp` | All unit, AppHost, Architecture, Integration, StoryEvidenceGate, and UI E2E suites pass; only the optional manual observer is unexecuted | Fix product; keep assertions |
+| Required live topology cases | `Hexalith.ChatBot.Live.IntegrationTests` with `require-runtime.py` + `required-live.xunit.runner.json` (`failSkips`) | All 3 required cases clear EventStore owner preparation and pass, 0 skipped | Record exact refusal/failure; never weaken guards |
+| Positive M2/origin release cases | `Hexalith.ChatBot.Release.Tests` with `require-runtime.py` | Both run, clear owner preparation, and fail at `ValidateAtomicParticipationAsync` | Record result + log digest; not a story failure |
+| Owned-content preservation | Candidate tree vs `0fd555f3` | All 7 owned files byte- and mode-identical; `.github/{hexalith-ci.json,dependabot.yml}` absent; only `references/Hexalith.Builds` changes | Reject unintended owned changes before commit |
 
 </frozen-after-approval>
 
 ## Code Map
 
-- `../../../chatbot-story-19-latest` (absolute `/home/administrator/projects/hexalith/chatbot-story-19-latest`), branch `story/19-chatbot-latest-dependencies` at `ddd385ec6b37a7bb6362cdc66cb3a1a0def935d3`, which was ChatBot remote main on 2026-11-18 -- the only place to commit ChatBot product changes. Leave `references/Hexalith.ChatBot` in the CiCd checkout untouched. Build and test in standalone copies under `run-with-temp`. This phase does no fetch and no push.
-- [latest-dependencies-plan.json](../specs/spec-cicd/evidence/19/latest-dependencies-plan.json) -- exact base, pins, targets, catalog defaults, the loader mechanism and the atomic-participation findings. Read it first.
-- ChatBot `references/*` gitlinks; `src/Hexalith.ChatBot.AppHost/Hexalith.ChatBot.AppHost.csproj:35-49` -- AppHost source composition: EventStore, Tenants, Platform, Memories, Parties, Projects.
-- ChatBot `Directory.Packages.props:7` -- imports the Builds catalog; version properties set before it override the catalog defaults.
-- ChatBot `Directory.Build.props:24` (net10.0), `Directory.Build.targets:22` (`aspnet:10.0-alpine`), `eng/ChatBot.Composition.props:19` (`tools/net10.0/any`), `.config/dotnet-tools.json:6` (Builds tool 4.48.2) -- runtime and tooling targets.
-- ChatBot `tests/Hexalith.ChatBot.Architecture.Tests/ScaffoldArchitectureTests.cs:1099` (asserts net10.0) and `MemoriesProbeCommandGateway.cs:191` (`net10.0` output path) -- framework-encoding expectations.
-- EventStore v5.3.1 `src/Hexalith.EventStore.Aspire/DevelopmentRouteCatalog{OwnerLoadContext,RuntimeSnapshot,OwnerPreparationExtensions}.cs` -- loader behavior; read-only.
-- Keep unchanged: ChatBot `ChatBotAdmissionEvidenceValidator.cs:372-379`, the evidence source DI, and the recovery and M2 scenario bodies.
-- Story 19 [code investigation](../specs/spec-cicd/evidence/19/code-investigation.md) and [fix verification](../specs/spec-cicd/evidence/19/product-fix-verification.md) -- live-fixture custody, the backend and the 6,243-test baseline.
+- Target revisions and catalog defaults: [targets-20261127.json](../specs/spec-cicd/evidence/19/latest-dependencies/targets-20261127.json) — authoritative base SHA, all 16 `references/*` SHAs, and owned-path lists.
+- ChatBot worktree to create: `/home/administrator/projects/hexalith/chatbot-story-19-latest` on branch `story/19-chatbot-latest-dependencies` from `/home/administrator/projects/hexalith/chatbot` (`0fd555f3`). Leave `references/Hexalith.ChatBot` and `/home/administrator/projects/hexalith/chatbot` untouched. Populate standalone `run-with-temp` copies via `git archive` from CiCd's local `references/*` stores.
+- ChatBot build/composition files: `.config/dotnet-tools.json` (`6.7.0` -> `6.8.5`), `Directory.{Build.props,Build.targets,Packages.props,Solution.props,Solution.targets}`, `eng/ChatBot.Composition.{props,Restore.targets}`, `src/Hexalith.ChatBot.AppHost/Hexalith.ChatBot.AppHost.csproj`, `.github/actions/after-unit-tests/require-runtime.py`.
+- Sibling contract check: `Parties` (`ca637a01`) and `Tenants` (`ce3aadd8`) `Directory.Build.targets` both admit `$(HexalithCatalogEventStoreVersion)` (`5.6.0` in `v6.8.5`).
+- Keep unchanged: `ChatBotAdmissionEvidenceValidator.cs:372-379`, `RequiredTopologyTests.cs`, `GovernedStateReleaseGateTests.cs`, `LiveContinuityAspireE2eTests.cs`, and all 7 owned files.
+- Prior evidence: [loader-proof.json](../specs/spec-cicd/evidence/19/latest-dependencies/loader-proof.json), [main-readback-20261119.json](../specs/spec-cicd/evidence/19/latest-dependencies/main-readback-20261119.json).
 
 ## Tasks & Acceptance
 
 **Execution:**
-- [x] ChatBot (standalone copy under `run-with-temp`) -- loader proof: retarget the test host and a Tenants v8.0.2 owner child to net11.0 on EventStore 5.3.x, then run `GovernedCommandsShouldFailClosedWithoutAtomicParticipationInRealDaprTopology` -- settles the unverified loader claim before the full move.
-- [ ] ChatBot `references/*` gitlinks -- move Builds to v6.4.2 (`8ad2c228`) and every other one to its submodule's latest `main` commit, read at resume -- the latest net11 sources and catalog.
-- [ ] ChatBot `Directory.{Build.props,Build.targets,Packages.props}`, `eng/ChatBot.Composition.props`, `.config/dotnet-tools.json` -- net11.0, `aspnet:11.0` base image, the Builds tool 6.4.2, and catalog overrides only where required.
-- [ ] ChatBot `src/`, `tests/` -- adapt to the Aspire 17, Commons 3, Tenants 8, Memories 4 and FrontComposer 6 APIs and to the framework-encoding expectations, with zero warnings.
-- [ ] `_bmad-output/specs/spec-cicd/evidence/19/latest-dependencies/` -- record the exact revisions, the owned-content comparison and the results with digests. Raw logs stay under `$TMPDIR`.
+- [x] `/home/administrator/projects/hexalith/chatbot-story-19-latest` -- create worktree on `story/19-chatbot-latest-dependencies` from `/home/administrator/projects/hexalith/chatbot` (`0fd555f3`) -- isolate edits from clean `main` and CiCd.
+- [x] ChatBot `references/*` and `.config/dotnet-tools.json` -- apply all 16 SHAs from `targets-20261127.json` (Builds `v6.8.5` `deccbc3b`) and bump `hexalith.builds.module.cli` to `6.8.5` -- match approved `builds-version` and latest sibling sources.
+- [ ] ChatBot `Directory.*`, `eng/`, `src/`, `tests/` -- resolve any compile, analyzer, or package-mode runtime breaks under `v6.8.5` with zero warnings and no weakened assertions -- keep Release build and test integrity.
+- [ ] Standalone `run-with-temp` copy -- run Release build, all core suites, `Hexalith.ChatBot.Live.IntegrationTests`, `Hexalith.ChatBot.Release.Tests`, and owned-file comparison vs `0fd555f3` -- verify every matrix row and confirm zero leaked containers/processes.
+- [ ] ChatBot branch `story/19-chatbot-latest-dependencies` and `_bmad-output/specs/spec-cicd/evidence/19/latest-dependencies/verification-20261127.json` -- commit verified ChatBot changes locally (no push) and record SHAs, owned-file check, test counts, and SHA-256 log digests -- preserve compact auditable evidence.
 
 **Acceptance Criteria:**
-- Given the moved ChatBot, when built in package-mode Release, then there are zero warnings and errors, and the unit, AppHost, integration and UI E2E suites pass with no test lost from the 6,243 baseline.
-- Given the moved ChatBot, when compared with its base, then the owned files are byte- and mode-identical, and only the decided Builds gitlink changes.
+- Given the updated ChatBot worktree on Builds `v6.8.5` and target gitlinks, when built in standalone package-mode Release (`-warnaserror`), then build passes with 0 warnings/errors and all core suites pass with zero unexpected skips.
+- Given `require-runtime.py`, when `Hexalith.ChatBot.Live.IntegrationTests` and `Hexalith.ChatBot.Release.Tests` run, then 3/3 live cases pass (0 skipped) and 2/2 release cases clear owner preparation and fail only at `ValidateAtomicParticipationAsync`.
+- Given the final candidate vs `0fd555f3`, when owned paths are compared, then all 7 owned files are byte- and mode-identical, `.github/{hexalith-ci.json,dependabot.yml}` remain absent, and only `references/Hexalith.Builds` changes among owned items.
 
 ## Implementation Notes
 
-- Loader proof, 2026-11-18: The proof did not pass, so work stopped before the full move (I/O matrix row 2). ChatBot HEAD is still `ddd385ec6b37a7bb6362cdc66cb3a1a0def935d3`. The proof inputs remain uncommitted in the ChatBot worktree as tree `bd05c98f217f95d6388f48d041a9576a1e7348f1`. With them, the package-mode Release solution builds with 0 warnings and 0 errors. The required case then fails during owner preparation.
-  - The EventStore 5.3.0 loader no longer refuses System.Text.Json. The Tenants v8.0.2 net11 owner is prepared with 24 declarations.
-  - The Parties child loads with host-identical SDK bytes. It is then refused with "No compiled owner declaration source was enrolled", because Parties main enables its catalog API only for EventStore up to 5.1.1.
-  - Without the byte-identity override, the Tenants child (local 5.3.1 pin) is refused against the host's 5.3.0.
-- Three human decisions were open (decided 2026-11-19, see the next note):
-  1. Parties needs a release that qualifies the EventStore 5.3.x catalog API. Tenants v8.0.2 accepts only 5.3.0 or 5.3.1.
-  2. Plan target Projects `69697a08` does not compile in package mode, because it uses Conversations APIs that no release provides. The proof used `146d0f7e`.
-  3. Builds v6.3.1 pins Aspire 13.6.5. The base AppHost SDK 17.0.0 then fails restore with NU1109, so the proof used SDK 13.6.5. Aspire 17 needs Builds v6.3.2.
-- Owned files are byte- and mode-identical. Only the Builds gitlink changed. No commit, fetch, push, registration or adoption occurred. See [loader proof](../specs/spec-cicd/evidence/19/latest-dependencies/loader-proof.json).
-- Parked, 2026-11-19: The human decided 1c, 2b and 3b and chose the latest `main` of every submodule (frozen block). A readback of each `main` that day confirms two blockers. Parties main `b30e7510` and v4.0.0 still qualify EventStore only up to 5.1.1, while Tenants main still requires 5.3.0 or 5.3.1. Projects main is still `69697a08`, and Conversations' latest release is still v2.0.0. Builds main `a8e2ae29` (v6.3.3+2) defaults to EventStore 5.3.1 and Aspire 17.0.0, which settles the Aspire question. Story 21's task currently says "Qualify EventStore 5.1.1", so it does not yet cover 5.3.x. Resume after both sibling fixes land. Start from fresh ChatBot main, pin each submodule's `main` read again at that time, and rerun the loader proof. The current worktree is disposable proof state and still holds the rejected Aspire 13.6.5 downgrade. See [main readback](../specs/spec-cicd/evidence/19/latest-dependencies/main-readback-20261119.json).
-- 2026-11-19 (later): The human approved how the two waits get unblocked. This story's intent is unchanged.
-  - **Parties:** story 21 qualifies EventStore 5.3.0 and 5.3.1 as an early standalone Parties preparation push. A compile probe of Parties main on 5.3.1 with the four lists extended built cleanly; tests have not run yet.
-  - **Projects:** story 18 pushes the Projects product fix once Conversations releases, without waiting for story 11.
-  - **Conversations (status at 14:00 UTC):** main CI is green on `734b92d1` (run 44507990648), after CiCd scoped its CI to Linux (`1c323979`). Release run 44517857028 still failed on Builds v6.3.4: the release build refuses a retained fixture ProjectReference with HXW006. No v6.4.x change targets HXW006, so v6.4.2 is not known to fix it. CiCd moved its Builds pin to v6.4.2 on main (`f88bc37c`, another session); Delivery run 44537177196 succeeded.
-  - **Resume:** when both pushes land on Parties and Projects main.
+- Historical (2026-11-18/19, baseline `53857b9e`): Initial loader proof on `ddd385ec` / Builds `v6.3.1` cleared `System.Text.Json` but parked on Parties 5.3.x and Projects/Conversations. See [loader-proof.json](../specs/spec-cicd/evidence/19/latest-dependencies/loader-proof.json) and [main-readback-20261119.json](../specs/spec-cicd/evidence/19/latest-dependencies/main-readback-20261119.json).
+- 2026-11-27 (baseline `b00126c0`): Created `/home/administrator/projects/hexalith/chatbot-story-19-latest` (`story/19-chatbot-latest-dependencies` at `0fd555f3`), applied all 16 `targets-20261127.json` gitlinks and CLI `6.8.5`, forwarded `Hexalith1BuildPackageProps`/`Hexalith2BuildPackageProps`, and updated `LiveCatalogFixture.cs` for `Projects 2067b57d` split artifacts (`diff_head_binary_sha256: 7cfb64b5...`). Held uncommitted: Release build (`-m:1 /nr:false`) passed (0 errors, 0 ChatBot warnings), 13/14 core suites + native/python gates passed (6,729 passed, 0 failed), owned files byte/mode-identical, and all 4 owners cleared preparation, but three upstream cohort blockers stop green Architecture/Live/Release acceptance: (1) `EventStore 5484fae6` (`360ed041d`) vs published `5.6.0` `SubmitCommandResponse` schema drift (`ObservedRouteCatalogHost.ObserveAsync:109`); (2) `FrontComposer b3342381` (`adcc8b32`) and `Parties ca637a01` (`ea6c6fd2`) `Directory.Packages.props` overriding Builds `v6.8.5` (`Architecture.Tests` 125/126); (3) disposable `EventStore v5.6.0` (`295b5a6b`) probe committed catalog and passed `CorrectionPropagationWorkflowRuntimeShouldBeHealthyInRealDaprTopology` (61.6s), but surfaced `Memories 830484ee` tenant provisioning workflow `FAILED` and 15s/60s `HttpClient` timeouts. See [verification-20261127.json](../specs/spec-cicd/evidence/19/latest-dependencies/verification-20261127.json).
+- Parked, 2026-11-27: Human approved parking until an EventStore release carrying `360ed041d` (and Builds promotion) plus upstream `FrontComposer`/`Parties` `Directory.Packages.props` delegation fixes land, then investigating the `Memories` tenant provisioning failure on the refreshed cohort. Evidence and uncommitted worktree `/home/administrator/projects/hexalith/chatbot-story-19-latest` are retained; no ChatBot commit, push, remote op, registration, or adoption occurred.
+
+## Spec Change Log
+
+- 2026-11-27 — Renegotiated with human approval against ChatBot `main` (`0fd555f3`, already on `net11.0`, Builds `v6.8.1`, EventStore `5.5.1+`). Updated frozen Builds pin from `v6.4.2` to `v6.8.5` (`deccbc3b`, CLI `6.8.5`), moved target SHAs to `targets-20261127.json`, and reset status to `draft` for checkpoint approval. Prior `baseline_commit` was `53857b9e4223e3a161ed0731cebbe415761f3576`.
+
+## Review Triage Log
 
 ## Verification
 
 **Commands:**
-- `run-with-temp dotnet build Hexalith.ChatBot.slnx -c Release` in a standalone package-mode copy -- expected: 0 warnings, 0 errors.
-- `run-with-temp dotnet test` per test project, with the required-live runner config -- expected: all pass; the only unexecuted case is the optional manual observer.
+- `run-with-temp` standalone copy: `dotnet build Hexalith.ChatBot.slnx -c Release -warnaserror -p:UseHexalithProjectReferences=false` -- expected: 0 warnings, 0 errors.
+- `run-with-temp` per-project `dotnet test` across all core suites -- expected: all pass, 0 unexpected skips (only optional manual observer unexecuted).
+- `run-with-temp` with `require-runtime.py`: `Hexalith.ChatBot.Live.IntegrationTests` (`required-live.xunit.runner.json`) and `Hexalith.ChatBot.Release.Tests` -- expected: 3/3 live pass (0 skipped); 2/2 release clear owner preparation and fail at `ValidateAtomicParticipationAsync`.
+- Owned-file byte/mode diff vs `0fd555f3` -- expected: 7 owned files identical; only `references/Hexalith.Builds` changed among owned items.
