@@ -86,6 +86,7 @@ context: []
     - Standalone solution: 38 projects built with no C# errors. The one failure was the native Admin UI prebuild prerequisite, which the probe skipped.
     - Evidence: [main readback](../specs/spec-cicd/evidence/19/latest-dependencies/main-readback-20261119.json).
 - Completion remains blocked on shared native test/model reuse, owner composition package routing, released frozen-created support and the live AD-21/adoption/nightly prerequisites. All execution checkboxes remain open because their full obligations are unsatisfied. Keep status `in-progress`; implementation has not reached the workflow review checkpoint.
+- 2026-11-27: The local Parties candidate prepares the browser hook and builds both lifecycle assemblies in the standalone solution. The checked-out Parties pin already contains the EventStore 5.3.0 and 5.3.1 compatibility switches. Builds `v6.9.1` includes frozen-created support. Its native runner and model compiler still require story `31-1`, and an MSBuild evaluation reproduced the EventStore owner package-routing blocker. See the [local continuation](../specs/spec-cicd/evidence/21/continuation-2026-11-27.md) for exact inputs, qualification, and remaining cutover work.
 
 ## Spec Change Log
 
@@ -113,3 +114,8 @@ Parties commit `0f261ccd3b461102dcac35da2e074d15a195ebb4`; the corresponding CiC
 record preserves `in-progress`. See [publication proof](../specs/spec-cicd/evidence/21/publication/publication.json)
 and [pre-push qualification](../specs/spec-cicd/evidence/21/publication/pre-push-qualification.json).
 Registration/adoption and full acceptance remain pending their documented prerequisites.
+
+The subsequent browser and lifecycle build preparation is published in Parties
+commit `8daf30af7e413278f03f1ea744477e976a78fe16`. The
+[fresh-main qualification](../specs/spec-cicd/evidence/21/continuation-2026-11-27.md#fresh-main-preparation-publication)
+records the exact candidate and latest package test results.
