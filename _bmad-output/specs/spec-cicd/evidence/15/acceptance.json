@@ -724,7 +724,7 @@
   },
   "blockers": [
     "Verify a passing or reviewed-gap-accepted scan row for McpCli 033121fa (or its successor): CiCd main must hold the gap record and the E8 scanner when the scan runs. Locally, all 23 errors match recorded gaps.",
-    "Verify green CI and completed Linux live and Windows/macOS product jobs at one adopted main SHA. The live lane needs a Projects host for projects.list (spec-gh-9 / CiCd issue #9, owned by another session); hosted run 45920445432 for 033121fa was in progress when recorded.",
+    "Verify green CI and completed Linux live and Windows/macOS product jobs at one adopted main SHA. Hosted run 45920445432 for 033121fa failed in the independent boundary fixture because the in-progress spec-gh-9 Projects host enrollment (McpCli 50d98683, failing identically in run 45873099100) needs its Projects checkout. That work, owned by another session, must land first.",
     "Verify a qualifying CAP-13 nightly for the same green SHA, with the approved pair publication or a valid nothing-to-release outcome."
   ],
   "duplicate_scan_resolution": {
@@ -827,6 +827,14 @@
       "progression": "69 (f02f2929, start) -> 48 -> 19 after the test boundary -> 15 after stage 1 -> 23 diagnostics for the same sites once every failing wrapper caller is reported",
       "other_modules": "No module gained a newly failing site. Conversations' 7 test-boundary observations become errors under E8 until its unittest launches drop the workflow command file variables.",
       "review": "30 findings across three review layers: 26 fixed, 2 rejected with evidence, 1 decided by the human (E8); see the Review Triage Log"
+    },
+    "hosted_run_45920445432": {
+      "sha": "033121facc0d6d5eaa1c55a41cf2608688f75561",
+      "result": "failure",
+      "stage": "independent boundary (SharedHeadBoundaryTests)",
+      "detail": "AspireTopologyFixture refused selected child owner preparation: 'No compiled owner declaration source was enrolled.' McpCli 50d98683 (spec-gh-9 Projects host enrollment, before the Story 15 commits) failed identically in run 45873099100; spec-gh-9's remaining task adds references/Hexalith.Projects to setup/Hexalith.McpCli.yml.",
+      "job_log_sha256": "b76c20d5dac016fe7ec25be95c066f69d9f6fdec4ca3745f9f2eb71485447c00",
+      "windows_macos": "skipped (they wait on the Linux job)"
     }
   }
 }
