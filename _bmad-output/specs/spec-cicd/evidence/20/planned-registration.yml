@@ -1,8 +1,14 @@
-# Staged handoff only. Register after an acceptable compatible Builds release and live-main product actions.
+# Staged v6.9.1-validated candidate only; do not move to setup/Hexalith.EventStore.yml
+# until Phase 1 blockers clear (AD-21 preconditions, .NET 10.0.402 SDK compatibility gap,
+# tools/scan.py 32 non-Python errors + unauthorized references/Hexalith.Builds pin, and
+# refreshed references/Hexalith.EventStore gitlink) and tests.failSkips /
+# tests.minimumExpectedTests budgets are audited before adoption.
 solution: Hexalith.EventStore.slnx
 ciTimeoutMinutes: 180
-additionalSdkVersion: 10.0.404
+releaseTimeoutMinutes: 60
+nightlyTimeoutMinutes: 120
 dapr: true
+aspire: true
 browsers: true
 registry: false
 codeql:
@@ -12,10 +18,8 @@ tests:
   integration: []
   exclude:
     tests/Hexalith.EventStore.PayloadProtection.Tests/Hexalith.EventStore.PayloadProtection.Tests.csproj: after-unit-tests
-    ? tests/Hexalith.EventStore.PayloadProtection.AzureKeyVault.LiveTests/Hexalith.EventStore.PayloadProtection.AzureKeyVault.LiveTests.csproj
-    : payload-azure
-    ? tests/Hexalith.EventStore.PayloadProtection.LiveSidecar.Tests/Hexalith.EventStore.PayloadProtection.LiveSidecar.Tests.csproj
-    : after-integration-tests
+    tests/Hexalith.EventStore.PayloadProtection.AzureKeyVault.LiveTests/Hexalith.EventStore.PayloadProtection.AzureKeyVault.LiveTests.csproj: payload-azure
+    tests/Hexalith.EventStore.PayloadProtection.LiveSidecar.Tests/Hexalith.EventStore.PayloadProtection.LiveSidecar.Tests.csproj: after-integration-tests
     tests/Hexalith.EventStore.Server.LiveSidecar.Tests/Hexalith.EventStore.Server.LiveSidecar.Tests.csproj: after-integration-tests
     tests/Hexalith.EventStore.PublishedCompatibility.Tests/Hexalith.EventStore.PublishedCompatibility.Tests.csproj: after-integration-tests
 hooks:

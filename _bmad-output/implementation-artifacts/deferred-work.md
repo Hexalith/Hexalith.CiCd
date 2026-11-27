@@ -597,3 +597,10 @@ resolution: Both Nightly observers continue to query Delivery. Evidence runs in 
 - source_spec: `_bmad-output/implementation-artifacts/spec-deferred-builds-invocation-and-attachment.md`
   summary: Use option-safe SDK paths when restoring and building explicitly listed additional test projects.
   evidence: Builds `Github/lib/ci_pipeline.py` passes `tests.additional` project paths directly to restore and build. A root filename starting with a dash is accepted by the path validation and can be interpreted as an SDK option. The solution-path repair in DW-7 uses a contained absolute path for both commands.
+
+- source_spec: `/home/administrator/projects/hexalith/cicd/_bmad-output/implementation-artifacts/spec-20-migrate-eventstore.md`
+  summary: Omit `on.schedule` and the `nightly` dispatch choice in `templates/.github/workflows/qualification.yml.j2` when a module defines only manual qualification jobs.
+  evidence: Verified in `templates/.github/workflows/qualification.yml.j2:3-11` — when a module places `nightly` in `hooks` and declares only a manual job (`payload-azure`) in `jobs`, the rendered `qualification.yml` still triggers daily at `37 2 * * *` and defaults `workflow_dispatch` to `job: nightly`, causing silent daily no-op runs where every job is skipped.
+- source_spec: `/home/administrator/projects/hexalith/cicd/_bmad-output/implementation-artifacts/spec-20-migrate-eventstore.md`
+  summary: Guard `qualification-ci` in `templates/.github/workflows/qualification.yml.j2` / `tools/render.py` against empty `inputs.authority-sha256` on private manual qualification dispatches.
+  evidence: Verified in `templates/.github/workflows/qualification.yml.j2` and `tools/render.py` — dispatching a private manual job (`payload-azure`) with default empty `authority-sha256` runs up to 180-minute `qualification-ci` before `Github/prepare` immediately rejects the missing digest.
