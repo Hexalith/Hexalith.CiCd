@@ -1,5 +1,5 @@
 {
-  "recorded_at": "2026-11-26T11:54:00+01:00",
+  "recorded_at": "2026-11-27T02:05:00+01:00",
   "initial_recorded_at": "2026-11-17T21:16:00+00:00",
   "status": "incomplete",
   "adopted": true,
@@ -723,8 +723,110 @@
     }
   },
   "blockers": [
-    "Complete source discovery through the native runner and product test helpers. Main at 56da5c38 reaches 53 files and reports 69 diagnostics, including 31 computed subprocess working directories and 20 computed environments. Verify an independent passing scan for the adopted main SHA.",
-    "Verify green CI and completed Linux live and Windows/macOS product jobs at one adopted main SHA. Run 45795458696 for 56da5c38 carries the Tenants cohort fix and was still running when recorded.",
+    "Verify a passing or reviewed-gap-accepted scan row for McpCli 033121fa (or its successor): CiCd main must hold the gap record and the E8 scanner when the scan runs. Locally, all 23 errors match recorded gaps.",
+    "Verify green CI and completed Linux live and Windows/macOS product jobs at one adopted main SHA. The live lane needs a Projects host for projects.list (spec-gh-9 / CiCd issue #9, owned by another session); hosted run 45920445432 for 033121fa was in progress when recorded.",
     "Verify a qualifying CAP-13 nightly for the same green SHA, with the approved pair publication or a valid nothing-to-release outcome."
-  ]
+  ],
+  "duplicate_scan_resolution": {
+    "recorded_at": "2026-11-27T02:05:00+01:00",
+    "python": "3.14.4",
+    "decisions": "Story 15 Spec Change Log entries dated 2026-11-26 (scan discovery, test boundary, staged rules, reviewed gaps, E8)",
+    "hosted_run_45795458696": {
+      "sha": "56da5c38163638da9c311fd51abb6f6067b75e40",
+      "result": "failure",
+      "stage": "live vectors",
+      "detail": "21 of 22 live vectors passed; projects.list returned gateway_error 503 because the live topology had no Projects host (tracked as CiCd issue #9 / spec-gh-9)",
+      "job_log_sha256": "c0f64795e203a08a6244381e9b3b1827193b87f808e5b9c9ed135ff06998ac1f"
+    },
+    "cicd": {
+      "main_commits": [
+        "bc048d7af1d5608374eb115c064ce23f72efaadd",
+        "b74d2e80b46896a51f72c32387b45163954afb1f",
+        "554f6170",
+        "96c48064fcd5238483a94e65f1bbe6d605660f04"
+      ],
+      "e8_commit": "578e7e64a745bbd3b2e2922c4dee72fa82ea3e66",
+      "e8_tree": "80d4328500532790dfe0740ef95bf31fd274cc57",
+      "blobs": {
+        "tools/scan_discovery.py": "8752e6ba959fde50c9c2a4a15d86321a55804509",
+        "tools/scan-coverage-gaps.json": "bd63bf860200455e6ec19f3091561403b6d44eb1"
+      },
+      "sha256": {
+        "tools/scan_discovery.py": "c3d48f5a1b206c09657dee1e65d5ffb2b0657c16d6659e6cb406895d4b247f50",
+        "tools/scan.py": "0831bada303cbb623de668ac38ff88a06cc81b37205ce4c6541e84e7f4d05126",
+        "tools/nightly_acceptance.py": "3cdb45f8acfa450321d9fb0ba6e5a312334fe4ef987d86688a2b14271e379ae6",
+        "tools/scan-coverage-gaps.json": "10cba4d8847eb30653e6db6a961f8d87b7797cc64ff294aa674a5d1b6c978a1b",
+        "tools/repository_inputs.py": "c54a76e849cdd97bd20cea5a06bfbb0faef75e1e04f40ff94e9e0948e2b84c5d"
+      },
+      "delivery_96c48064": {
+        "run": 45912398676,
+        "conclusion": "success"
+      },
+      "delivery_failures_fixed": [
+        {
+          "run": 45869378821,
+          "sha": "bc048d7a",
+          "cause": "test_repository_inputs exceeded 600 s"
+        },
+        {
+          "run": 45897567019,
+          "sha": "b74d2e80",
+          "cause": "stale gap record format and the same timeout"
+        }
+      ],
+      "repository_inputs_timing": {
+        "before_s": 594,
+        "base_c3622b8d_s": 136,
+        "after_full_suite_s": 15
+      },
+      "tests": {
+        "test_scan.py": "228 OK",
+        "test_nightly_acceptance.py": "64 OK",
+        "test_nightly_workflow.py": "34 OK",
+        "test_validate.py": "80 OK",
+        "test_repository_inputs.py": "40 OK in about 15 s"
+      }
+    },
+    "mcpcli": {
+      "pushed_main": "033121facc0d6d5eaa1c55a41cf2608688f75561",
+      "pre_push_main": "50d9868397ca4700798384bb2cd6539b19867401",
+      "credential": "module-agent",
+      "completed_at": "2026-11-27T01:04:31.429Z",
+      "commits": [
+        "fbe75012 fix(ci): make product launchers statically discoverable",
+        "88e1d036 fix(ci): prove platform and live launch inputs statically",
+        "6bfca8d0 fix(ci): record the launched lane argv and test launch input guards",
+        "033121fa fix(ci): start product unit tests without workflow command files"
+      ],
+      "tree": "691f2fdbfc1b1efa305ca6c00f24921d7ba9d6c7",
+      "check_py": {
+        "result": "pass",
+        "seconds": 241,
+        "log_sha256": "b7e589abadbf378a38af9b90b6e92f33747b617e8ff35a1b5ca19ac41a64e565"
+      },
+      "suites": {
+        "tools/live-topology/test_ci.py": "122 OK",
+        "test_runtime.py": "20 OK",
+        "test_lane.py": "19 OK",
+        "test_current_runtime_profile.py": "4 OK",
+        "scripts/tests": "70 OK",
+        "tools/conformance-vectors/v1": "207 OK"
+      },
+      "owned_paths_changed": []
+    },
+    "source_discovery": {
+      "scanner_sha256": "c3d48f5a1b206c09657dee1e65d5ffb2b0657c16d6659e6cb406895d4b247f50",
+      "mcpcli_main": {
+        "sha": "033121facc0d6d5eaa1c55a41cf2608688f75561",
+        "files": 54,
+        "errors": 23,
+        "observations": 34,
+        "errors_all_recorded_gaps": true,
+        "report_sha256": "8ff5aa268b58b1ea407c79ef161a38c0ad2695ec79754363dbf97a23c5a0a028"
+      },
+      "progression": "69 (f02f2929, start) -> 48 -> 19 after the test boundary -> 15 after stage 1 -> 23 diagnostics for the same sites once every failing wrapper caller is reported",
+      "other_modules": "No module gained a newly failing site. Conversations' 7 test-boundary observations become errors under E8 until its unittest launches drop the workflow command file variables.",
+      "review": "30 findings across three review layers: 26 fixed, 2 rejected with evidence, 1 decided by the human (E8); see the Review Triage Log"
+    }
+  }
 }
