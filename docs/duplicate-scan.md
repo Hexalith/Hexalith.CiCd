@@ -146,29 +146,34 @@ Recognized forms supply the exact working directory, import roots and language:
   `subprocess` call through `sys.executable` with a proved Python file operand
   can forward computed data after the file operand. Computed executable or
   script operands, shell invocation and pre-execution callbacks remain failures.
-- Python argv with a fixed `dotnet build`, `pack`, `restore`, `msbuild`, or
-  `tool run NAME` prefix consumes project, output and property data at the
-  compiled-language boundary. The executable, operation and tool name must be
-  literal. Build, pack, restore and msbuild may expand one trailing immutable
-  tuple made of `-p:Name=Value` operands with fixed property names. Other argv
-  expansion remains unsupported. Literal script references in these data
-  operands still enter discovery. The executable can also be
-  `shutil.which('dotnet')` from the standard module, directly or through a
-  function-local name bound once to it; an importer could rebind a module-level
-  name. The argv can be a
-  function-local list bound once and only passed to standard subprocess calls,
-  alone or concatenated with a literal list. A computed working directory for build, pack, restore and
-  msbuild is directory data, as for Git. The .NET host reads `global.json`
-  from that directory and its parents, and a relative PATH entry or lookup
-  result resolves inside it. So every tracked `global.json` must be strict
-  JSON without duplicate keys, nested at most 64 levels deep, and must not
-  declare SDK search `paths`; SDK
-  version and roll-forward settings only choose installed SDKs. A tracked
-  `dotnet` host, an unproved subprocess API, a shell, a pre-execution
-  callback and `DOTNET_`, `MSBuild`, `NUGET_`, host or loader variables in
-  the environment fail. Pinned sources acquired later are checked again.
-  `dotnet tool run` still needs a literal working directory because tool
-  manifests are found from it. Computed executable, operation, shell or
+- Python argv with a fixed `dotnet build`, `pack`, `restore`, `msbuild`,
+  `nuget verify`, or `tool run NAME` prefix consumes project, output, package
+  and property data at the compiled-language boundary. The executable,
+  operation and tool name must be literal. Build, pack, restore and msbuild may
+  expand proved immutable tuples or local lists of `-p:Name=Value` operands
+  with fixed property names (including `--artifacts-path` and literal-dict
+  property comprehensions) when any following operands are literal options.
+  `dotnet nuget verify` accepts exactly one package operand (either a single
+  computed expression or a single non-flag literal string) plus literal verify
+  flags (`--all`, `--certificate-fingerprint`, `-v`, `--verbosity`, with
+  literal values for the value-taking flags); `--configfile`, computed flags,
+  non-string constants, extra operands and other `dotnet nuget` verbs fail. Other argv expansion remains unsupported. Literal script
+  references in these data operands still enter discovery. The executable can
+  also be `shutil.which('dotnet')` from the standard module, directly or
+  through a function-local name bound once to it; an importer could rebind a
+  module-level name. The argv can be a function-local list bound once and only
+  passed to standard subprocess calls, alone or concatenated with a literal
+  list. A computed working directory for build, pack, restore and msbuild is
+  directory data, as for Git. The .NET host reads `global.json` from that
+  directory and its parents, and a relative PATH entry or lookup result
+  resolves inside it. So every tracked `global.json` must be strict JSON
+  without duplicate keys, nested at most 64 levels deep, and must not declare
+  SDK search `paths`; SDK version and roll-forward settings only choose
+  installed SDKs. A tracked `dotnet` host, an unproved subprocess API, a shell,
+  a pre-execution callback and `DOTNET_`, `MSBuild`, `NUGET_`, host or loader
+  variables in the environment fail. Pinned sources acquired later are checked
+  again. `dotnet tool run` and `dotnet nuget verify` still keep a literal or
+  inherited working directory. Computed executable, operation, shell or
   resolution-environment changes remain failures.
   Bash calls to the same fixed build, pack, restore and msbuild operations
   also accept simple shell parameter expansion in the data operands.
@@ -206,9 +211,15 @@ Recognized forms supply the exact working directory, import roots and language:
   standard subprocess import and the absence of a tracked Docker executable.
   Shell invocation, alternate executables, callbacks and unproved environment
   changes fail. Literal script operands stay in discovery.
+- Python subprocess argv can terminate a Windows process tree with literal
+  `taskkill /PID <pid> /T /F` (with `/PID <pid>`, `/T` and `/F` in supported
+  literal flag orders). Discovery checks the standard subprocess import, the
+  absence of a tracked `taskkill` executable, and rejects shells, alternate
+  executables, callbacks, computed binaries/switches and unproved environments.
 - Python subprocess argv using the standard Git executable can read metadata
   with literal `rev-parse`, `ls-files`, `ls-tree`, `status`, `cat-file`,
-  `diff`, `show`, `archive` and `remote get-url` and supported literal flags.
+  `diff`, `show`, `archive` and `remote get-url` and supported literal flags
+  (including `--binary` and `--no-renames` for `diff`).
   A computed `cwd` or `-C` operand is directory data. Computed paths after
   `--` are data. Modes with execution-sensitive options require proof that a
   computed operand cannot be treated as one of those options. Use
@@ -216,19 +227,27 @@ Recognized forms supply the exact working directory, import roots and language:
   `clone`, `fetch` or `checkout --detach` requires safe literal flags and
   `--`. Computed verbs, Git aliases, `-c`, `config`, `hook`, and
   `submodule foreach` fail. Literal tracked scripts remain in scope, including
-  those under a proved literal working directory or `-C` path.
-- Direct Python `*args` wrappers and finite literal loops are expanded
-  within fixed depth, argument and variant budgets. A loop row is a tuple, or
-  a list whose loop name only reaches that process argv. Aliased or replaced
-  callables, reflective namespace changes, unknown callers and computed
-  process options fail. A wrapper whose subprocess argv, `cwd` or `env` is
-  one of its parameters is checked at each direct call site in the same
-  source, with that call's arguments in place of the parameters, up to 8
-  levels and 128 variants. Each failing call site is reported, naming its
-  line. The wrapper may only read its argv parameter and may use its env
-  parameter only as a proved copy, and its subprocess call takes argv as its
-  only positional argument. A wrapper without callers in its source, or one
-  that is passed on, decorated or a method, still fails.
+  those under a proved literal working directory or `-C` path. Reviewed Git
+  wrapper callsites in a hash-pinned Works Platform export module
+  (`WORKS_PLATFORM_EXPORT`) clear only when the export's exact SHA-256 matches
+  and no bytecode cache is present; any byte drift fails as `unproved`.
+- Direct Python `*args` wrappers, once-bound local prefix lists and finite
+  literal loops are expanded within fixed depth, argument and variant budgets.
+  A loop row is a tuple, or a list whose loop name only reaches that process
+  argv. Aliased or replaced callables, reflective namespace changes, unknown
+  callers and computed process options fail. A wrapper whose subprocess argv,
+  `cwd` or `env` is one of its parameters is checked at each direct call site
+  in the same source, with that call's arguments in place of the parameters, up
+  to 8 levels and 128 variants (including nested wrappers passed to proved
+  direct-call local helpers in the same source). Each failing call site is
+  reported, naming its line. The wrapper may only read its argv parameter
+  (including f-string `{argv!r}` / `{argv}` formatting without a `format_spec`
+  and storing it in a once-bound local record dict whose argv entry is neither
+  read back for mutation nor leaked, optionally appended to a proved built-in
+  list sink) and may use its env parameter only as a proved copy, and its
+  subprocess call takes argv as its only positional argument. A wrapper without
+  callers in its source, or one that is passed on to unknown code, decorated or
+  a method, still fails.
   These proofs see only their own source. A module-level wrapper of either
   form, including each `*args` wrapper an expansion passes through, fails
   when other discovered code can reach its name, as
@@ -236,33 +255,46 @@ Recognized forms supply the exact working directory, import roots and language:
   test source that keeps [the test boundary](#test-boundary). Importers that
   use only the source's other names leave the proof intact.
   Git wrappers must meet the same rules at every call site. A constant tuple
-  can supply literal operands. A conditional `**` mapping may supply only
-  the subprocess `env` keyword, and the environment must preserve executable
-  resolution in each branch. Git mode proof does not permit a shell,
-  alternate executable, pre-execution callback or unresolved environment.
-- A subprocess `env` can be `os.environ.copy()`, `dict(os.environ, ...)` or
-  `{**os.environ, ...}`: inline, in a local bound once, through a proved
-  wrapper parameter, or in one instance attribute. Changes use literal keys or
-  a loop over literal keys. Added values are built only from names, reads,
-  literals, f-strings, `+`, `/`, `%` and builtin `str`; other calls fail.
-  Keys can also be removed through a `startswith` filter over a `list` or
-  `tuple` of the keys. Keys and removal prefixes cannot name resolution
-  variables (`PATH`, `PYTHON*`, `NODE*`, `NPM_CONFIG_*`, `PS*`,
-  `POWERSHELL*`, `BASH_ENV` and similar) or the Git and .NET variables
-  above for those children. Home and configuration roots need literal values.
-  Other references may only read the copy, pass it as the `env` of a proved
-  standard `subprocess` call or pass it to a proved local function. An
-  instance attribute is assigned only copies, in methods of one module-level
-  class based on `object` or `unittest.TestCase`. Every reference to that
-  attribute name in the source must be one of those uses. A module-level copy
-  or an instance attribute fails when other discovered code imports its
-  source, as the import index decides, unless every importer is a test source
-  that keeps the test boundary. The source may not replace or write
-  `os.environ`, or pass it or `os` to unknown code. `patch.dict(os.environ,
-  ...)` from `unittest.mock` is allowed because it changes the process
-  environment through the public mapping API. Aliases, unknown mutations,
-  reflection and other escapes fail. Each scope proof is limited to 4,096
-  nodes.
+  or non-mutated local prefix list can supply operands. A conditional `**`
+  mapping may supply only the subprocess `env` keyword, and the environment
+  must preserve executable resolution in each branch. Git mode proof does not
+  permit a shell, alternate executable, pre-execution callback or unresolved
+  environment.
+- A subprocess `env` can be `os.environ.copy()`, `dict(os.environ, ...)`,
+  `{**os.environ, ...}`, a safe Git inspection environment stripping `GIT_*`
+  and setting only literal `GIT_NO_REPLACE_OBJECTS`, `GIT_NO_LAZY_FETCH`, or
+  `GIT_OPTIONAL_LOCKS` (inline, through a zero-argument local or imported
+  helper, or through a read-only forwarded `env` parameter verified across all
+  discovered callers), or a read-only allowlist dict comprehension
+  `{k: v for k, v in os.environ.items() if k in ALLOWED}` over a literal
+  string collection (`set`, `frozenset`, `tuple`, or `list`; immutable
+  `frozenset`/`tuple` at module scope) without value transforms or added keys:
+  inline, in a local bound once,
+  through a proved wrapper parameter, or in one instance attribute. Changes use
+  literal keys or a loop over literal keys. Added values are built only from
+  names, reads, literals, f-strings, `+`, `/`, `%` and builtin `str`; other
+  calls fail. Keys can also be removed through a `startswith` filter over a
+  `list` or `tuple` of the keys. Keys and removal prefixes cannot name
+  resolution variables (`PATH`, `PYTHON*`, `NODE*`, `NPM_CONFIG_*`, `PS*`,
+  `POWERSHELL*`, `BASH_ENV` and similar) or the Git (other than the three
+  safe literal flags above) and .NET variables above for those children. Home
+  and configuration roots need literal values. Other references may only read
+  the copy, check `is None`/`is not None`, pass it as the `env` (or
+  conditional `**({"env": env} if env is not None else {})`) of a proved
+  standard `subprocess` call, or pass it to a proved local or non-mutating
+  imported function. Imported helpers and forwarded `env` consumers fail if
+  another discovered non-test importer can modify the helper or pass an
+  unproved environment. An instance attribute is assigned only copies, in
+  methods of one module-level class based on `object` or `unittest.TestCase`.
+  Every reference to that attribute name in the source must be one of those
+  uses. A module-level copy or an instance attribute fails when other
+  discovered code imports its source, as the import index decides, unless every
+  importer is a test source that keeps the test boundary. The source may not
+  replace or write `os.environ`, or pass it or `os` to unknown code.
+  `patch.dict(os.environ, ...)` from `unittest.mock` is allowed because it
+  changes the process environment through the public mapping API. Aliases,
+  unknown mutations, reflection and other escapes fail. Each scope proof is
+  limited to 4,096 nodes.
 
 ### Rule 1: literal references are included
 

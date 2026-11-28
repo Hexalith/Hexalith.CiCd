@@ -1989,6 +1989,371 @@ class ComputedProcessContextTests(unittest.TestCase):
                 _, errors = discover_python({"entry.py": unsafe, "leaf.py": "pass\n", "other.py": "pass\n"})
                 self.assertTrue(any("unsafe or unresolved forwarding" in error for error in errors), (label, errors))
 
+    def test_safe_git_inspection_environment_direct_imported_and_forwarded(self):
+        helper = (
+            "import os\n"
+            "def inspection_environment():\n"
+            "    return {k: v for k, v in os.environ.items() if not k.upper().startswith('GIT_')} | {\n"
+            "        'GIT_NO_REPLACE_OBJECTS': '1', 'GIT_NO_LAZY_FETCH': '1', 'GIT_OPTIONAL_LOCKS': '0',\n"
+            "    }\n"
+        )
+        helper_dict_call = (
+            "import os\n"
+            "def inspection_environment():\n"
+            "    env = {k: v for k, v in os.environ.items() if not k.upper().startswith('GIT_')}\n"
+            "    return dict(env, GIT_NO_REPLACE_OBJECTS='1', GIT_NO_LAZY_FETCH='1', GIT_OPTIONAL_LOCKS='0')\n"
+        )
+        callee = (
+            "import subprocess\n"
+            "def recorded_gitlink(root, environment=None):\n"
+            "    return subprocess.check_output(['git', 'ls-tree', 'HEAD', '--', 'x'], cwd=root,\n"
+            "                                   **({'env': environment} if environment is not None else {}))\n"
+            "def verify_catalog(root, environment=None):\n"
+            "    def git(*arguments):\n"
+            "        return subprocess.check_output(['git', *arguments], cwd=root,\n"
+            "                                       **({'env': environment} if environment is not None else {}))\n"
+            "    return git('rev-parse', 'HEAD')\n"
+            "recorded_gitlink(supplied_root)\n"
+        )
+        caller = (
+            "import subprocess\n"
+            "from env_helper import inspection_environment\n"
+            "from callee import recorded_gitlink, verify_catalog\n"
+            "def run_all(root):\n"
+            "    env = inspection_environment()\n"
+            "    recorded_gitlink(root, environment=env)\n"
+            "    verify_catalog(root, environment=env)\n"
+            "    subprocess.check_output(['git', 'status', '--porcelain'], cwd=root, env=env)\n"
+            "    subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=root, env=inspection_environment())\n"
+            "run_all(supplied_root)\n"
+        )
+        for label, helper_src in (("pipe", helper), ("dict-call", helper_dict_call)):
+            with self.subTest(positive=label):
+                _, errors = discover_python({"entry.py": caller, "env_helper.py": helper_src, "callee.py": callee})
+                self.assertEqual(errors, [], (label, errors))
+
+        # Reject forbidden keys in safe Git helper or inline dict.
+        for bad_key in ("GIT_EXEC_PATH", "GIT_SSH", "GIT_SSH_COMMAND", "GIT_CONFIG_COUNT", "GIT_CONFIG_GLOBAL",
+                        "GIT_DIR", "PATH", "PYTHONPATH", "DOTNET_ROOT", "LD_PRELOAD", "DYLD_INSERT_LIBRARIES"):
+            with self.subTest(forbidden_key=bad_key):
+                bad_helper = helper.replace("'GIT_OPTIONAL_LOCKS': '0'", f"'{bad_key}': '1'")
+                _, errors = discover_python({"entry.py": caller, "env_helper.py": bad_helper, "callee.py": callee})
+                self.assertTrue(any("computed subprocess env" in e for e in errors), (bad_key, errors))
+
+        # Reject non-literal value, wrong stripped prefix, value transform, monkeypatched helper, bad caller env.
+        negative_cases = {
+            "non_literal_git_val": {"entry.py": caller, "env_helper.py": helper.replace("'1'", "dynamic", 1), "callee.py": callee},
+            "strip_path": {"entry.py": caller, "env_helper.py": helper.replace("'GIT_'", "'PATH'"), "callee.py": callee},
+            "value_transform": {"entry.py": caller, "env_helper.py": helper.replace("{k: v ", "{k: v + 'x' "), "callee.py": callee},
+            "monkeypatched_helper": {
+                "entry.py": "import env_helper\nenv_helper.inspection_environment = lambda: {'PATH': '.'}\n" + caller,
+                "env_helper.py": helper, "callee.py": callee,
+            },
+            "bad_forwarded_caller": {
+                "entry.py": caller + "recorded_gitlink('work', environment={'GIT_EXEC_PATH': '/evil'})\n",
+                "env_helper.py": helper, "callee.py": callee,
+            },
+            "unproved_forwarded_caller": {
+                "entry.py": caller + "recorded_gitlink('work', environment=supplied)\n",
+                "env_helper.py": helper, "callee.py": callee,
+            },
+            "aliased_forwarded_callee": {
+                "entry.py": caller + "alias = recorded_gitlink\nalias('work', environment=supplied)\n",
+                "env_helper.py": helper, "callee.py": callee,
+            },
+            "mutating_imported_consumer": {
+                "entry.py": caller, "env_helper.py": helper,
+                "callee.py": callee.replace("    return subprocess.check_output",
+                                            "    environment['PATH'] = '.'\n    return subprocess.check_output"),
+            },
+            "uncalled_forwarded_env": {
+                "entry.py": "import subprocess\ndef f(env=None):\n    subprocess.run(['git', 'status'], env=env)\n",
+            },
+        }
+        for label, files in negative_cases.items():
+            with self.subTest(negative=label):
+                _, errors = discover_python(files)
+                self.assertTrue(any("computed subprocess env" in e for e in errors), (label, errors))
+
+    def test_env_allowlist_dict_comp_accepts_literal_set_and_rejects_mutations(self):
+        base = (
+            "import os, subprocess\n"
+            "def run(driver, root):\n"
+            "    allowed = {'PATH', 'HOME', 'DOTNET_ROOT', 'LD_LIBRARY_PATH'}\n"
+            "    environment = {key: value for key, value in os.environ.items() if key in allowed}\n"
+            "    return subprocess.run(['dotnet', 'msbuild', str(driver), '-nologo'], cwd=root, env=environment)\n"
+        )
+        _, errors = discover_python({"entry.py": base})
+        self.assertEqual(errors, [])
+
+        inline = base.replace("    allowed = {'PATH', 'HOME', 'DOTNET_ROOT', 'LD_LIBRARY_PATH'}\n", "").replace(
+            "if key in allowed", "if key in {'PATH', 'HOME'}")
+        _, errors = discover_python({"entry.py": inline})
+        self.assertEqual(errors, [])
+
+        module_frozenset = (
+            "import os, subprocess\n"
+            "ALLOWED = frozenset({'PATH', 'HOME'})\n"
+            "def run(driver, root):\n"
+            "    env = {k: v for k, v in os.environ.items() if k in ALLOWED}\n"
+            "    return subprocess.run(['dotnet', 'msbuild', str(driver)], cwd=root, env=env)\n"
+        )
+        _, errors = discover_python({"entry.py": module_frozenset})
+        self.assertEqual(errors, [])
+
+        negatives = {
+            "non_literal_set": base.replace("'DOTNET_ROOT'", "extra_key"),
+            "computed_set": base.replace("{'PATH', 'HOME', 'DOTNET_ROOT', 'LD_LIBRARY_PATH'}", "get_allowed()"),
+            "mutated_local_set": base.replace("    environment =", "    allowed.add('EXTRA')\n    environment ="),
+            "mutable_module_set": module_frozenset.replace("frozenset({'PATH', 'HOME'})", "{'PATH', 'HOME'}"),
+            "value_transform": base.replace("{key: value ", "{key: value.strip() "),
+            "added_key_pipe": base.replace("if key in allowed}", "if key in allowed} | {'EXTRA': '1'}"),
+            "added_key_store": base.replace("    return subprocess.run", "    environment['EXTRA'] = '1'\n    return subprocess.run"),
+            "added_key_update": base.replace("    return subprocess.run", "    environment.update({'EXTRA': '1'})\n    return subprocess.run"),
+        }
+        for label, source in negatives.items():
+            with self.subTest(case=label):
+                _, errors = discover_python({"entry.py": source})
+                self.assertTrue(any("computed subprocess env" in e for e in errors), (label, errors))
+
+    def test_read_only_argv_logging_and_nested_callback_wrapper(self):
+        source = (
+            "import os, subprocess\n"
+            "DEPENDENCIES = {'references/A': ('AVersion', 'ARoot')}\n"
+            "def execute(command, root, environment, records):\n"
+            "    record = {'command': command, 'log': 'cmd.log'}\n"
+            "    records.append(record)\n"
+            "    record['exitCode'] = 0\n"
+            "    subprocess.Popen(command, cwd=root, env=environment)\n"
+            "    if record.get('exitCode'):\n"
+            "        raise RuntimeError(f'Command failed: {command!r}')\n"
+            "def inspection_environment():\n"
+            "    env = {k: v for k, v in os.environ.items() if not k.upper().startswith('GIT_')}\n"
+            "    return dict(env, GIT_NO_REPLACE_OBJECTS='1', GIT_NO_LAZY_FETCH='1', GIT_OPTIONAL_LOCKS='0')\n"
+            "def snapshot(checkout, run):\n"
+            "    prefix = ['git', '-C', str(checkout)]\n"
+            "    run([*prefix, 'diff', '--no-ext-diff', '--no-textconv', '--binary', '--no-renames', 'HEAD'])\n"
+            "    run([*prefix, 'rev-parse', 'HEAD'])\n"
+            "def verify(root, artifacts):\n"
+            "    report = {'commands': []}\n"
+            "    environment = inspection_environment()\n"
+            "    builds = f'-p:BuildsRoot={root}'\n"
+            "    def run(command):\n"
+            "        return execute(command, root, environment, report['commands'])\n"
+            "    snapshot(root, run)\n"
+            "    release = [builds, '-p:Configuration=Release']\n"
+            "    run(['dotnet', 'msbuild', 'app.csproj', 'leaf.py', '-nologo', *release, f'-getProperty:{root}'])\n"
+            "    outputs = ['--artifacts-path', str(artifacts)]\n"
+            "    src = [builds, '-p:UseProj=true']\n"
+            "    src += [f'-p:{v[1]}={root}' for k, v in DEPENDENCIES.items()]\n"
+            "    run(['dotnet', 'build', 'app.slnx', *outputs, *src])\n"
+        )
+        selected, errors = discover_python({"entry.py": source, "leaf.py": "pass\n"})
+        self.assertEqual(errors, [])
+        self.assertIn("leaf.py", selected)
+
+        negatives = {
+            "mutate_argv": source.replace("    record['exitCode'] = 0\n", "    command.append('-c')\n"),
+            "mutate_record_argv": source.replace("    record['exitCode'] = 0\n", "    record['command'].append('-c')\n"),
+            "escape_record": source.replace("    record['exitCode'] = 0\n", "    evil(record)\n"),
+            "escape_records": source.replace("    record['exitCode'] = 0\n", "    evil(records)\n"),
+            "unproved_records_sink": source.replace("report['commands']", "EvilList()"),
+            "rebound_report_commands": source.replace("    snapshot(root, run)\n", "    report['commands'] = EvilList()\n    snapshot(root, run)\n"),
+            "escape_nested_run": source.replace("    snapshot(root, run)\n", "    unknown(run)\n"),
+            "helper_escapes_run": source.replace("    run([*prefix, 'rev-parse', 'HEAD'])\n", "    unknown(run)\n"),
+            "git_config_in_helper": source.replace(
+                "    run([*prefix, 'rev-parse', 'HEAD'])\n",
+                "    run(['git', 'config', '--file', '.gitmodules', '--get-regexp', 'x'])\n"),
+            "git_dash_c_in_helper": source.replace(
+                "    run([*prefix, 'rev-parse', 'HEAD'])\n",
+                "    run(['git', '-c', 'core.pager=evil', 'status'])\n"),
+            "prefix_mutated": source.replace("    run([*prefix, 'rev-parse', 'HEAD'])\n", "    prefix.append('-c')\n    run([*prefix, 'rev-parse', 'HEAD'])\n"),
+            "prefix_after_use": source.replace("    prefix = ['git', '-C', str(checkout)]\n", "") + "",
+            "prefix_starred_elt": source.replace("prefix = ['git', '-C', str(checkout)]", "prefix = ['git', *extra]"),
+            "option_flag_dynamic": source.replace("f'-getProperty:{root}'", "f'-{dynamic}'"),
+            "artifacts_path_starred": source.replace("outputs = ['--artifacts-path', str(artifacts)]", "outputs = ['--artifacts-path', *extra]"),
+            "property_dict_update": source.replace("    snapshot(root, run)\n", "    DEPENDENCIES.update({})\n    snapshot(root, run)\n"),
+            "property_dict_list_value": source.replace("('AVersion', 'ARoot')", "['AVersion', 'ARoot']"),
+            "property_listcomp_format_spec": source.replace("f'-p:{v[1]}={root}'", "f'-p:{v[1]!r}={root}'"),
+            "property_expr_global": source.replace("def verify(root, artifacts):\n", "def verify(root, artifacts):\n    global builds\n"),
+            "helper_global_param": source.replace("def snapshot(checkout, run):\n", "def snapshot(checkout, run):\n    global run\n"),
+            "nested_class_in_verify": source.replace("    snapshot(root, run)\n", "    class Inner:\n        x = run\n    snapshot(root, run)\n"),
+        }
+        for label, bad in negatives.items():
+            with self.subTest(case=label):
+                _, errors = discover_python({"entry.py": bad, "leaf.py": "pass\n"})
+                self.assertTrue(errors, (label, errors))
+
+        # Module-level callback helper and MSBuild property dictionary must fail when imported.
+        for label, importer in (
+            ("imported_helper", "from target import snapshot\nsnapshot('.', evil)\n"),
+            ("imported_deps_dict", "from target import DEPENDENCIES\nDEPENDENCIES['x'] = ('a', 'b')\n"),
+        ):
+            with self.subTest(imported=label):
+                _, errors = discover_python({"entry.py": importer, "target.py": source, "leaf.py": "pass\n"})
+                self.assertTrue(errors, (label, errors))
+
+    def test_dotnet_nuget_verify_and_taskkill_preserve_discovery_boundary(self):
+        good = (
+            "import subprocess\n"
+            "def check(path, pid):\n"
+            "    subprocess.run(['dotnet', 'nuget', 'verify', str(path), '--all'], capture_output=True)\n"
+            "    subprocess.run(['dotnet', 'nuget', 'verify', 'scripts/leaf.py', '--all', '-v', 'minimal'], capture_output=True)\n"
+            "    subprocess.run(['taskkill', '/PID', str(pid), '/T', '/F'], capture_output=True)\n"
+            "    subprocess.run(['taskkill', '/F', '/T', '/PID', str(pid)], capture_output=True)\n"
+        )
+        selected, errors = discover_python({"entry.py": good, "scripts/leaf.py": "pass\n"})
+        self.assertEqual(errors, [])
+        self.assertIn("scripts/leaf.py", selected)
+
+        # Empty list/tuple argv must never crash with IndexError.
+        _, empty_errors = discover_python({"entry.py": "import subprocess\nsubprocess.run([])\nsubprocess.run(())\n"})
+        self.assertEqual(empty_errors, [])
+
+        for label, command, extra_files in (
+            ("nuget_computed_verb", "subprocess.run(['dotnet', 'nuget', op, str(path)])", {}),
+            ("nuget_push", "subprocess.run(['dotnet', 'nuget', 'push', str(path)])", {}),
+            ("nuget_computed_exe", "subprocess.run([exe, 'nuget', 'verify', str(path), '--all'])", {}),
+            ("nuget_configfile", "subprocess.run(['dotnet', 'nuget', 'verify', str(path), '--configfile', 'x'])", {}),
+            ("nuget_two_computed", "subprocess.run(['dotnet', 'nuget', 'verify', dynamic_flag, str(path)])", {}),
+            ("nuget_computed_plus_literal", "subprocess.run(['dotnet', 'nuget', 'verify', dynamic_flag, 'extra.nupkg'])", {}),
+            ("nuget_non_string_const", "subprocess.run(['dotnet', 'nuget', 'verify', 123, '--all'])", {}),
+            ("nuget_missing_flag_value", "subprocess.run(['dotnet', 'nuget', 'verify', str(path), '-v'])", {}),
+            ("nuget_computed_cwd", "subprocess.run(['dotnet', 'nuget', 'verify', str(path), '--all'], cwd=path)", {}),
+            ("nuget_shell", "subprocess.run(['dotnet', 'nuget', 'verify', str(path), '--all'], shell=True)", {}),
+            ("nuget_preexec", "subprocess.run(['dotnet', 'nuget', 'verify', str(path), '--all'], preexec_fn=cb)", {}),
+            ("nuget_env", "subprocess.run(['dotnet', 'nuget', 'verify', str(path), '--all'], env={'DOTNET_ROOT': '.'})", {}),
+            ("nuget_copied_env_dotnet", "env = os.environ.copy(); env['DOTNET_ROOT'] = '.'; subprocess.run(['dotnet', 'nuget', 'verify', str(path), '--all'], env=env)", {}),
+            ("nuget_tracked_dotnet", "subprocess.run(['dotnet', 'nuget', 'verify', str(path), '--all'])", {"bin/dotnet": "x"}),
+            ("nuget_global_json_paths", "subprocess.run(['dotnet', 'nuget', 'verify', str(path), '--all'])",
+             {"global.json": '{"sdk":{"paths":["."]}}'}),
+            ("taskkill_computed_exe", "subprocess.run([exe, '/PID', str(pid), '/T', '/F'])", {}),
+            ("taskkill_computed_flag", "subprocess.run(['taskkill', flag, str(pid), '/T', '/F'])", {}),
+            ("taskkill_im_flag", "subprocess.run(['taskkill', '/IM', name, '/T', '/F'])", {}),
+            ("taskkill_shell", "subprocess.run(['taskkill', '/PID', str(pid), '/T', '/F'], shell=True)", {}),
+            ("taskkill_preexec", "subprocess.run(['taskkill', '/PID', str(pid), '/T', '/F'], preexec_fn=cb)", {}),
+            ("taskkill_env", "subprocess.run(['taskkill', '/PID', str(pid), '/T', '/F'], env={'PATH': '.'})", {}),
+            ("taskkill_tracked_bin", "subprocess.run(['taskkill', '/PID', str(pid), '/T', '/F'])", {"tools/taskkill.exe": "x"}),
+            ("taskkill_shadow_subprocess", "subprocess.run(['taskkill', '/PID', str(pid), '/T', '/F'])", {"subprocess.py": "pass\n"}),
+        ):
+            with self.subTest(case=label):
+                files = {"entry.py": "import os, subprocess\ndef check(path, pid):\n    " + command + "\n", **extra_files}
+                _, errors = discover_python(files)
+                self.assertTrue(errors, (label, errors))
+
+    def test_cross_module_env_proof_hardening_and_verification_gaps(self):
+        helper = (
+            "import os\n"
+            "def inspection_environment():\n"
+            "    return {k: v for k, v in os.environ.items() if not k.upper().startswith('GIT_')} | {\n"
+            "        'GIT_NO_REPLACE_OBJECTS': '1',\n"
+            "    }\n"
+        )
+        callee = (
+            "import subprocess\n"
+            "def run_git(root, environment=None):\n"
+            "    return subprocess.check_output(['git', 'status'], cwd=root,\n"
+            "                                   **({'env': environment} if environment is not None else {}))\n"
+        )
+        # Positive: import mod attribute call + positional env forwarding + relative from . import.
+        caller_mod_attr = (
+            "import env_helper, callee\n"
+            "def go(root):\n"
+            "    env = env_helper.inspection_environment()\n"
+            "    callee.run_git(root, env)\n"
+            "go(supplied_root)\n"
+        )
+        _, errors = discover_python({"entry.py": caller_mod_attr, "env_helper.py": helper, "callee.py": callee})
+        self.assertEqual(errors, [])
+
+        # Positive: sys.path-proven root resolves imported helper in python_context.
+        _, errors = discover_python({
+            "entry.py": "import sys, subprocess\nfrom pathlib import Path\nsys.path.insert(0, str(Path(__file__).resolve().parent / 'lib'))\nfrom env_helper import inspection_environment\nsubprocess.run(['git', 'status'], env=inspection_environment())\n",
+            "lib/env_helper.py": helper,
+        })
+        self.assertEqual(errors, [])
+
+        # Adversarial bypass cases (all must fail).
+        bypasses = {
+            "helper_os_alias_mutation": {
+                "entry.py": "from env_helper import inspection_environment\nimport subprocess\nsubprocess.run(['git', 'status'], env=inspection_environment())\n",
+                "env_helper.py": "import os\nm = os\nm.environ['PATH'] = '.'\ndef inspection_environment():\n    return {k: v for k, v in os.environ.items() if not k.upper().startswith('GIT_')}\n",
+            },
+            "vararg_forwarded_env": {
+                "entry.py": "import subprocess\ndef f(**kwargs):\n    subprocess.run(['git', 'status'], env=kwargs)\nf(PATH='.')\n",
+            },
+            "transitive_reexport": {
+                "entry.py": "from reexport import run_git\nrun_git(supplied_root, environment={'PATH': '.'})\n",
+                "reexport.py": "from callee import run_git\n",
+                "callee.py": callee,
+            },
+            "transitive_helper_patch_string": {
+                "entry.py": "import bridge\nfrom env_helper import inspection_environment\nimport subprocess\nsubprocess.run(['git', 'status'], env=inspection_environment())\n",
+                "bridge.py": "import env_helper\nfrom unittest.mock import patch\npatch('env_helper.inspection_environment', lambda: {'PATH': '.'})\n",
+                "env_helper.py": helper,
+            },
+            "patch_object_keyword_attr": {
+                "entry.py": "import evil, subprocess\nfrom env_helper import inspection_environment\nsubprocess.run(['git', 'status'], env=inspection_environment())\n",
+                "evil.py": "import env_helper\nfrom unittest.mock import patch\npatch.object(env_helper, attribute='inspection_environment')\n",
+                "env_helper.py": helper,
+            },
+            "helper_module_escape": {
+                "entry.py": "import evil, subprocess\nfrom env_helper import inspection_environment\nsubprocess.run(['git', 'status'], env=inspection_environment())\n",
+                "evil.py": "import env_helper\nmutate(env_helper)\n",
+                "env_helper.py": helper,
+            },
+            "monkeypatched_imported_consumer": {
+                "entry.py": "import evil, env_helper, callee\ndef go(root):\n    env = env_helper.inspection_environment()\n    callee.run_git(root, env)\ngo(supplied_root)\n",
+                "evil.py": "import callee\ncallee.run_git = lambda r, e: e.__setitem__('PATH', '.')\n",
+                "env_helper.py": helper, "callee.py": callee,
+            },
+            "forwarded_caller_module_env_imported": {
+                "entry.py": "import holder, mutator\n",
+                "holder.py": "import os\nfrom callee import run_git\nSHARED = os.environ.copy()\nrun_git(supplied_root, environment=SHARED)\n",
+                "mutator.py": "import holder\nholder.SHARED['PATH'] = '.'\n",
+                "callee.py": callee,
+            },
+            "module_allowlist_imported": {
+                "entry.py": "import runner\nrunner.ALLOWED = {'PATH'}\n",
+                "runner.py": "import os, subprocess\nALLOWED = frozenset({'PATH'})\nsubprocess.run(['dotnet', 'msbuild', 'a.csproj'], env={k: v for k, v in os.environ.items() if k in ALLOWED})\n",
+            },
+            "chained_in_comparison": {
+                "entry.py": "import os, subprocess\ndef f():\n    allowed = {'PATH'}\n    x = 'a' in allowed in [True]\n    subprocess.run(['dotnet', 'msbuild', 'a.csproj'], env={k: v for k, v in os.environ.items() if k in allowed})\n",
+            },
+            "rebound_callee_in_def_path": {
+                "entry.py": "import subprocess\ndef run_git(root, environment=None):\n    return subprocess.check_output(['git', 'status'], cwd=root, **({'env': environment} if environment is not None else {}))\nrun_git(supplied_root)\nrun_git = other\n",
+            },
+            "forwarded_env_global_param": {
+                "entry.py": "import subprocess, env_helper, callee\ndef go(root):\n    env = env_helper.inspection_environment()\n    callee.run_git(root, env)\n    subprocess.check_output(['git', 'status'], cwd=root, env=env)\ngo(supplied_root)\n",
+                "env_helper.py": helper,
+                "callee.py": "def other():\n    global environment\ndef run_git(root, environment=None):\n    environment['PATH'] = '.'\n",
+            },
+            "dotted_import_helper": {
+                "entry.py": "import pkg.env_helper, subprocess\nsubprocess.run(['git', 'status'], env=pkg.inspection_environment())\n",
+                "pkg/__init__.py": "",
+                "pkg/env_helper.py": helper,
+            },
+        }
+        for label, files in bypasses.items():
+            with self.subTest(bypass=label):
+                _, errors = discover_python(files)
+                self.assertTrue(errors, (label, errors))
+
+        # Test boundary observations for env_helper_proofs and forwarded_env_proofs (VG-3).
+        test_files = {
+            "entry.py": "from env_helper import inspection_environment\n"
+                        "from callee import run_git\n"
+                        "run_git(supplied_root, environment=inspection_environment())\n",
+            "env_helper.py": helper,
+            "callee.py": callee,
+            "tests/test_mut.py": "import env_helper, callee\nenv_helper.inspection_environment = lambda: {}\ncallee.run_git('x', environment=supplied)\n",
+        }
+        _, errors, observations = discover_boundary(
+            [("bash", UNSET + "python3 -m unittest discover -s tests\npython3 entry.py", "")], test_files)
+        self.assertEqual(errors, [], (errors, observations))
+        self.assertTrue(any("inspection_environment" in obs for obs in observations), observations)
+        self.assertTrue(any("unresolved computed subprocess env" in obs for obs in observations), observations)
+
 
 class ErrorSourceTests(unittest.TestCase):
     """Per-error source details: reported and caller statement digests, or none for an unproved site."""
@@ -3946,6 +4311,92 @@ class ScanTests(acceptance_tests.Harness):
         targets = {target for target, _ in discovery.WORKS_PLATFORM_ENTRIES.values()}
         self.assertTrue(discovery.WORKS_PLATFORM_EXPORT)
         self.assertLessEqual(set(discovery.WORKS_PLATFORM_EXPORT), targets)
+        export_paths = {discovery.WORKS_PLATFORM_ROOT + "/" + p for p in discovery.WORKS_PLATFORM_EXPORT}
+        self.assertTrue(discovery.WORKS_PLATFORM_EXPORT_GIT_CALLS)
+        self.assertLessEqual({p for p, _, _ in discovery.WORKS_PLATFORM_EXPORT_GIT_CALLS}, export_paths)
+
+    def test_works_platform_reviewed_export_git_call_clears_only_exact_digest(self):
+        import scan_discovery as discovery
+
+        module, repository = "Hexalith.Works", "Hexalith.Platform"
+        path, action, workflow = (discovery.WORKS_PLATFORM_ROOT, discovery.WORKS_PLATFORM_ACTION,
+                                  discovery.WORKS_PLATFORM_WORKFLOW)
+        coordinator, export = "scripts/coordinator.py", "eng/works_host_snapshot.py"
+        reviewed = "jobs:\n  parity:\n    steps:\n    - uses: ./.github/actions/platform-parity\n"
+        entries = {(coordinator, 2, "importlib.util.spec_from_file_location"): (export, "python")}
+        export_source = (
+            "import subprocess\n"
+            "def git(root, *arguments):\n"
+            "    return subprocess.check_output(['git', '-C', str(root), *arguments])\n"
+            "def run(origin, commit):\n"
+            "    return git(origin, 'archive', commit)\n"
+        )
+        workspace, pin = self.pinned_workspace("echo dormant", module=module, repository=repository,
+                                               dependency_files={export: export_source})
+        remote = workspace.paths[module]
+        dependency = workspace.transport.pins[repository]
+        script = workspace.write(module, coordinator, "import importlib.util\n"
+                                 f"importlib.util.spec_from_file_location('export', sealed / {export!r})\n")
+        action_source = workspace.write(module, action, steps(("bash", "python3 " + coordinator, "")))
+        workspace.write(module, workflow, reviewed)
+        git(remote, "add", "--", action, coordinator, workflow)
+        git(remote, "commit", "--quiet", "-m", "record export git wrapper")
+        base = git(remote, "rev-parse", "HEAD")
+        inputs = {workflow: discovery.works_fingerprint(workflow, reviewed.encode()),
+                  action: hashlib.sha256(action_source.read_bytes()).hexdigest(),
+                  coordinator: hashlib.sha256(script.read_bytes()).hexdigest()}
+        exports = {export: hashlib.sha256(export_source.encode()).hexdigest()}
+        export_calls = {(path + "/" + export, 3, "subprocess.check_output")}
+
+        with mock.patch.multiple(discovery, WORKS_PLATFORM_INPUTS=inputs, WORKS_PLATFORM_EXPORT=exports,
+                                 WORKS_PLATFORM_ENTRIES=entries, WORKS_PLATFORM_EXPORT_GIT_CALLS=export_calls):
+            row = workspace.scan(self.factory)["modules"][0]
+            self.assertEqual(row["errors"], [], row)
+            self.assertEqual("pass", row["result"], row)
+
+            # Any byte drift in the reviewed export fails unproved.
+            (dependency / export).write_text(export_source + "# drift\n")
+            git(dependency, "add", "--", export)
+            git(dependency, "commit", "--quiet", "-m", "drift export")
+            drifted = git(dependency, "rev-parse", "HEAD")
+            git(remote, "update-index", "--cacheinfo", "160000", drifted, path)
+            git(remote, "commit", "--quiet", "-m", "pin drifted export")
+            row = workspace.scan(self.factory)["modules"][0]
+            self.assertEqual("fail", row["result"], row)
+            self.assertIn(f"{action}:1: local-script discovery: unproved computed Platform source: {path}/{export}",
+                          row["errors"])
+
+            # An unlisted callsite in the reviewed export still fails.
+            git(dependency, "reset", "--quiet", "--hard", pin)
+            git(remote, "reset", "--quiet", "--hard", base)
+            with mock.patch.object(discovery, "WORKS_PLATFORM_EXPORT_GIT_CALLS", set()):
+                row = workspace.scan(self.factory)["modules"][0]
+                self.assertEqual("fail", row["result"], row)
+                self.assertTrue(any(f"{path}/{export}:3:" in error for error in row["errors"]), row)
+
+            # A committed __pycache__ beside the export fails unproved even when source bytes match.
+            pyc = dependency / "eng/__pycache__/works_host_snapshot.cpython-312.pyc"
+            pyc.parent.mkdir(parents=True, exist_ok=True)
+            pyc.write_text("substituted\n")
+            git(dependency, "add", "--force", "--", "eng/__pycache__/works_host_snapshot.cpython-312.pyc")
+            git(dependency, "commit", "--quiet", "-m", "add export bytecode")
+            cached = git(dependency, "rev-parse", "HEAD")
+            git(remote, "update-index", "--cacheinfo", "160000", cached, path)
+            git(remote, "commit", "--quiet", "-m", "pin cached export")
+            row = workspace.scan(self.factory)["modules"][0]
+            self.assertEqual("fail", row["result"], row)
+            self.assertTrue(any("unproved computed Platform source" in error for error in row["errors"]), row)
+
+            # A different action reaching the export file without the reviewed action context still fails.
+            git(dependency, "reset", "--quiet", "--hard", pin)
+            git(remote, "reset", "--quiet", "--hard", base)
+            workspace.write(module, ".github/actions/other/action.yml",
+                            steps(("bash", f"python3 {path}/{export}", "")))
+            git(remote, "add", "--", ".github/actions/other/action.yml")
+            git(remote, "commit", "--quiet", "-m", "reach export from wrong action")
+            row = workspace.scan(self.factory)["modules"][0]
+            self.assertEqual("fail", row["result"], row)
+            self.assertTrue(any(f"{path}/{export}:3:" in error for error in row["errors"]), row)
 
     def test_nonexecuting_git_and_anonymous_transport_environment(self):
         w = self.workspace(("Hexalith.Alpha",))

@@ -58,8 +58,8 @@ Check maintainer prerequisites and cleanup first. Use Works' restricted module-a
 - [x] `../evidence/13/` Read back whether hosted shared CI and independent Platform parity on the current Works `main` show the Platform tag-to-gitlink pairing as resolved. Record the run, job and attempt identities, or the exact remaining failure and its owner.
 - [ ] `../evidence/13/` Track and reconcile the maintainer prerequisites against authenticated precondition and cutover readbacks. Record qualified Zot replacements and continuity for the remaining consumers, old key retirement and loss of legacy Works write access, Works' exclusion from the legacy `NUGET_API_KEY` grant, and the retained scoped publishing and immutable release settings.
 - [x] `references/Hexalith.Works`, `setup/Hexalith.Works.yml`, and `rendered/Hexalith.Works*` Verify historical preparation and delivery, exact current configuration, and the disposition of product gates and audit waivers. Reuse the existing adoption.
-- [ ] `tools/scan_discovery.py`, `tools/tests/test_scan.py` and `docs/duplicate-scan.md` Recognize a literal read-only Git subcommand (`rev-parse`, `ls-files`, `ls-tree`, `status`, `cat-file`, `diff`, `show`, `archive`, `remote get-url`) with literal flags as running no tracked source, whatever its computed `cwd`, `-C` directory, revisions or paths. Cover a Git wrapper whose every caller passes a literal subcommand, a conditional `env` keyword and a constant tuple expansion. Accept local `clone`, `fetch` and `checkout --detach` only with literal flags and `--`. Keep computed subcommands, `-c` overrides, `config`, `hook`, `submodule foreach` and aliases failing. Retire `WORKS_PLATFORM_GIT_CALLS` entries only where the rule covers them. Pass the focused tests, the locked scanner suite, the renderer check and the global tool suites. Scan current Works `main` locally with the production controller, and record its Platform diagnostics before and after in `../evidence/13/`. The expected change is 128 to 115.
-- [ ] `../evidence/13/` Hand off to the Platform owners the move of the four lanes and their Agents context out of `eng/verify_works_host.py` into Platform's own CI, and the removal from `VERIFIER_HELPERS` of files that no longer run in Works CI. Record the handoff and the resulting Platform commit. Once Works `main` pins that commit, record its re-scan with the remaining sites and their owners.
+- [x] `tools/scan_discovery.py`, `tools/tests/test_scan.py` and `docs/duplicate-scan.md` Recognize a literal read-only Git subcommand (`rev-parse`, `ls-files`, `ls-tree`, `status`, `cat-file`, `diff`, `show`, `archive`, `remote get-url`) with literal flags as running no tracked source, whatever its computed `cwd`, `-C` directory, revisions or paths. Cover a Git wrapper whose every caller passes a literal subcommand, a conditional `env` keyword and a constant tuple expansion. Accept local `clone`, `fetch` and `checkout --detach` only with literal flags and `--`. Keep computed subcommands, `-c` overrides, `config`, `hook`, `submodule foreach` and aliases failing. Retire `WORKS_PLATFORM_GIT_CALLS` entries only where the rule covers them. Pass the focused tests, the locked scanner suite, the renderer check and the global tool suites. Scan current Works `main` locally with the production controller, and record its Platform diagnostics before and after in `../evidence/13/`. The expected change is 128 to 115.
+- [x] `../evidence/13/` Hand off to the Platform owners the move of the four lanes and their Agents context out of `eng/verify_works_host.py` into Platform's own CI, and the removal from `VERIFIER_HELPERS` of files that no longer run in Works CI. Record the handoff and the resulting Platform commit. Once Works `main` pins that commit, record its re-scan with the remaining sites and their owners.
 - [ ] `tools/scan_discovery.py`, `references/Hexalith.Works/.github/actions/platform-parity/` and its reachable Works-owned scripts. Complete the scanner checkpoint and resolve Works-owned discovery errors while preserving Platform parity behavior. Record exact-base and exact-candidate qualification evidence or the outstanding path diagnostics and owners. Run the standalone Builds checker on the exact candidate before any module push.
 - [ ] `../evidence/13/` Route the recurring Stage 4 Dapr scheduler bind failure to Builds and record its triage and any immutable Builds correction and delivery. Record any separate Works product fix. Before publishing through the normal Works PR path, record passing hosted shared CI and Platform parity on the exact Works `main` base and Builds pin, the hosted CiCd scan of that base, and the exact local candidate discovery and standalone-checker results. Record run and attempt identities, the scan artifact identity and digest, the Works commits, the scanner revision and policy digest. If the scoped prerequisite applies, record why a Works source change is necessary, which base diagnostics it clears, and the clean hosted Works row on the resulting `main` after merge.
 - [ ] `references/Hexalith.Works/references/Hexalith.Builds/check.py` and `tools/nightly_acceptance.py` Verify the current adopted source and obtain passing exact-source hosted CI and an eligible central Nightly result. Record any shared pipeline failure or access refusal with exact evidence.
@@ -133,6 +133,7 @@ Check maintainer prerequisites and cleanup first. Use Works' restricted module-a
 - [Export-byte Platform proof, current pairing and AD-21 readback](../evidence/13/export-byte-proof-20261125.md)
 - [CiCd validation fix, current Works readback and Platform reachability](../evidence/13/validation-fix-and-reachability-20261125.md)
 - [Literal Git discovery, exact Works checker, and Platform handoff](../evidence/13/literal-git-discovery-20261125.md)
+- [Step 3 discovery follow-up, held Works candidate, and 8-site Platform handoff](../evidence/13/discovery-followup-20261128.md)
 - `run-with-temp uv run --locked --script tools/render.py --check` from CiCd.
 - `run-with-temp uv run --locked --script tools/validate.py --scope full` from CiCd, the gate that Delivery runs.
 - `run-with-temp python3 references/Hexalith.Builds/check.py` from a standalone exact Works checkout with the declared direct submodules.
@@ -142,7 +143,37 @@ Check maintainer prerequisites and cleanup first. Use Works' restricted module-a
 
 **Status** `blocked`
 
-The local scanner recognizes the approved Python Git operations where it can
+Step 3 discovery follow-up (2026-11-28, Option A): after Platform moved the
+four non-Works lanes (`f035498b`, pinned in Works `main` `5d5b56e1` at
+`7eaa9eb8`, reducing hosted scan `45995012594` to 21 files / 19 diagnostics),
+CiCd added generalizable fail-closed scanner rules for safe Git
+`inspection_environment()` (direct, imported, and cross-module forwarded
+conditional `env`), literal read-only `os.environ` allowlist comprehensions,
+`dotnet nuget verify`, Windows `taskkill /PID <pid> /T /F`, read-only `argv`
+logging/formatting and nested callback wrappers, and the hash-pinned reviewed
+export callsite `eng/works_host_snapshot.py:65`.
+
+Local production `scan.scan()` on Works `main` (`5d5b56e1`, Platform
+`7eaa9eb8`, Builds `v6.9.2`) dropped diagnostics from 19 (17 Platform + 2
+Works) to 9 (exact 8 handed-off Platform sites + 1 Works site
+`scripts/verify-source-debug.py:67` -> L170 -> L137 `git config`), with 21
+selected files, 0 run errors and 0 duplicates. The locked renderer check and
+89 focused scanner tests (including new positive and adversarial bypass tests
+and Works boundary/export-drift tests) exited 0 under `run-with-temp`.
+
+A behavior-preserving Works candidate (`ba908c0b`, local branch
+`fix/works-source-debug-configparser-5d5b56e1`) replacing L137 `git config`
+with stdlib `configparser` cleared Works diagnostics to 0 (8 Platform + 0
+Works, 0 run errors, 0 duplicates), passed all 20/20 `verify-source-debug`
+unit tests, and passed standalone `python3 references/Hexalith.Builds/check.py`
+(386 ArchitectureTests, 3 PropertyTests, 603 UnitTests, clean checkout). The
+candidate is held locally until the scanner update reaches CiCd `main` and
+hosted scan + exact-base hosted CI satisfy the publication gate. The 8
+remaining Platform sites are handed off to Platform owners, and AD-21 legacy
+Zot cleanup remains open before final Story 13 closeout.
+[Step 3 discovery follow-up and handoffs](../evidence/13/discovery-followup-20261128.md)
+
+Earlier Step 1 record (2026-11-25): The local scanner recognizes the approved Python Git operations where it can
 prove the command and option boundaries. Production-policy discovery on Works
 `e6e4d1928c09bbde2f8f05c6a6a0211ddce89035` and its Platform pin
 `3bcac63c6fe20b46687b6e0bb7a333ea8c66fb4d` reduced Platform diagnostics from
