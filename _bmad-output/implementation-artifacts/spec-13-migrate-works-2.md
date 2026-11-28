@@ -2,7 +2,7 @@
 title: '13 — Migrate Works (Discovery Follow-Up & Closeout)'
 type: 'feature'
 created: '2026-11-28'
-status: 'in-review'
+status: 'done'
 route: 'dispatch'
 baseline_commit: '9ada4b8a87e128e1b811944e13d1e79017941446'
 review_loop_iteration: 0

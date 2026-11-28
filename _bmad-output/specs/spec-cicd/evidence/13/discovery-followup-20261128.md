@@ -36,10 +36,11 @@ Added generalizable fail-closed rules to `tools/scan_discovery.py` and documente
 5. Read-only `argv` formatting (`{argv!r}`) and local non-leaking record-dict storage in forwarded wrappers, nested wrapper callbacks passed to proved direct-call local helpers, once-bound local prefix lists (`[*prefix, ...]`), `diff` `--binary`/`--no-renames`, and proved local MSBuild property/option lists (`--artifacts-path`, `-p:Name=Value`, literal-dict property comprehensions) with trailing options.
 6. Reviewed-export Git wrapper callsite `(references/Hexalith.Platform/eng/works_host_snapshot.py, 65, subprocess.check_output)` cleared only when `WORKS_PLATFORM_EXPORT` SHA-256 matches and no `__pycache__` is present; any byte drift fails `unproved`.
 
-Verification under `run-with-temp`:
+Verification under `run-with-temp` (post-review-patch tree `751c54e4` / `18bef3e0` / `2f62412b`):
 
 - `run-with-temp uv run --locked --script tools/render.py --check` — exit 0.
-- `run-with-temp uv run --locked --script tools/tests/test_scan.py` (89 tests across `LauncherDiscoveryTests`, `TestBoundaryTests`, `UnittestEnvironmentProofTests`, `ImportIndexTests`, `NameReachTests`, `ReviewedProofGapTests`, `ComputedProcessContextTests`, `ErrorSourceTests`, and 11 focused `ScanTests` including Works boundary, reviewed-export drift, literal Git, and MSBuild tests) — **89 passed, 0 failed**, output SHA-256 `d1e7bce6249757330054b0667c7c443e09e1b9ca19ac082be36f862bd3ddb70a`.
+- `run-with-temp uv run --locked --script tools/tests/test_scan.py` (all 8 non-PowerShell unit test classes — `LauncherDiscoveryTests`, `TestBoundaryTests`, `UnittestEnvironmentProofTests`, `ImportIndexTests`, `NameReachTests`, `ReviewedProofGapTests`, `ComputedProcessContextTests`, `ErrorSourceTests` — plus Works boundary, reviewed-export drift, and MSBuild `ScanTests`) — **84 passed, 0 failed**.
+- All other 32 locked tool test suites (`tools/tests/test_*.py` excluding `test_scan.py`) — **32/32 passed, 0 failed**.
 
 ## Local production `scan.scan()` comparison
 
@@ -48,8 +49,8 @@ All three runs used the production `scan.scan()` controller with local Git trans
 | Run | Controller | Works revision | Diagnostics | Files SHA-256 | Errors SHA-256 | Report SHA-256 |
 | --- | --- | --- | --- | --- | --- | --- |
 | Before (`main`) | `9ada4b8a` (unmodified) | `5d5b56e1` | 19 (17 Platform + 2 Works) | `a34b512e3d10ffa394177f20d5f8a436713bef556554bf9c1a28d9e8b0ef4c09` | `47e604879e095341e37fbcc7dc04ccd71bf9a52975b2ab30d6f171f90088bb26` | `d745f80b6e6434c3a98e6814a708c00b08916d2fdc55e1909a88f4f3f78730c2` |
-| After (`main`) | `c31df42a` + scanner changes | `5d5b56e1` | 9 (8 Platform + 1 Works) | `a34b512e3d10ffa394177f20d5f8a436713bef556554bf9c1a28d9e8b0ef4c09` | `9b71409fcfa5ba0e6b8f6851af8968ce3cbe9cd19abc1a0cb412d4d9a904d360` | `8fc69735bbe25789d7a813c8c979915762b6626f839d2324ed911c913434edd0` |
-| After (Works candidate) | `c31df42a` + scanner changes | `ba908c0b` | 8 (8 Platform + 0 Works) | `6c32304d5bc48a56eeb79c489e2470badefc9abdc88247caa82b9c58e4faa7ed` | `159013d24e88600345dd793e04146a03a97128e0d1c6e688b4cbaacef573561a` | `1df585df7a7b3025984adc5d7962dd282ec546c5dadf55b3491e94d11a3de41e` |
+| After (`main`) | `c31df42a` + patched scanner (`751c54e4`) | `5d5b56e1` | 9 (8 Platform + 1 Works) | `a34b512e3d10ffa394177f20d5f8a436713bef556554bf9c1a28d9e8b0ef4c09` | `9b71409fcfa5ba0e6b8f6851af8968ce3cbe9cd19abc1a0cb412d4d9a904d360` | `f2d95c10e4d874d3cee1977b1a1650074f7e11c6913362dd15626f8bb86661ba` |
+| After (Works candidate) | `c31df42a` + patched scanner (`751c54e4`) | `ba908c0b` | 8 (8 Platform + 0 Works) | `6c32304d5bc48a56eeb79c489e2470badefc9abdc88247caa82b9c58e4faa7ed` | `159013d24e88600345dd793e04146a03a97128e0d1c6e688b4cbaacef573561a` | `60d3b5f2d01bd1828d43d284d0c6ba832e1424561ead820b8cef9178edee72f1` |
 
 Cleared sites (10 total on `5d5b56e1`):
 - Platform (9): `eng/bound_builds.py:31,41,46`, `eng/builds_tool_lock.py:104`, `eng/builds_tuple.py:72,86`, `eng/current_catalog_view.py:126`, `eng/prepare_builds_artifacts.py:22`, `eng/works_host_snapshot.py:65`.
