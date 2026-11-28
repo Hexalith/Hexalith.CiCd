@@ -21,9 +21,11 @@
 
 ## Hosted CI, Nightly and scan status
 
-- Works is adopted (`v2.0.0` immutable). Both `ci` and `platform-parity` passed on `fe369b7a` / Builds `v6.9.2`, and CodeQL + release passed in Nightly `45985698522`.
+- Works is adopted (`v2.0.0` immutable). Both `ci / Build and tests` and `custom-platform-parity` passed on `fe369b7a` (run `46090478003`) and on exact current Works `main` `5d5b56e11eafb121d688fea6f8523fa03863c676` (run `46123095097`, Builds `v6.9.2`). CodeQL (`csharp`, `python`) and release (`45985953417`, `outcome: nothing`) passed in Nightly `45985698522`.
 - Platform moved the four non-Works lanes (`f035498b`, pinned in Works at `7eaa9eb8`), dropping hosted scan `45995012594` from 43 files / 130 diagnostics to 21 files / 19 diagnostics (17 Platform + 2 Works, 0 duplicates).
-- Hosted requalification of the scanner changes below waits for CiCd `main` publication and the normal hosted scan workflow.
+- **Hosted CiCd validation & scan on the updated scanner (`6a836939d34decf76b57afd75819930531ad5eb2`, covering `703e4409b6d235712bce0a1601aa0a465ffc27c8`):**
+  - `deliver.yml` run `46133458534`: `validate` passed (`success`) on `6a836939d34decf76b57afd75819930531ad5eb2`.
+  - `scan.yml` run `46134971380` (`workflow_dispatch` on `main` `6a836939d34decf76b57afd75819930531ad5eb2`, job `140948109628`, artifact `15259293306`, digest `sha256:931b1ed557bbb9c3675c7d04baa6cf69b58849a3515faefd3ae02ec898c95aba`, `report.json` SHA-256 `76126ce00c0910e5ec36fea4602fe8a9f150f65b10cdeb64675e2b1f1e25eb4e`): **0 run-level errors**, **0 duplicates**, Works row at exact `5d5b56e11eafb121d688fea6f8523fa03863c676` (Platform `7eaa9eb85d060b6d0d0c836a938ccb6e8795fa89`) selected **21 files** (`files_sha256` `a34b512e3d10ffa394177f20d5f8a436713bef556554bf9c1a28d9e8b0ef4c09`) with **9 diagnostics** (`errors_sha256` `9b71409fcfa5ba0e6b8f6851af8968ce3cbe9cd19abc1a0cb412d4d9a904d360` — exact byte-for-byte match to the local scan: 8 handed-off Platform sites + 1 Works site `scripts/verify-source-debug.py:67 -> L170 -> L137`).
 
 ## Scanner changes and verification
 
